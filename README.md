@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+```
+═══════════════════════════════════════════════════════════════════════════
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+    ██████╗ ██╗ █████╗ ███╗   ███╗ █████╗ ███╗   ██╗████████╗███████╗
+    ██╔══██╗██║██╔══██╗████╗ ████║██╔══██╗████╗  ██║╚══██╔══╝██╔════╝
+    ██║  ██║██║███████║██╔████╔██║███████║██╔██╗ ██║   ██║   █████╗
+    ██║  ██║██║██╔══██║██║╚██╔╝██║██╔══██║██║╚██╗██║   ██║   ██╔══╝
+    ██████╔╝██║██║  ██║██║ ╚═╝ ██║██║  ██║██║ ╚████║   ██║   ███████╗
+    ╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
 
-## Available Scripts
+    ██╗███╗   ██╗██╗   ██╗███████╗███████╗████████╗███╗   ███╗███████╗███╗   ██╗████████╗███████╗
+    ██║████╗  ██║██║   ██║██╔════╝██╔════╝╚══██╔══╝████╗ ████║██╔════╝████╗  ██║╚══██╔══╝██╔════╝
+    ██║██╔██╗ ██║██║   ██║█████╗  ███████╗   ██║   ██╔████╔██║█████╗  ██╔██╗ ██║   ██║   ███████╗
+    ██║██║╚██╗██║╚██╗ ██╔╝██╔══╝  ╚════██║   ██║   ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║   ╚════██║
+    ██║██║ ╚████║ ╚████╔╝ ███████╗███████║   ██║   ██║ ╚═╝ ██║███████╗██║ ╚████║   ██║   ███████║
+    ╚═╝╚═╝  ╚═══╝  ╚═══╝  ╚══════╝╚══════╝   ╚═╝   ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
 
-In the project directory, you can run:
+                            v2.0
+═══════════════════════════════════════════════════════════════════════════
+```
 
-### `npm start`
+## Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Modern web platform for tracking and analyzing US stock market data in real-time. Empowers retail investors with clean UI, comprehensive metrics, and personalized watchlists.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Key Features
 
-### `npm test`
+- **Stock Search & Discovery** - Real-time search with instant comprehensive results
+- **Watchlist Management** - One-click add/remove, persistent storage, expandable detail views
+- **Interactive Charts** - Candlestick charts with multiple timeframes (hourly, daily, weekly, monthly)
+- **Real-time Data** - Live pricing, daily changes, volume, market cap, PE ratios
+- **Technical Analysis** - 52-week ranges, moving averages (50d/100d), fundamental metrics
+- **Mobile-First Design** - Responsive across all devices (320px-2560px)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Tech Stack
 
-### `npm run build`
+- React 19 + TypeScript
+- Alpha Vantage API (stock data)
+- Strict code quality (max 150 lines/file, 25 lines/function, complexity 10)
+- Pre-commit hooks (Prettier, ESLint, jscpd, build)
+- Pre-push hooks (tests)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Quick Start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+npm start       # Development server
+npm test        # Run tests
+npm run build   # Production build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Scripts
 
-### `npm run eject`
+```bash
+npm run lint              # Check linting
+npm run lint:fix          # Fix linting issues
+npm run prettier:check    # Check formatting
+npm run prettier:format   # Format code
+npm run type-check        # TypeScript validation
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Target Users**: Retail investors (25-55) and trading enthusiasts (20-40) seeking simplified stock tracking with clean, efficient interfaces.

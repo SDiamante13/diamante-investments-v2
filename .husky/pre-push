@@ -1,0 +1,2 @@
+#!/bin/sh
+npm test -- --watchAll=false --passWithNoTests

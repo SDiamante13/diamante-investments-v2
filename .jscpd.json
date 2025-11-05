@@ -1,0 +1,15 @@
+{
+  "threshold": 5,
+  "reporters": ["console"],
+  "ignore": [
+    "**/*.min.js",
+    "**/node_modules/**",
+    "**/build/**",
+    "**/*.map"
+  ],
+  "minLines": 5,
+  "minTokens": 50,
+  "mode": "mild",
+  "format": ["typescript", "javascript", "jsx"],
+  "gitignore": true
+}
