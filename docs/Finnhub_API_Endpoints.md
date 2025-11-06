@@ -11,11 +11,11 @@
 
 ✅ **EXCELLENT NEWS: Finnhub can provide ALL required data for Diamante Investments v2.0**
 
-Finnhub offers comprehensive real-time stock data with a significantly better free tier than Alpha Vantage (60 API calls/minute vs 25 calls/day). This document provides detailed breakdown of required API endpoints, their capabilities, and implementation examples.
+Finnhub offers comprehensive real-time stock data with an excellent free tier (60 API calls/minute). This document provides detailed breakdown of required API endpoints, their capabilities, and implementation examples.
 
-### Key Advantages Over Alpha Vantage
-- **60 API calls per minute** (free tier) vs Alpha Vantage's 25 calls per day
-- Real-time data on free tier
+### Key Advantages
+- **60 API calls per minute** on free tier
+- Real-time data included
 - No daily limits, only per-minute throttling
 - Comprehensive fundamental data in single endpoints
 
@@ -645,19 +645,18 @@ const profile = await getCachedData(
 **✅ Finnhub is an excellent data provider for Diamante Investments v2.0.**
 
 ### Advantages:
-- **Superior free tier**: 60 calls/minute vs Alpha Vantage's 25/day
+- **Excellent free tier**: 60 calls/minute with no daily cap
 - **Real-time data** included in free tier
 - **Comprehensive data** with all required metrics
 - **No daily limits** - only per-minute throttling
 - **Modern API** with excellent documentation
 - **Active development** and community support
 
-### Key Differences from Alpha Vantage:
-- Better rate limits (60/min vs 25/day)
-- Real-time data on free tier
-- More modern API design
-- Volume requires separate call (minor inconvenience)
-- Moving averages require calculation (easily done client-side)
+### Implementation Notes:
+- Volume requires separate candle call (not in quote endpoint)
+- Moving averages calculated client-side from historical data
+- Rate limiting handled via request queue
+- All MVP requirements covered by free tier
 
 ### Implementation Priority:
 1. **Phase 1:** REST API implementation for all MVP features

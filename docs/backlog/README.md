@@ -74,5 +74,5 @@ Stories are organized by epic but should be prioritized based on:
 ## Related Documentation
 
 - [Product Requirements Document](../Stock_Watchlist_PRD.md)
-- [Alpha Vantage API Endpoints](../Alpha_Vantage_API_Endpoints.md)
+- [Finnhub API Endpoints](../Finnhub_API_Endpoints.md)
 

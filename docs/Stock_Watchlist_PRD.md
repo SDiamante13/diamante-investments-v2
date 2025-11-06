@@ -221,8 +221,8 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 - **Security**: Secure API key management and rate limiting
 
 ### Data Requirements
-- **Stock Data Provider**: Alpha Vantage API integration for comprehensive financial data
-- **Real-time Updates**: WebSocket or polling mechanism for real-time price updates via Alpha Vantage
+- **Stock Data Provider**: Finnhub API integration for comprehensive financial data
+- **Real-time Updates**: Polling mechanism for real-time price updates
 - **Data Storage**: Client-side storage for watchlists and user preferences
 - **Data Validation**: Input validation and sanitization for all user inputs
 
@@ -265,7 +265,7 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 ## Assumptions and Dependencies
 
 ### Technical Assumptions
-- **Stock Data API**: Alpha Vantage API available and reliable for real-time stock data
+- **Stock Data API**: Finnhub API available and reliable for real-time stock data
 - **Browser Support**: Target users have modern browsers with JavaScript enabled
 - **Internet Connectivity**: Users have stable internet connection for real-time data
 - **Development Resources**: Sufficient development team capacity for implementation
@@ -277,14 +277,14 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 - **Monetization**: Future revenue opportunities through premium features or partnerships
 
 ### External Dependencies
-- **Financial Data Provider**: Alpha Vantage API for comprehensive stock market data
+- **Financial Data Provider**: Finnhub API for comprehensive stock market data
 - **Hosting Infrastructure**: Cloud hosting platform for application deployment
 - **Development Tools**: Access to modern development and testing tools
 - **Design Resources**: UI/UX design assets and guidelines
 
 ### Risk Dependencies
-- **API Reliability**: Dependent on Alpha Vantage API uptime and reliability
-- **Market Data Costs**: Potential costs for real-time data vs. delayed data from Alpha Vantage
+- **API Reliability**: Dependent on Finnhub API uptime and reliability
+- **Market Data Costs**: Potential costs for premium data features from Finnhub
 - **Regulatory Compliance**: Financial data display regulations and requirements
 - **Browser Changes**: Potential browser updates affecting compatibility
 
@@ -293,8 +293,8 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 ## Risks and Mitigation
 
 ### Technical Risks
-**High Risk: Alpha Vantage API Rate Limiting or Failure**
-- *Mitigation*: Implement caching strategy, fallback data sources, and graceful error handling
+**High Risk: Finnhub API Rate Limiting or Failure**
+- *Mitigation*: Implement caching strategy, request throttling, and graceful error handling
 
 **Medium Risk: Performance Issues with Real-time Data**
 - *Mitigation*: Optimize data fetching, implement efficient update mechanisms, and performance monitoring
@@ -303,8 +303,8 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 - *Mitigation*: Comprehensive cross-browser testing and progressive enhancement approach
 
 ### Business Risks
-**High Risk: Alpha Vantage Data Provider Cost Escalation**
-- *Mitigation*: Monitor API usage closely, implement efficient caching, negotiate usage-based pricing with Alpha Vantage
+**High Risk: Finnhub Data Provider Cost Escalation**
+- *Mitigation*: Monitor API usage closely, implement efficient caching, stay within free tier limits (60 calls/minute)
 
 **Medium Risk: User Adoption Lower Than Expected**
 - *Mitigation*: User research validation, beta testing program, iterative improvement based on feedback
