@@ -14,5 +14,9 @@ export default defineConfig({
       reporter: ['text', 'html', 'lcov'],
       exclude: ['node_modules/', 'build/', '**/*.config.ts'],
     },
+    env: {
+      VITE_ALPHA_VANTAGE_API_KEY: 'fake-api-key',
+      VITE_ALPHA_VANTAGE_API_URL: 'https://www.alphavantage.co/query',
+    },
   },
 });
