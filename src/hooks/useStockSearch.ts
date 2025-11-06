@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { searchStockBySymbol, RateLimitError } from '../services/alphaVantageService';
+import { searchStockBySymbol, RateLimitError } from '../services/finnhubService';
 import { SearchState, StockSearchMatch } from '../types/stock';
 
 type SetState = (state: SearchState) => void;

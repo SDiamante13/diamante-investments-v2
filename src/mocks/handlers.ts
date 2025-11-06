@@ -1,33 +1,28 @@
 import { http, HttpResponse } from 'msw';
 
-const API_BASE = 'https://www.alphavantage.co/query';
+const API_BASE = 'https://finnhub.io/api/v1';
 
 const mockAAPL = {
-  '1. symbol': 'AAPL',
-  '2. name': 'Apple Inc',
-  '3. type': 'Equity',
-  '4. region': 'United States',
-  '9. matchScore': '1.0000',
+  description: 'Apple Inc',
+  displaySymbol: 'AAPL',
+  symbol: 'AAPL',
+  type: 'Common Stock',
 };
 
 const mockMSFT = {
-  '1. symbol': 'MSFT',
-  '2. name': 'Microsoft Corporation',
-  '3. type': 'Equity',
-  '4. region': 'United States',
-  '9. matchScore': '1.0000',
+  description: 'Microsoft Corporation',
+  displaySymbol: 'MSFT',
+  symbol: 'MSFT',
+  type: 'Common Stock',
 };
 
 export const handlers = [
-  http.get(API_BASE, ({ request }) => {
+  http.get(`${API_BASE}/search`, ({ request }) => {
     const url = new URL(request.url);
-    const func = url.searchParams.get('function');
-    const keywords = url.searchParams.get('keywords');
-    if (func === 'SYMBOL_SEARCH') {
-      if (keywords === 'ERROR') return HttpResponse.error();
-      if (keywords === 'AAPL') return HttpResponse.json({ bestMatches: [mockAAPL] });
-      if (keywords === 'MSFT') return HttpResponse.json({ bestMatches: [mockMSFT] });
-    }
-    return HttpResponse.json({ bestMatches: [] });
+    const query = url.searchParams.get('q');
+    if (query === 'ERROR') return HttpResponse.error();
+    if (query === 'AAPL') return HttpResponse.json({ count: 1, result: [mockAAPL] });
+    if (query === 'MSFT') return HttpResponse.json({ count: 1, result: [mockMSFT] });
+    return HttpResponse.json({ count: 0, result: [] });
   }),
 ];

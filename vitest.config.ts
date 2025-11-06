@@ -15,8 +15,7 @@ export default defineConfig({
       exclude: ['node_modules/', 'build/', '**/*.config.ts'],
     },
     env: {
-      VITE_ALPHA_VANTAGE_API_KEY: 'fake-api-key',
-      VITE_ALPHA_VANTAGE_API_URL: 'https://www.alphavantage.co/query',
+      VITE_FINNHUB_API_KEY: 'fake-api-key',
     },
   },
 });
