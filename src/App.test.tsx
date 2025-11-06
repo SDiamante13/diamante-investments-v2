@@ -46,3 +46,17 @@ test('user sees updated results when changing search query', async () => {
   expect(screen.getByText(/microsoft/i)).toBeInTheDocument();
   expect(screen.queryByText('AAPL')).not.toBeInTheDocument();
 });
+
+test('user sees clean state when clearing search input', async () => {
+  render(<App />);
+
+  const searchInput = screen.getByRole('textbox', { name: /search/i });
+  await userEvent.type(searchInput, 'INVALID');
+
+  expect(await screen.findByText(/not found/i)).toBeInTheDocument();
+
+  await userEvent.clear(searchInput);
+
+  expect(screen.queryByText(/not found/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+});
