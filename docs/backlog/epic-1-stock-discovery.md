@@ -1,6 +1,6 @@
 # Epic 1: Stock Discovery
 
-## Story 1.1: User searches for stock by ticker symbol
+## Story 1.1: User searches for stock by ticker symbol ✅
 
 **Description:** Users can search for stocks using ticker symbols (e.g., "AAPL", "MSFT") to quickly find specific companies. This enables fast discovery of stocks without needing to know full company names.
 
@@ -30,6 +30,16 @@ Scenario: User searches for invalid ticker symbol
   And the message suggests checking the symbol spelling
 ```
 
+```gherkin
+Scenario: Search results display current price and daily change
+  Given user is on the application homepage
+  When they search for a valid ticker symbol
+  Then the search results display the stock's current price
+  And the daily percentage change is displayed
+  And positive changes are shown in green
+  And negative changes are shown in red
+```
+
 **Integration:** Accessible from the main application homepage via the search input field at the top of the page.
 
 **Manual Testing:**
@@ -38,8 +48,11 @@ Scenario: User searches for invalid ticker symbol
 3. Type "AAPL" in the search field
 4. Verify search results appear showing Apple Inc. stock information
 5. Verify results appear quickly (within 500ms)
-6. Type "INVALID123" in the search field
-7. Verify an appropriate "no results found" message appears
+6. Verify current price is displayed in the search results
+7. Verify daily percentage change is displayed
+8. Verify price change color coding (green for positive, red for negative)
+9. Type "INVALID123" in the search field
+10. Verify an appropriate "no results found" message appears
 
 ---
 

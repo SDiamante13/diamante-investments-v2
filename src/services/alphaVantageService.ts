@@ -10,6 +10,14 @@ interface AlphaVantageMatch {
 
 interface AlphaVantageResponse {
   bestMatches?: AlphaVantageMatch[];
+  Information?: string;
+}
+
+export class RateLimitError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RateLimitError';
+  }
 }
 
 const API_KEY = import.meta.env.VITE_ALPHA_VANTAGE_API_KEY;
@@ -31,6 +39,9 @@ export async function searchStockBySymbol(keyword: string): Promise<StockSearchM
   const response = await globalThis.fetch(url);
   if (!response.ok) throw new Error('Network request failed');
   const data = (await response.json()) as AlphaVantageResponse;
+  if (data.Information) {
+    throw new RateLimitError(data.Information);
+  }
   const matches = data.bestMatches || [];
   return matches.map(mapToStockMatch);
 }
