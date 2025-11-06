@@ -1,0 +1,163 @@
+---
+alwaysApply: false
+---
+
+# A-Frame Architecture & Nullables
+
+## A-Frame Architecture
+
+A-Frame Architecture is an optional architectural pattern that structures applications with clear separation between:
+
+- **Application Entry Point** (`App`): Orchestrates the application flow
+- **Logic Classes**: Pure business logic with no infrastructure dependencies
+- **Infrastructure Classes**: Wrappers around external systems (databases, APIs, file systems, etc.)
+
+The pattern creates a clear dependency hierarchy:
+```
+App → Logic + Infrastructure
+```
+
+### Benefits
+- Clear separation of concerns
+- Logic is easily testable (pure functions)
+- Infrastructure is isolated and can be "nulled" for testing
+- Enables "Logic Sandwich" pattern where logic is sandwiched between infrastructure calls
+
+### Example Structure
+```typescript
+class App {
+  constructor(
+    private logic: BusinessLogic,
+    private infrastructure: InfrastructureWrapper
+  ) {}
+  
+  run() {
+    const input = this.infrastructure.getInput();
+    const result = this.logic.process(input);
+    this.infrastructure.saveOutput(result);
+  }
+}
+```
+
+## Nullables
+
+Nullables are **production code with an "off" switch** - not test doubles or mocks. They're infrastructure wrappers that can operate in:
+- **Production mode**: Real infrastructure (databases, APIs, file systems)
+- **Null mode**: Test-friendly mode that doesn't affect external systems
+
+### Key Principles
+
+1. **They are production code**: Nullables are real classes used in production, not test-only code
+2. **Static factory methods**: 
+   - `create()` for production instances
+   - `createNull()` for test instances
+3. **Configurable Responses**: Null mode accepts configuration to return specific test data
+4. **Output Tracking**: Can track what would have been written/sent without actually doing it
+5. **Zero-Impact Instantiation**: Null mode doesn't affect external systems
+
+### Pattern Structure
+
+```typescript
+class InfrastructureWrapper {
+  static create(): InfrastructureWrapper {
+    return new InfrastructureWrapper(new RealInfrastructure());
+  }
+  
+  static createNull(config?: Config): InfrastructureWrapper {
+    return new InfrastructureWrapper(new StubbedInfrastructure(config));
+  }
+  
+  constructor(private implementation: Infrastructure) {}
+  
+  // Production methods delegate to implementation
+  getData(): Data {
+    return this.implementation.getData();
+  }
+}
+```
+
+### Key Patterns
+
+#### Infrastructure Wrappers
+- Wrap all external dependencies (databases, APIs, file systems, etc.)
+- Provide single point of control for infrastructure access
+- Enable Nullable pattern
+
+#### Configurable Responses
+- Nullables accept configuration to return specific test data
+- Example: `CommandLine.createNull({ args: ['test'] })`
+- Allows tests to configure infrastructure behavior without mocks
+
+#### Output Tracking
+- Track what would have been written/sent without actually doing it
+- Example: `commandLine.trackOutput()` returns array of what was written
+- Enables state-based assertions instead of interaction-based mocks
+
+#### Embedded Stub
+- Internal stub class used by Nullable in null mode
+- Implements same interface as real infrastructure
+- Returns configured responses instead of real I/O
+
+### Testing Benefits
+
+1. **Sociable, State-Based Tests**: Tests run with real dependencies (not mocks), but in null mode
+2. **Fast & Reliable**: Like unit tests, but test actual behavior
+3. **Refactor-Friendly**: Tests don't lock in implementation details
+4. **No Broad Tests Needed**: Narrow tests that are still powerful
+5. **Infrastructure Tested**: Infrastructure code is tested, not just logic
+
+### Tradeoffs
+
+- **Production Code Complexity**: Nullables add an "off" switch to production code
+- **Architectural Requirement**: Requires Infrastructure Wrappers pattern
+- **Initial Setup**: More upfront work than mocks, but pays off in maintainability
+
+### Migration Path
+
+For existing code with mocks:
+1. Replace spies with Configurable Responses first (easiest)
+2. Replace mocks with Output Tracking last (requires more refactoring)
+3. Use "Descend the Ladder" or "Climb the Ladder" patterns for legacy code
+
+### Example: CommandLine Nullable
+
+```typescript
+class CommandLine {
+  static create(): CommandLine {
+    return new CommandLine(process);
+  }
+  
+  static createNull({ args = [] }: { args?: string[] } = {}): CommandLine {
+    return new CommandLine(new StubbedProcess(args));
+  }
+  
+  constructor(private process: Process) {}
+  
+  args(): string[] {
+    return this.process.argv.slice(2);
+  }
+  
+  writeOutput(text: string): void {
+    this.process.stdout.write(text);
+    this.emitter.emit('output', text);
+  }
+  
+  trackOutput(): string[] {
+    return OutputTracker.create(this.emitter, 'output');
+  }
+}
+```
+
+## Testing Without Mocks Philosophy
+
+The overall approach:
+- **Narrow Tests**: Test one class at a time (unit tests)
+- **State-Based**: Assert on state/output, not method calls
+- **Sociable**: Tests run with real dependencies (in null mode)
+- **Overlapping**: Multiple classes tested together test integration
+- **No Mocks**: Real code, just in null mode
+
+## References
+
+- Full article: https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks
+- Nullables Hub: https://www.jamesshore.com/v2/projects/nullables
