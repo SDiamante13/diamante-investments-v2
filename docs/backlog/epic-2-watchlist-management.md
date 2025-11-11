@@ -73,7 +73,6 @@ Scenario: User expands stock card to see details
   Given user is viewing their watchlist
   When they click on a stock card
   Then the card expands to reveal additional detailed metrics
-  And the card shows a smooth animation during expansion
 ```
 
 ```gherkin
@@ -88,11 +87,15 @@ Scenario: Detailed metrics are displayed when expanded
     | Volume              |
     | Market cap          |
     | PE ratio            |
-    | 52-week high        |
-    | 52-week low         |
-    | 50-day moving average |
-    | 100-day moving average |
-    | Dividend yield      |
+```
+
+```gherkin
+Scenario: User sees 52-week range information on expanded card
+  Given user has expanded a stock card in the watchlist
+  When they view the expanded card
+  Then the 52-week high is displayed
+  And the 52-week low is displayed
+  And the current position within the range is visually indicated
 ```
 
 ```gherkin
@@ -103,29 +106,17 @@ Scenario: User can collapse expanded card
   And only the basic information is visible again
 ```
 
-```gherkin
-Scenario: Only one card expanded at a time
-  Given user has multiple stocks in their watchlist
-  When they expand one stock card
-  And then click to expand a different stock card
-  Then the previously expanded card collapses
-  And only the newly clicked card is expanded
-```
-
 **Integration:** Accessible by clicking on any stock card in the watchlist view. The expansion happens inline within the watchlist.
 
 **Manual Testing:**
 1. Open the application in a browser
 2. Navigate to the watchlist view with multiple stocks
 3. Click on a stock card (e.g., AAPL)
-4. Verify the card expands smoothly
-5. Verify detailed metrics are now visible (open, high, low, volume, market cap, PE ratio, 52-week range, moving averages, dividend yield)
-6. Click on the same card again
-7. Verify the card collapses back to compact view
-8. Expand a stock card
-9. Click on a different stock card
-10. Verify the first card collapses and the second card expands
-11. Verify only one card is expanded at a time
+4. Verify the card expands
+5. Verify detailed metrics are now visible (open, high, low, volume, market cap, PE ratio)
+6. Verify 52-week range is displayed with visual indicator
+7. Click on the same card again
+8. Verify the card collapses back to compact view
 
 ---
 
@@ -138,7 +129,7 @@ Scenario: Only one card expanded at a time
 ```gherkin
 Scenario: User removes stock from watchlist
   Given user has stocks in their watchlist
-  When they click the remove button (or star icon) on a stock card
+  When they click the remove control on a stock card
   Then the stock is removed from the watchlist
   And the stock card disappears from the view
   And a confirmation message appears indicating the stock was removed
@@ -160,12 +151,12 @@ Scenario: User can remove multiple stocks
   And the remaining stocks continue to be displayed
 ```
 
-**Integration:** Accessible via a remove button (X icon) or by clicking the star icon on stock cards in the watchlist view. The star icon toggles the watchlist status.
+**Integration:** Accessible via a remove control on stock cards in the watchlist view.
 
 **Manual Testing:**
 1. Open the application in a browser
 2. Navigate to the watchlist view with multiple stocks
-3. Click the remove button (X icon) or star icon on a stock card
+3. Click the remove control on a stock card
 4. Verify the stock card disappears from the watchlist
 5. Verify a confirmation message appears (e.g., "Removed from watchlist")
 6. Verify the watchlist now shows only the remaining stocks
@@ -209,14 +200,6 @@ Scenario: Watchlist changes persist immediately
   And the change persists even if they navigate away immediately
 ```
 
-```gherkin
-Scenario: Watchlist persists across different browser tabs
-  Given user has stocks in their watchlist
-  When they open the application in a new browser tab
-  Then the watchlist in the new tab shows the same stocks
-  And changes made in one tab are reflected in other tabs
-```
-
 **Integration:** Works automatically for all watchlist operations. No separate user action is required - persistence happens in the background.
 
 **Manual Testing:**
@@ -233,10 +216,4 @@ Scenario: Watchlist persists across different browser tabs
 11. Immediately close the browser
 12. Reopen the browser and navigate to the application
 13. Verify the newly added stock is present
-14. Open the application in a second browser tab
-15. Navigate to the watchlist view in the second tab
-16. Verify the watchlist shows the same stocks
-17. Remove a stock from the watchlist in one tab
-18. Refresh the other tab
-19. Verify the removed stock is also gone from the second tab
 

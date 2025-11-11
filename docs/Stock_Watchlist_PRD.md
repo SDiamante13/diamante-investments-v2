@@ -91,9 +91,10 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 ## User Stories & Use Cases
 
 ### Epic 1: Stock Discovery
-- **As a user**, I want to search for stocks by symbol or company name so that I can quickly find specific companies
+- **As a user**, I want to search for stocks by ticker symbol so that I can quickly find specific companies
 - **As a user**, I want to see comprehensive stock data immediately upon searching so that I can make quick decisions
 - **As a user**, I want to add stocks to my watchlist with a single click so that I can track them later
+- **As a user**, I want to see visual indicators (green/red) for price changes so that I can quickly assess performance
 
 ### Epic 2: Watchlist Management
 - **As a user**, I want to view all my tracked stocks in one place so that I can monitor my interests efficiently
@@ -104,13 +105,12 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 ### Epic 3: Data Analysis
 - **As a user**, I want to view candlestick charts so that I can analyze price movements and trends
 - **As a user**, I want to switch between different timeframes (hourly, daily, weekly, monthly) so that I can analyze both short-term and long-term trends
-- **As a user**, I want to see key financial metrics (PE ratio, market cap, volume, etc.) so that I can evaluate stock fundamentals
-- **As a user**, I want to see moving averages and technical indicators so that I can identify trends and entry/exit points
+- **As a user**, I want to see moving averages so that I can identify trends
 
 ### Epic 4: User Experience
-- **As a user**, I want the application to work seamlessly on my mobile device so that I can check stocks anywhere
-- **As a user**, I want fast loading times so that I can access information quickly during market hours
-- **As a user**, I want visual indicators for gains/losses so that I can quickly assess performance
+- **As a user**, I want the application to work on both mobile and desktop devices so that I can check stocks from any device
+- **As a user**, I want to see loading indicators so that I understand when data is being fetched
+- **As a user**, I want clear error messages so that I understand when something goes wrong
 
 ---
 
@@ -119,13 +119,13 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 ### Core Features (MVP)
 
 #### 1. Stock Search & Discovery
-- **Real-time Search**: Instant search functionality with autocomplete
+- **Real-time Search**: Instant search functionality by ticker symbol
 - **Comprehensive Results**: Full stock data displayed immediately upon search
-- **Symbol and Name Search**: Support for both ticker symbols and company names
 - **Search History**: Recently searched stocks for quick access
+- **Visual Indicators**: Green/red color coding for price changes
 
 #### 2. Watchlist Management
-- **Add/Remove Functionality**: One-click add/remove from watchlist via star icon
+- **Add/Remove Functionality**: One-click add/remove from watchlist
 - **Persistent Storage**: Watchlist saved across browser sessions
 - **Basic Card View**: Compact display showing essential information (price, change, percentage)
 - **Expandable Details**: Click-to-expand functionality revealing comprehensive metrics
@@ -134,8 +134,7 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 - **Real-time Pricing**: Current stock price with daily change indicators
 - **Essential Metrics**: Open, high, low, volume, market cap, PE ratio
 - **52-Week Range**: Visual representation with current position indicator
-- **Moving Averages**: 50-day and 100-day moving averages with performance indicators
-- **Fundamental Data**: Dividend yield, average volume, key ratios
+- **Moving Averages**: 50-day and 100-day moving averages
 
 #### 4. Interactive Charts
 - **Candlestick Charts**: OHLC data visualization
@@ -144,9 +143,9 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 - **Clean Design**: Modern styling with clear visual hierarchy
 
 #### 5. Modern User Interface
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Gradient Themes**: Color-coded cards based on performance (green for gains, red for losses)
-- **Smooth Animations**: Hover effects, transitions, and micro-interactions
+- **Responsive Design**: Optimized for mobile and desktop devices
+- **Loading Indicators**: Visual feedback during data fetching
+- **Error Handling**: Clear, user-friendly error messages
 - **Accessibility**: High contrast ratios and keyboard navigation support
 
 ### Enhanced Features (Future Releases)
@@ -173,34 +172,23 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 ## Release Criteria
 
 ### Functionality Requirements
-- **Search Functionality**: Must return accurate results within 500ms for any valid US stock symbol
+- **Search Functionality**: Must return accurate results for any valid US stock symbol
 - **Data Accuracy**: Stock prices must be accurate within 15-minute delay (or real-time if premium data available)
 - **Watchlist Persistence**: User watchlists must be saved and restored across browser sessions
-- **Chart Rendering**: Charts must load completely within 2 seconds
-- **Responsive Behavior**: All features must work on devices with screen sizes from 320px to 2560px wide
+- **Responsive Behavior**: All features must work on mobile and desktop devices
 
 ### Usability Requirements
-- **Intuitive Navigation**: New users should be able to add a stock to their watchlist within 30 seconds without instruction
-- **Mobile Optimization**: Touch targets must be at least 44px for mobile interaction
+- **Intuitive Navigation**: New users should be able to add a stock to their watchlist without instruction
 - **Loading States**: All data loading must show appropriate loading indicators
-- **Error Handling**: Clear error messages for network issues, invalid searches, or data unavailability
+- **Error Handling**: Clear error messages for network issues and data unavailability
 
 ### Reliability Requirements
-- **Uptime**: Application must maintain 99.5% uptime during market hours
 - **Error Recovery**: Application must gracefully handle API failures and network interruptions
 - **Data Consistency**: Watchlist data must never be lost due to browser refresh or temporary network issues
 - **Cross-Browser Support**: Must work on latest versions of Chrome, Firefox, Safari, and Edge
 
-### Performance Requirements
-- **Initial Load Time**: Application must load within 3 seconds on standard broadband connection
-- **Search Response Time**: Search results must appear within 500ms of user input
-- **Chart Rendering**: Charts must render within 2 seconds of user request
-- **Memory Usage**: Application must not exceed 100MB memory usage in browser
-- **Smooth Animations**: All animations must maintain 60fps performance
-
 ### Supportability Requirements
-- **Browser Compatibility**: Support for browsers released within the last 2 years
-- **Mobile Compatibility**: iOS 14+ and Android 10+ support
+- **Browser Compatibility**: Support for modern browsers
 - **Accessibility**: WCAG 2.1 AA compliance for screen readers and keyboard navigation
 - **Documentation**: Complete user guide and API documentation for future development
 
@@ -227,10 +215,9 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 - **Data Validation**: Input validation and sanitization for all user inputs
 
 ### Browser and Device Support
-- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- **Mobile Devices**: iOS Safari 14+, Android Chrome 90+
-- **Screen Sizes**: 320px to 2560px width support
-- **Touch Support**: Full touch and gesture support for mobile devices
+- **Modern Browsers**: Latest versions of Chrome, Firefox, Safari, and Edge
+- **Devices**: Mobile and desktop support
+- **Responsive Design**: Adapts to different screen sizes
 
 ---
 
@@ -243,10 +230,8 @@ To create an intuitive, comprehensive stock tracking platform that empowers user
 - **Return Users**: 60% weekly return rate for active users
 
 ### Performance Metrics
-- **Page Load Speed**: 95% of page loads under 3 seconds
-- **Search Performance**: 99% of searches completed under 500ms
-- **Uptime**: 99.5% availability during market hours
 - **Error Rate**: Less than 1% error rate for all user actions
+- **Data Accuracy**: Stock data consistently accurate and up-to-date
 
 ### Feature Adoption Metrics
 - **Search Usage**: Average 10+ searches per user session

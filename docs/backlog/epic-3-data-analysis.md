@@ -26,14 +26,6 @@ Scenario: Chart displays relevant price information
 ```
 
 ```gherkin
-Scenario: Chart loads within acceptable time
-  Given user navigates to the chart view
-  When they request to view a candlestick chart
-  Then the chart begins rendering within 2 seconds
-  And the chart is fully displayed and interactive shortly after
-```
-
-```gherkin
 Scenario: Chart is interactive with hover information
   Given user is viewing a candlestick chart
   When they hover over a candlestick
@@ -53,7 +45,6 @@ Scenario: Chart is interactive with hover information
 7. Verify the chart shows price on the Y-axis and time on the X-axis
 8. Hover over a candlestick
 9. Verify a tooltip appears showing OHLC data for that time period
-10. Verify the chart loads within 2 seconds
 
 ---
 
@@ -99,91 +90,24 @@ Scenario: User switches to monthly timeframe
   And the chart displays monthly data over a long-term period
 ```
 
-```gherkin
-Scenario: Timeframe selection is clearly indicated
-  Given user is viewing a candlestick chart
-  When they look at the timeframe selector
-  Then the currently selected timeframe is visually highlighted
-  And all available timeframe options are clearly labeled
-```
-
 **Integration:** Accessible via timeframe selector buttons (Hourly, Daily, Weekly, Monthly) near the chart view, typically above or below the chart display.
 
 **Manual Testing:**
 1. Open the application in a browser
 2. Navigate to a stock chart view
-3. Verify timeframe selector buttons are visible (Hourly, Daily, Weekly, Monthly)
-4. Click on "Daily" timeframe
+3. Verify timeframe selector is visible
+4. Select "Daily" timeframe
 5. Verify the chart updates to show daily candlesticks
-6. Verify the "Daily" button is highlighted/selected
-7. Click on "Hourly" timeframe
-8. Verify the chart updates to show hourly candlesticks
-9. Verify each candlestick represents one hour
-10. Click on "Weekly" timeframe
-11. Verify the chart updates to show weekly candlesticks
-12. Verify the time period shown is longer than daily view
-13. Click on "Monthly" timeframe
-14. Verify the chart updates to show monthly candlesticks
-15. Verify the time period shown is the longest
+6. Select "Hourly" timeframe
+7. Verify the chart updates to show hourly candlesticks
+8. Select "Weekly" timeframe
+9. Verify the chart updates to show weekly candlesticks
+10. Select "Monthly" timeframe
+11. Verify the chart updates to show monthly candlesticks
 
 ---
 
-## Story 3.3: User views key financial metrics
-
-**Description:** Users can view key financial metrics (PE ratio, market cap, volume, etc.) for stocks to evaluate fundamentals. This enables users to assess stock value and make informed investment decisions.
-
-**Acceptance Criteria (Gherkin):**
-
-```gherkin
-Scenario: User views essential financial metrics
-  Given user is viewing a stock (from search or watchlist)
-  When they view the stock details
-  Then the following key metrics are displayed:
-    | Metric              |
-    | PE ratio            |
-    | Market cap          |
-    | Volume              |
-    | Open price          |
-    | High price          |
-    | Low price           |
-    | Current price       |
-```
-
-```gherkin
-Scenario: Metrics are clearly labeled and formatted
-  Given user is viewing financial metrics
-  When they look at the metrics display
-  Then each metric has a clear label
-  And numeric values are formatted appropriately (e.g., commas for large numbers)
-  And currency values are displayed with dollar signs
-```
-
-```gherkin
-Scenario: Metrics update with current data
-  Given user is viewing financial metrics for a stock
-  When they refresh the data or return to the view
-  Then the metrics reflect the most current available data
-  And any changes in price or volume are reflected
-```
-
-**Integration:** Accessible from the stock detail view, displayed alongside or below the stock price information. May be in the expanded watchlist card view or in the search results detail view.
-
-**Manual Testing:**
-1. Open the application in a browser
-2. Search for "AAPL" or navigate to a stock in the watchlist
-3. Verify the stock detail view displays key financial metrics
-4. Verify PE ratio is displayed with a clear label
-5. Verify market cap is displayed (e.g., "Market Cap: $2.5T")
-6. Verify volume is displayed (e.g., "Volume: 50,000,000")
-7. Verify open, high, low prices are displayed
-8. Verify all numeric values are properly formatted with commas
-9. Verify currency values include dollar signs
-10. Refresh the page or navigate away and back
-11. Verify metrics reflect current data
-
----
-
-## Story 3.4: User views moving averages and performance indicators
+## Story 3.3: User views moving averages and performance indicators
 
 **Description:** Users can view moving averages (50-day and 100-day) and performance indicators to identify trends and potential entry/exit points. This provides technical analysis information to help users make trading decisions.
 
@@ -216,15 +140,6 @@ Scenario: Moving averages are displayed on chart
   And each line is visually distinct and labeled
 ```
 
-```gherkin
-Scenario: Performance indicators show trend direction
-  Given user is viewing moving averages
-  When the current price is above the moving averages
-  Then a visual indicator shows the stock is performing well
-  And when the current price is below the moving averages
-  Then a visual indicator shows the stock is underperforming
-```
-
 **Integration:** Accessible from the stock detail view and chart view. Moving averages may be displayed as numeric values in the metrics section and as lines on the chart.
 
 **Manual Testing:**
@@ -239,11 +154,10 @@ Scenario: Performance indicators show trend direction
 9. Verify 100-day moving average line is overlaid on the candlestick chart
 10. Verify the lines are visually distinct (different colors or styles)
 11. Verify each line is labeled in a legend
-12. Verify if current price is above/below moving averages, there's a visual indicator
 
 ---
 
-## Story 3.5: User views 52-week range with position indicator
+## Story 3.4: User views 52-week range with position indicator
 
 **Description:** Users can view the 52-week high and low prices with a visual indicator showing where the current price falls within that range. This helps users understand the stock's recent performance context.
 
