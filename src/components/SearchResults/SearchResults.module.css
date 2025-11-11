@@ -8,18 +8,25 @@
   border-radius: 4px;
   margin-bottom: 12px;
   background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto auto;
+  gap: 8px;
 }
 
 .symbol {
   font-size: 18px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 4px;
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .name {
   font-size: 14px;
   color: #666;
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .message {
@@ -39,4 +46,27 @@
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+.positive {
+  color: #28a745;
+}
+
+.negative {
+  color: #dc3545;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+}
+
+.change {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  font-size: 14px;
 }

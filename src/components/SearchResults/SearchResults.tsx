@@ -1,11 +1,40 @@
+import { useEffect, useState } from 'react';
 import { SearchState } from '../../types/stock';
+import { fetchStockQuote } from '../../services/finnhubService';
+import { StockCard } from './StockCard';
 import styles from './SearchResults.module.css';
 
 interface SearchResultsProps {
   state: SearchState;
 }
 
+interface StockQuote {
+  currentPrice: number;
+  change: number;
+  changePercent: number;
+}
+
+function useStockQuotes(state: SearchState): Record<string, StockQuote | null> {
+  const [quotes, setQuotes] = useState<Record<string, StockQuote | null>>({});
+
+  useEffect(() => {
+    if (state.status === 'success') {
+      const loadQuotes = async (): Promise<void> => {
+        for (const stock of state.data) {
+          const quote = await fetchStockQuote(stock.symbol);
+          setQuotes((prev) => ({ ...prev, [stock.symbol]: quote }));
+        }
+      };
+      void loadQuotes();
+    }
+  }, [state]);
+
+  return quotes;
+}
+
 export function SearchResults({ state }: SearchResultsProps): React.ReactElement | null {
+  const quotes = useStockQuotes(state);
+
   if (state.status === 'idle') {
     return null;
   }
@@ -25,10 +54,7 @@ export function SearchResults({ state }: SearchResultsProps): React.ReactElement
   return (
     <div className={styles.container}>
       {state.data.map((stock) => (
-        <div key={stock.symbol} className={styles.stock}>
-          <div className={styles.symbol}>{stock.symbol}</div>
-          <div className={styles.name}>{stock.name}</div>
-        </div>
+        <StockCard key={stock.symbol} symbol={stock.symbol} name={stock.name} quote={quotes[stock.symbol]} />
       ))}
     </div>
   );

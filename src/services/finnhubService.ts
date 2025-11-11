@@ -44,3 +44,18 @@ export async function searchStockBySymbol(keyword: string): Promise<StockSearchM
   const matches = data.result || [];
   return matches.map(mapToStockMatch);
 }
+
+interface FinnhubQuoteResponse {
+  c: number;
+  d: number;
+  dp: number;
+}
+
+export async function fetchStockQuote(symbol: string): Promise<{ currentPrice: number; change: number; changePercent: number } | null> {
+  if (!API_KEY) return null;
+  const url = `${API_BASE}/quote?symbol=${encodeURIComponent(symbol)}&token=${API_KEY}`;
+  const response = await globalThis.fetch(url);
+  if (!response.ok) return null;
+  const data = (await response.json()) as FinnhubQuoteResponse;
+  return { currentPrice: data.c, change: data.d, changePercent: data.dp };
+}
