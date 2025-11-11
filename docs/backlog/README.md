@@ -8,9 +8,8 @@ This directory contains user stories organized by epic, derived from the [Stock 
 **File:** `epic-1-stock-discovery.md`
 
 Stories focused on enabling users to find and discover stocks:
-- Search by ticker symbol
-- Search by company name
-- View comprehensive stock data after search
+- Search by ticker symbol with price and change display
+- Click stock card to view detailed metrics
 - Add stock to watchlist from search results
 - View search history
 
@@ -28,20 +27,17 @@ Stories focused on managing and viewing tracked stocks:
 
 Stories focused on analyzing stock data and trends:
 - View candlestick charts
-- Switch chart timeframes
-- View key financial metrics
-- View moving averages and performance indicators
-- View 52-week range with position indicator
+- Switch chart timeframes (hourly, daily, weekly, monthly)
+- View moving averages
 
 ### Epic 4: User Experience
 **File:** `epic-4-user-experience.md`
 
 Stories focused on overall user experience and accessibility:
-- Mobile device compatibility
-- Fast loading with loading indicators
-- Visual indicators for gains/losses
-- Responsive design across screen sizes
-- Graceful error handling
+- Mobile and desktop device compatibility
+- Loading indicators during data fetching
+- Visual indicators for gains/losses (green/red)
+- Clear error messages
 
 ## Story Format
 
