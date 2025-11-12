@@ -12,6 +12,17 @@ export const mockSearchResponses: Record<string, SearchResponse> = {
       },
     ],
   },
+  TSLA: {
+    count: 1,
+    result: [
+      {
+        description: 'TESLA INC',
+        displaySymbol: 'TSLA',
+        symbol: 'TSLA',
+        type: 'Common Stock',
+      },
+    ],
+  },
   INVALID123: {
     count: 0,
     result: [],
@@ -27,6 +38,16 @@ export const mockQuotes: Record<string, Quote> = {
     l: 143.89,
     o: 144.2,
     pc: 143.17,
+    t: 1699564800,
+  },
+  TSLA: {
+    c: 238.45,
+    d: -1.2,
+    dp: -0.5,
+    h: 240.5,
+    l: 237.8,
+    o: 239.65,
+    pc: 239.65,
     t: 1699564800,
   },
 };

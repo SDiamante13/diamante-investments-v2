@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  onSearch: (query: string) => Promise<unknown>;
 }
 
 export function SearchBar({ onSearch }: SearchBarProps): React.JSX.Element {
@@ -10,7 +10,7 @@ export function SearchBar({ onSearch }: SearchBarProps): React.JSX.Element {
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (query.trim()) {
-      onSearch(query.trim());
+      onSearch(query.trim()).catch(() => {});
     }
   };
 

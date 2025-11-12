@@ -27,7 +27,7 @@ describe('Stock Search by Ticker Symbol', () => {
   it('user searches valid ticker and sees stock with symbol and company name', async () => {
     render(<App />);
     const searchInput = screen.getByRole('searchbox');
-    await userEvent.type(searchInput, 'AAPL{Enter}');
+    userEvent.type(searchInput, 'AAPL{Enter}');
 
     await waitFor(() => {
       expect(screen.getByText('AAPL')).toBeInTheDocument();
@@ -45,19 +45,37 @@ describe('Stock Search by Ticker Symbol', () => {
     });
   });
 
-  it.skip('search results show current price with dollar and percentage change', async () => {
+  it('search results show current price with dollar and percentage change', async () => {
     render(<App />);
     const searchInput = screen.getByRole('searchbox');
     userEvent.type(searchInput, 'AAPL{Enter}');
 
     await waitFor(() => {
       expect(screen.getByText('$145.52')).toBeInTheDocument();
-      expect(screen.getByText('+$2.35')).toBeInTheDocument();
-      expect(screen.getByText('+1.64%')).toBeInTheDocument();
+      expect(screen.getByText(/\+\$2\.35/)).toBeInTheDocument();
+      expect(screen.getByText(/\+1\.64%/)).toBeInTheDocument();
     });
   });
 
-  // [TEST] Positive changes display in green
+  it('positive changes display in green', async () => {
+    render(<App />);
+    const searchInput = screen.getByRole('searchbox');
+    userEvent.type(searchInput, 'AAPL{Enter}');
 
-  // [TEST] Negative changes display in red
+    await waitFor(() => {
+      const changeElement = screen.getByText(/\+\$2\.35/);
+      expect(changeElement).toHaveClass('text-green-600');
+    });
+  });
+
+  it('negative changes display in red', async () => {
+    render(<App />);
+    const searchInput = screen.getByRole('searchbox');
+    userEvent.type(searchInput, 'TSLA{Enter}');
+
+    await waitFor(() => {
+      const changeElement = screen.getByText(/-\$1\.20/);
+      expect(changeElement).toHaveClass('text-red-600');
+    });
+  });
 });

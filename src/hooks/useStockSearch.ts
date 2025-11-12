@@ -13,6 +13,10 @@ function transformToStockData(result: SearchResult, quote: Quote): StockData {
   };
 }
 
+function extractFulfilledResults<T>(results: PromiseSettledResult<T>[]): T[] {
+  return results.filter((result): result is PromiseFulfilledResult<T> => result.status === 'fulfilled').map((result) => result.value);
+}
+
 async function fetchStockData(query: string): Promise<StockData[]> {
   const searchResponse = await searchStock(query);
 
@@ -25,20 +29,27 @@ async function fetchStockData(query: string): Promise<StockData[]> {
     return transformToStockData(stock, quote);
   });
 
-  return Promise.all(stockPromises);
+  const results = await Promise.allSettled(stockPromises);
+  const successfulStocks = extractFulfilledResults(results);
+
+  if (successfulStocks.length === 0) {
+    throw new Error('No accessible stock data found');
+  }
+
+  return successfulStocks;
 }
 
 export function useStockSearch(): {
   results: StockData[];
   isLoading: boolean;
   error: string | null;
-  search: (query: string) => Promise<void>;
+  search: (query: string) => Promise<StockData[]>;
 } {
   const [results, setResults] = useState<StockData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const search = async (query: string): Promise<void> => {
+  const search = async (query: string): Promise<StockData[]> => {
     setIsLoading(true);
     setError(null);
     setResults([]);
@@ -46,8 +57,11 @@ export function useStockSearch(): {
     try {
       const stocks = await fetchStockData(query);
       setResults(stocks);
+      return stocks;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch stocks');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch stocks';
+      setError(errorMessage);
+      throw err;
     } finally {
       setIsLoading(false);
     }
