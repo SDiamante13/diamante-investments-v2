@@ -35,9 +35,27 @@ describe('Stock Search by Ticker Symbol', () => {
     });
   });
 
-  // [TEST] User searches invalid ticker and sees no results message
+  it('user searches invalid ticker and sees no results message', async () => {
+    render(<App />);
+    const searchInput = screen.getByRole('searchbox');
+    userEvent.type(searchInput, 'INVALID123{Enter}');
 
-  // [TEST] Search results show current price with dollar and percentage change
+    await waitFor(() => {
+      expect(screen.getByText(/no results found/i)).toBeInTheDocument();
+    });
+  });
+
+  it.skip('search results show current price with dollar and percentage change', async () => {
+    render(<App />);
+    const searchInput = screen.getByRole('searchbox');
+    userEvent.type(searchInput, 'AAPL{Enter}');
+
+    await waitFor(() => {
+      expect(screen.getByText('$145.52')).toBeInTheDocument();
+      expect(screen.getByText('+$2.35')).toBeInTheDocument();
+      expect(screen.getByText('+1.64%')).toBeInTheDocument();
+    });
+  });
 
   // [TEST] Positive changes display in green
 
