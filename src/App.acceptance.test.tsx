@@ -1,9 +1,29 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
+import { server } from './test/mswServer';
+import { mockSearchResponses, mockQuotes } from './test/testData';
 import App from './App';
 
-describe('Story 1.1: Stock Search by Ticker Symbol', () => {
+describe('Stock Search by Ticker Symbol', () => {
+  beforeEach(() => {
+    server.use(
+      http.get('https://finnhub.io/api/v1/search', ({ request }) => {
+        const url = new URL(request.url);
+        const query = url.searchParams.get('q');
+        const response = query ? mockSearchResponses[query] : undefined;
+        return HttpResponse.json(response || { count: 0, result: [] });
+      }),
+      http.get('https://finnhub.io/api/v1/quote', ({ request }) => {
+        const url = new URL(request.url);
+        const symbol = url.searchParams.get('symbol');
+        const response = symbol ? mockQuotes[symbol] : undefined;
+        return HttpResponse.json(response || {});
+      })
+    );
+  });
+
   it('user searches valid ticker and sees stock with symbol and company name', async () => {
     render(<App />);
     const searchInput = screen.getByRole('searchbox');

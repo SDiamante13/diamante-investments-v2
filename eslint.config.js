@@ -103,6 +103,7 @@ export default [
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/explicit-function-return-type': 'off',
+            'max-lines-per-function': 'off',
         },
     },
 ];
