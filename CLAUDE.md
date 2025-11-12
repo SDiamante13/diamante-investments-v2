@@ -1,6 +1,6 @@
-## Commiting and Pushing
+## Commiting
 
-After completing: Update any task lists, `npm install`, commit (short message), push
+When asked to commit: update any task lists, run `npm install`, commit (short message)
 
 ## Coding Standards
 

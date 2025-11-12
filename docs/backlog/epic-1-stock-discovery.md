@@ -1,6 +1,6 @@
 # Epic 1: Stock Discovery
 
-## Story 1.1: User searches for stock by ticker symbol ✅
+## Story 1.1: User searches for stock by ticker symbol
 
 **Description:** Users can search for stocks using ticker symbols (e.g., "AAPL", "MSFT") to quickly find specific companies. This enables fast discovery of stocks without needing to know full company names.
 
