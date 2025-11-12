@@ -1,6 +1,7 @@
 import { SearchBar } from './components/SearchBar';
 import { SearchResults } from './components/SearchResults';
 import { useStockSearch } from './hooks/useStockSearch';
+import React from 'react';
 
 function App(): React.ReactElement {
   const { results, search } = useStockSearch();
