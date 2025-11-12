@@ -1,4 +1,5 @@
 import type { StockData } from '../types/stock';
+import React from 'react';
 
 interface StockCardProps {
   stock: StockData;

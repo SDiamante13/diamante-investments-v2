@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { searchStock, getQuote } from '../services/api/stockService';
-import type { StockData, SearchResult, Quote } from '../types/stock';
+import type { StockData } from '../types/stock';
+import type { SearchResult, Quote } from '../types/api';
 
 function transformToStockData(result: SearchResult, quote: Quote): StockData {
   return {

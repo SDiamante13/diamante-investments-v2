@@ -1,5 +1,6 @@
 import type { StockData } from '../types/stock';
 import { StockCard } from './StockCard';
+import React from 'react';
 
 interface SearchResultsProps {
   results: StockData[];

@@ -1,4 +1,4 @@
-import type { SearchResponse, Quote } from '../types/stock';
+import type { SearchResponse, Quote } from '../types/api';
 
 export const mockSearchResponses: Record<string, SearchResponse> = {
   AAPL: {
