@@ -22,15 +22,23 @@ Scenario: User searches for invalid ticker symbol
 ```
 
 ```gherkin
-  Scenario: Search results display current price with dollar and
-percentage change
-Given user is on the application homepage
-When they search for a valid ticker symbol
-Then the search results display the stock's current price
-And the dollar amount change is displayed (e.g., "+$2.35")
-And the percentage change is displayed (e.g., "+1.64%")
-And positive changes are shown in green
-And negative changes are shown in red
+Scenario: Search results display current price with dollar and percentage change
+  Given user is on the application homepage
+  When they search for a valid ticker symbol
+  Then the search results display the stock's current price
+  And the dollar amount change is displayed (e.g., "+$2.35")
+  And the percentage change is displayed (e.g., "+1.64%")
+  And positive changes are shown in green
+  And negative changes are shown in red
+```
+
+```gherkin
+Scenario: API returns 403 for restricted stocks
+  Given user searches for multiple stocks
+  When some stocks return 403 Forbidden from the API
+  Then those restricted stocks are filtered out from results
+  And only accessible stocks are displayed
+  And no error message is shown for the filtered stocks
 ```
 
 **Integration:** Accessible from the main application homepage via the search input field at the top of the page.
