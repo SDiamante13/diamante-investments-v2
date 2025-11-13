@@ -80,8 +80,8 @@ export default [
             '@typescript-eslint/no-var-requires': 'error',
 
             // React rules
-            'react/react-in-jsx-scope': 'off',
-            'react/prop-types': 'off',
+            'react/react-in-jsx-scope': 'error',
+            'react/prop-types': 'error',
             'react/jsx-uses-react': 'error',
             'react/jsx-uses-vars': 'error',
             'react/jsx-no-undef': 'error',
@@ -98,6 +98,10 @@ export default [
 
             // Clean code
             'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': ['error', {
+                argsIgnorePattern: '^_',
+                varsIgnorePattern: '^_'
+            }],
         },
     },
     {

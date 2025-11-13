@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { getStockData } from './services/finnhub';
 import { StockData } from './types/finnhub';
 
-async function fetchAndSetStock(ticker: string, setStock: (s: StockData | null) => void, setError: (e: boolean) => void): Promise<void> {
+type SetStock = (data: StockData | null) => void;
+type SetError = (hasError: boolean) => void;
+
+async function fetchAndSetStock(ticker: string, setStock: SetStock, setError: SetError): Promise<void> {
   const data = await getStockData(ticker);
   if (data) {
     setStock(data);
