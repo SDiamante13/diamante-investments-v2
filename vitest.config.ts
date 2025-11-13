@@ -14,5 +14,6 @@ export default defineConfig({
       reporter: ['text', 'html', 'lcov'],
       exclude: ['node_modules/', 'build/', '**/*.config.ts'],
     },
+    globalSetup: [],
   },
 });

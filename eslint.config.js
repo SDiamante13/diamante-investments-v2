@@ -38,6 +38,8 @@ export default [
                 it: 'readonly',
                 beforeEach: 'readonly',
                 afterEach: 'readonly',
+                beforeAll: 'readonly',
+                afterAll: 'readonly',
             },
         },
         plugins: {
