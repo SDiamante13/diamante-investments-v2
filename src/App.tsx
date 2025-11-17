@@ -5,6 +5,14 @@ import { StockData } from './types/finnhub';
 type SetStock = (data: StockData | null) => void;
 type SetError = (hasError: boolean) => void;
 
+function getChangeColor(value: number): string {
+  return value >= 0 ? 'green' : 'red';
+}
+
+function formatSign(value: number): string {
+  return value >= 0 ? '+' : '';
+}
+
 async function fetchAndSetStock(ticker: string, setStock: SetStock, setError: SetError): Promise<void> {
   const data = await getStockData(ticker);
   if (data) {
@@ -38,6 +46,14 @@ function App(): React.ReactElement {
         <div>
           <div>{stock.symbol}</div>
           <div>{stock.companyName}</div>
+          <div>${stock.currentPrice}</div>
+          <div style={{ color: getChangeColor(stock.change) }}>
+            {formatSign(stock.change)}${stock.change}
+          </div>
+          <div style={{ color: getChangeColor(stock.percentChange) }}>
+            {formatSign(stock.percentChange)}
+            {stock.percentChange}%
+          </div>
         </div>
       )}
     </div>
