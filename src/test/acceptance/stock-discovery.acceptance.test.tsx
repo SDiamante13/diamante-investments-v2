@@ -1,10 +1,26 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../mocks/server';
 import App from '../../App';
 import userEvent from '@testing-library/user-event';
 
 describe('Stock Discovery', () => {
   it('user searches valid ticker and sees stock data with symbol, company name, price, dollar change, and percent change', async () => {
+    const stockData = {
+      symbol: 'AAPL',
+      name: 'APPLE INC',
+      price: 145.52,
+      change: 2.35,
+      changePercent: 1.64,
+    };
+
+    server.use(
+      http.get('/api/stocks/AAPL', () => {
+        return HttpResponse.json(stockData);
+      })
+    );
+
     render(<App />);
 
     const searchInput = screen.getByRole('textbox');
@@ -21,6 +37,12 @@ describe('Stock Discovery', () => {
   });
 
   it('user searches invalid ticker and sees no results message', async () => {
+    server.use(
+      http.get('/api/stocks/INVALID123', () => {
+        return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+      })
+    );
+
     render(<App />);
 
     const searchInput = screen.getByRole('textbox');
