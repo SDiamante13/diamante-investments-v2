@@ -4,7 +4,7 @@ import type { StockData } from '../../types/stock';
 import StockResult from '../StockResult/StockResult';
 import styles from './StockSearch.module.css';
 
-export default function StockSearch() {
+export default function StockSearch(): React.JSX.Element {
   const [query, setQuery] = useState('');
   const [stockData, setStockData] = useState<StockData | null>(null);
   const [error, setError] = useState('');
@@ -27,7 +27,7 @@ export default function StockSearch() {
         <input
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e): void => setQuery(e.target.value)}
           className={styles.searchInput}
           placeholder="Search by ticker (e.g., AAPL)"
         />
