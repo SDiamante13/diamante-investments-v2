@@ -5,19 +5,39 @@ import { server } from '../mocks/server';
 import App from '../../App';
 import userEvent from '@testing-library/user-event';
 
+const BASE_URL = 'https://finnhub.io/api/v1';
+
 describe('Stock Discovery', () => {
   it('user searches valid ticker and sees stock data with symbol, company name, price, dollar change, and percent change', async () => {
-    const stockData = {
-      symbol: 'AAPL',
-      name: 'APPLE INC',
-      price: 145.52,
-      change: 2.35,
-      changePercent: 1.64,
+    const searchResult = {
+      count: 1,
+      result: [
+        {
+          description: 'APPLE INC',
+          displaySymbol: 'AAPL',
+          symbol: 'AAPL',
+          type: 'Common Stock',
+        },
+      ],
+    };
+
+    const quoteData = {
+      c: 145.52,
+      d: 2.35,
+      dp: 1.64,
+      h: 146.12,
+      l: 143.89,
+      o: 144.2,
+      pc: 143.17,
+      t: 1699564800,
     };
 
     server.use(
-      http.get('/api/stocks/AAPL', () => {
-        return HttpResponse.json(stockData);
+      http.get(`${BASE_URL}/search`, () => {
+        return HttpResponse.json(searchResult);
+      }),
+      http.get(`${BASE_URL}/quote`, () => {
+        return HttpResponse.json(quoteData);
       })
     );
 
@@ -37,9 +57,11 @@ describe('Stock Discovery', () => {
   });
 
   it('user searches invalid ticker and sees no results message', async () => {
+    const emptySearchResult = { count: 0, result: [] };
+
     server.use(
-      http.get('/api/stocks/INVALID123', () => {
-        return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+      http.get(`${BASE_URL}/search`, () => {
+        return HttpResponse.json(emptySearchResult);
       })
     );
 
