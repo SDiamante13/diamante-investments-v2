@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import type { StockData } from '../../types/stock';
 import styles from './StockResult.module.css';
 
@@ -17,7 +18,7 @@ function formatPercentChange(value: number): string {
   return `${prefix}${value.toFixed(2)}%`;
 }
 
-export default function StockResult({ stockData }: StockResultProps): React.JSX.Element {
+export default function StockResult({ stockData }: StockResultProps): ReactElement {
   const changeClass = stockData.dollarChange >= 0 ? styles.positive : styles.negative;
 
   return (
