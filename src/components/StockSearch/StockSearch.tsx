@@ -24,6 +24,8 @@ export default function StockSearch(): ReactElement {
 
   return (
     <div className={styles.container}>
+      <div className={styles.decorativeLines} />
+      <h1 className={styles.title}>Diamante Investments</h1>
       <form onSubmit={handleSubmit} className={styles.searchForm}>
         <input
           type="text"

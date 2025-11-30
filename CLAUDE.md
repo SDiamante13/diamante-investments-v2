@@ -33,4 +33,13 @@ When asked to commit: update any task lists, run `npm install`, commit (short me
 ## Styling
 
 - Use CSS Modules for component styling
+- Use design tokens from `index.css` (never hardcode colors, spacing, fonts, shadows, borders, or animation values)
+- Token structure: primitive tokens (`--color-*`, `--space-*`) → semantic tokens (`--bg-*`, `--text-*`, `--accent-*`)
+- Typography: `--font-display` (Space Grotesk, titles), `--font-mono` (JetBrains Mono, data/tickers), `--font-body` (IBM Plex Sans, text)
+- Spacing scale: Use `--space-{1,2,3,4,5,6,8,10,12,16,20}` for margins, padding, gaps
+- Animations: Use `--duration-*` and `--ease-*` tokens, always respect `prefers-reduced-motion`
+- Color semantics: Use `--text-positive`/`--text-negative` for gains/losses (not `--color-green-*`/`--color-crimson-*` directly)
+- Shadows: Use `--shadow-{sm,md,lg}` scale, `--shadow-inset` for recessed inputs
+- Border tokens: Use `--border-width-*` and `--border-radius-*` (never hardcode px values)
+- Font scale: `xs/sm/base/lg/xl/2xl/3xl/4xl/5xl` - pick appropriate size for hierarchy
 

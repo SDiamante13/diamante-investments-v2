@@ -22,12 +22,18 @@ export default function StockResult({ stockData }: StockResultProps): ReactEleme
   const changeClass = stockData.dollarChange >= 0 ? styles.positive : styles.negative;
 
   return (
-    <div>
-      <div>{stockData.symbol}</div>
-      <div>{stockData.companyName}</div>
-      <div>${stockData.currentPrice}</div>
-      <div className={changeClass}>{formatDollarChange(stockData.dollarChange)}</div>
-      <div className={changeClass}>{formatPercentChange(stockData.percentChange)}</div>
+    <div className={styles.card}>
+      <div className={styles.header}>
+        <div className={styles.symbol}>{stockData.symbol}</div>
+        <div className={styles.company}>{stockData.companyName}</div>
+      </div>
+      <div className={styles.priceSection}>
+        <div className={styles.currentPrice}>${stockData.currentPrice}</div>
+        <div className={styles.changes}>
+          <div className={`${styles.change} ${changeClass}`}>{formatDollarChange(stockData.dollarChange)}</div>
+          <div className={`${styles.change} ${changeClass}`}>{formatPercentChange(stockData.percentChange)}</div>
+        </div>
+      </div>
     </div>
   );
 }

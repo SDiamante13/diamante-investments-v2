@@ -1,7 +1,112 @@
+.card {
+  width: 100%;
+  max-width: 640px;
+  margin-top: var(--space-8);
+  padding: var(--space-8);
+  background: var(--bg-secondary);
+  border: var(--border-width-medium) solid var(--border-default);
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-md);
+  animation: cardSlideIn var(--duration-slow) var(--ease-out);
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-6);
+  border-bottom: var(--border-width-thin) solid var(--border-default);
+}
+
+.symbol {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-tight);
+}
+
+.company {
+  font-family: var(--font-body);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.priceSection {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.currentPrice {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.changes {
+  display: flex;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.change {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+}
+
 .positive {
-  color: green;
+  color: var(--text-positive);
+}
+
+.positive::before {
+  content: '▲ ';
 }
 
 .negative {
-  color: red;
+  color: var(--text-negative);
+}
+
+.negative::before {
+  content: '▼ ';
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .symbol {
+    font-size: var(--font-size-3xl);
+  }
+
+  .company {
+    font-size: var(--font-size-base);
+  }
+
+  .currentPrice {
+    font-size: var(--font-size-2xl);
+  }
+
+  .change {
+    font-size: var(--font-size-lg);
+  }
+
+  .changes {
+    gap: var(--space-4);
+  }
 }
