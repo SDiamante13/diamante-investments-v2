@@ -1,4 +1,5 @@
 import type { FinnhubSearchResult, FinnhubQuote, StockData } from '../types/stock';
+import { normalizeTickerSymbol } from '../utils/stock';
 
 const API_KEY = import.meta.env.VITE_FINNHUB_API_KEY;
 const BASE_URL = 'https://finnhub.io/api/v1';
@@ -19,7 +20,8 @@ export async function getQuote(symbol: string): Promise<FinnhubQuote> {
 }
 
 export async function getStockData(symbol: string): Promise<StockData | null> {
-  const [searchResults, quote] = await Promise.all([searchStock(symbol), getQuote(symbol)]);
+  const normalizedSymbol = normalizeTickerSymbol(symbol);
+  const [searchResults, quote] = await Promise.all([searchStock(normalizedSymbol), getQuote(normalizedSymbol)]);
 
   const stockInfo = searchResults[0];
   if (!stockInfo) {
