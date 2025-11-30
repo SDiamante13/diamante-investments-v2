@@ -116,7 +116,7 @@ https://finnhub.io/api/v1/quote?symbol=AAPL&token=YOUR_API_KEY
 
 ### 📈 **Historical Chart Data (All Timeframes)**
 
-#### **Stock Candles**
+#### **Stock Candles** (Premium)
 **Purpose:** Get candlestick data (OHLCV) for stocks
 **Endpoint:** `GET /api/v1/stock/candle`
 **Documentation:** https://finnhub.io/docs/api/stock-candles
@@ -265,7 +265,7 @@ https://finnhub.io/api/v1/stock/metric?symbol=AAPL&metric=all&token=YOUR_API_KEY
 }
 ```
 
-#### **Dividends**
+#### **Dividends** (Premium)
 **Purpose:** Get dividend history
 **Endpoint:** `GET /api/v1/stock/dividend`
 **Documentation:** https://finnhub.io/docs/api/stock-dividends
@@ -291,7 +291,7 @@ https://finnhub.io/api/v1/stock/dividend?symbol=AAPL&from=2020-01-01&to=2024-12-
 
 ### 📉 **Technical Indicators**
 
-#### **Technical Analysis**
+#### **Technical Analysis** (Premium)
 **Purpose:** Aggregate technical analysis signals
 **Endpoint:** `GET /api/v1/scan/technical-indicator`
 **Documentation:** https://finnhub.io/docs/api/technical-indicators
@@ -381,91 +381,6 @@ https://finnhub.io/api/v1/stock/market-status?exchange=US&token=YOUR_API_KEY
 
 ---
 
-## Implementation Strategy
-
-### **For Basic Stock Cards:**
-```javascript
-// Get current price data
-const quote = await fetch(
-  `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
-);
-
-// Get company profile
-const profile = await fetch(
-  `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`
-);
-
-// Get fundamental metrics
-const metrics = await fetch(
-  `https://finnhub.io/api/v1/stock/metric?symbol=${symbol}&metric=all&token=${apiKey}`
-);
-```
-
-### **For Detailed Expandable Cards:**
-```javascript
-// Get 50-day moving average (calculate from daily candles)
-const now = Math.floor(Date.now() / 1000);
-const fiftyDaysAgo = now - (50 * 24 * 60 * 60);
-
-const dailyData = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=${fiftyDaysAgo}&to=${now}&token=${apiKey}`
-);
-
-// Calculate 50-day MA from close prices
-const closes = dailyData.c;
-const ma50 = closes.slice(-50).reduce((a, b) => a + b, 0) / 50;
-
-// Same approach for 100-day MA
-```
-
-### **For Charts with Multiple Timeframes:**
-```javascript
-const now = Math.floor(Date.now() / 1000);
-
-// Hourly chart (last 7 days)
-const hourlyData = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=60&from=${now - 604800}&to=${now}&token=${apiKey}`
-);
-
-// Daily chart (last year)
-const dailyData = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=${now - 31536000}&to=${now}&token=${apiKey}`
-);
-
-// Weekly chart (last 2 years)
-const weeklyData = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=W&from=${now - 63072000}&to=${now}&token=${apiKey}`
-);
-
-// Monthly chart (last 5 years)
-const monthlyData = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=M&from=${now - 157680000}&to=${now}&token=${apiKey}`
-);
-```
-
-### **For Stock Search:**
-```javascript
-// Real-time search
-const searchResults = await fetch(
-  `https://finnhub.io/api/v1/search?q=${searchTerm}&token=${apiKey}`
-);
-```
-
-### **For Volume Data:**
-```javascript
-// Volume not in /quote, get from today's candle
-const todayStart = new Date().setHours(0, 0, 0, 0) / 1000;
-const now = Math.floor(Date.now() / 1000);
-
-const todayCandle = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=${todayStart}&to=${now}&token=${apiKey}`
-);
-
-const volume = todayCandle.v[todayCandle.v.length - 1];
-```
-
----
-
 ## Rate Limits & Considerations
 
 ### **Free Plan:**
@@ -485,82 +400,6 @@ const volume = todayCandle.v[todayCandle.v.length - 1];
 3. **Calculate technical indicators client-side** - Reduces API calls
 4. **Smart throttling** - Respect 60/minute limit with request queue
 
-### **Rate Limit Best Practices:**
-```javascript
-// Example rate limiter
-class RateLimiter {
-  constructor(maxRequests = 60, perMilliseconds = 60000) {
-    this.maxRequests = maxRequests;
-    this.perMilliseconds = perMilliseconds;
-    this.requests = [];
-  }
-
-  async throttle() {
-    const now = Date.now();
-    this.requests = this.requests.filter(time => now - time < this.perMilliseconds);
-
-    if (this.requests.length >= this.maxRequests) {
-      const oldestRequest = this.requests[0];
-      const waitTime = this.perMilliseconds - (now - oldestRequest);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-      return this.throttle();
-    }
-
-    this.requests.push(now);
-  }
-}
-
-// Usage
-const limiter = new RateLimiter(60, 60000);
-await limiter.throttle();
-const data = await fetch(finnhubUrl);
-```
-
----
-
-## Missing Data & Workarounds
-
-### **⚠️ Volume from Quote Endpoint**
-**Issue:** `/quote` endpoint doesn't include volume
-**Solution:** Fetch today's candle data to get volume
-```javascript
-const todayStart = new Date().setHours(0, 0, 0, 0) / 1000;
-const now = Math.floor(Date.now() / 1000);
-const candle = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=${todayStart}&to=${now}&token=${apiKey}`
-);
-const volume = candle.v[candle.v.length - 1];
-```
-
-### **⚠️ Average Volume**
-**Issue:** Not directly provided
-**Solution:** Calculate from historical volume data
-```javascript
-const thirtyDaysAgo = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60);
-const now = Math.floor(Date.now() / 1000);
-const historicalData = await fetch(
-  `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=${thirtyDaysAgo}&to=${now}&token=${apiKey}`
-);
-const avgVolume = historicalData.v.reduce((a, b) => a + b, 0) / historicalData.v.length;
-```
-
-### **⚠️ 50-Day and 100-Day Moving Averages**
-**Issue:** Not directly provided
-**Solution:** Calculate from daily candle data
-```javascript
-function calculateMA(closes, period) {
-  if (closes.length < period) return null;
-  const recentCloses = closes.slice(-period);
-  return recentCloses.reduce((a, b) => a + b, 0) / period;
-}
-
-const ma50 = calculateMA(dailyData.c, 50);
-const ma100 = calculateMA(dailyData.c, 100);
-```
-
-### **✅ All Other Data Points**
-Every other required data point is directly available through Finnhub endpoints.
-
 ---
 
 ## Security & Best Practices
@@ -571,63 +410,11 @@ Every other required data point is directly available through Finnhub endpoints.
 - Use server-side proxy for API calls
 - Rotate keys periodically
 
-### **Error Handling:**
-```javascript
-async function fetchWithRetry(url, retries = 3) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url);
-
-      if (response.status === 429) {
-        // Rate limit hit, wait and retry
-        await new Promise(resolve => setTimeout(resolve, 2000 * (i + 1)));
-        continue;
-      }
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      if (i === retries - 1) throw error;
-      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-    }
-  }
-}
-```
-
 ### **Data Validation:**
 - Validate all numeric fields (some may be null)
 - Handle missing data gracefully
 - Sanitize user inputs for symbol search
 - Type check all API responses
-
-### **Performance Optimization:**
-```javascript
-// Cache strategy example
-const cache = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-
-async function getCachedData(key, fetchFn) {
-  const cached = cache.get(key);
-  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-    return cached.data;
-  }
-
-  const data = await fetchFn();
-  cache.set(key, { data, timestamp: Date.now() });
-  return data;
-}
-
-// Usage
-const profile = await getCachedData(
-  `profile_${symbol}`,
-  () => fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`)
-);
-```
-
----
 
 ## Documentation Resources
 
@@ -647,16 +434,10 @@ const profile = await getCachedData(
 ### Advantages:
 - **Excellent free tier**: 60 calls/minute with no daily cap
 - **Real-time data** included in free tier
-- **Comprehensive data** with all required metrics
+- **Comprehensive data** with most required metrics on free tier
 - **No daily limits** - only per-minute throttling
 - **Modern API** with excellent documentation
 - **Active development** and community support
-
-### Implementation Notes:
-- Volume requires separate candle call (not in quote endpoint)
-- Moving averages calculated client-side from historical data
-- Rate limiting handled via request queue
-- All MVP requirements covered by free tier
 
 ### Implementation Priority:
 1. **Phase 1:** REST API implementation for all MVP features

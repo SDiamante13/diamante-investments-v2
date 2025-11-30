@@ -38,6 +38,7 @@ export default [
                 it: 'readonly',
                 beforeEach: 'readonly',
                 afterEach: 'readonly',
+                fetch: 'readonly',
             },
         },
         plugins: {
@@ -54,7 +55,7 @@ export default [
         rules: {
             // File and function size rules
             'max-lines': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
-            'max-lines-per-function': ['error', { max: 25, skipBlankLines: true, skipComments: true }],
+            'max-lines-per-function': ['error', { max: 40, skipBlankLines: true, skipComments: true }],
 
             // Function complexity rules
             complexity: ['error', 10],

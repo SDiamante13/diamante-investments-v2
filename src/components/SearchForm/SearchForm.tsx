@@ -1,0 +1,43 @@
+import type { ReactElement, FormEvent } from 'react';
+import StockPreviewList from '../StockPreviewList/StockPreviewList';
+import styles from './SearchForm.module.css';
+
+import { FinnhubSearchResult } from '../../services/finnhub/types.ts';
+
+type SearchFormProps = {
+  query: string;
+  onQueryChange: (query: string) => void;
+  onSubmit: (e: FormEvent) => void;
+  previewResults: FinnhubSearchResult[];
+  showPreviews: boolean;
+  debouncedQuery: string;
+  onSelect: (symbol: string) => void;
+};
+
+export default function SearchForm({
+  query,
+  onQueryChange,
+  onSubmit,
+  previewResults,
+  showPreviews,
+  debouncedQuery,
+  onSelect,
+}: Readonly<SearchFormProps>): ReactElement {
+  return (
+    <form onSubmit={onSubmit} className={styles.searchForm}>
+      <div className={styles.searchWrapper}>
+        <input
+          type="text"
+          value={query}
+          onChange={(e): void => onQueryChange(e.target.value)}
+          className={styles.searchInput}
+          placeholder="Search by ticker (e.g., AAPL)"
+        />
+        {showPreviews && previewResults.length > 0 && <StockPreviewList results={previewResults} onSelect={onSelect} />}
+        {showPreviews && debouncedQuery.length >= 2 && previewResults.length === 0 && (
+          <div className={styles.noMatches}>No matches found</div>
+        )}
+      </div>
+    </form>
+  );
+}

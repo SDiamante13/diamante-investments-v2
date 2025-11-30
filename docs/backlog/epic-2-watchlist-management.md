@@ -19,13 +19,11 @@ Scenario: Watchlist displays all tracked stocks
 Scenario: Basic stock information is visible in watchlist cards
   Given user is viewing their watchlist
   When they look at each stock card
-  Then the following information is displayed:
-    | Information           |
-    | Stock symbol          |
-    | Company name          |
-    | Current price         |
-    | Daily change amount   |
-    | Daily change percentage |
+  Then the stock symbol is displayed
+  And the company name is displayed
+  And the current price is displayed
+  And the daily change amount is displayed
+  And the daily change percentage is displayed
 ```
 
 ```gherkin
@@ -79,14 +77,12 @@ Scenario: User expands stock card to see details
 Scenario: Detailed metrics are displayed when expanded
   Given user has expanded a stock card in the watchlist
   When they view the expanded card
-  Then the following detailed metrics are displayed:
-    | Metric              |
-    | Open price          |
-    | High price          |
-    | Low price           |
-    | Volume              |
-    | Market cap          |
-    | PE ratio            |
+  Then the open price is displayed
+  And the high price is displayed
+  And the low price is displayed
+  And the volume is displayed
+  And the market cap is displayed
+  And the PE ratio is displayed
 ```
 
 ```gherkin
@@ -95,7 +91,7 @@ Scenario: User sees 52-week range information on expanded card
   When they view the expanded card
   Then the 52-week high is displayed
   And the 52-week low is displayed
-  And the current position within the range is visually indicated
+  And the current position within the 52-week range is visually indicated
 ```
 
 ```gherkin
