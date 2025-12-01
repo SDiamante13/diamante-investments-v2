@@ -9,7 +9,7 @@ interface FinnhubSearchResponse {
 }
 
 export async function searchStock(query: string): Promise<FinnhubSearchResult[]> {
-  const response = await fetch(`${BASE_URL}/search?q=${query}&token=${API_KEY}`);
+  const response = await fetch(`${BASE_URL}/search?q=${query}&exchange=US&token=${API_KEY}`);
   const data = (await response.json()) as FinnhubSearchResponse;
   return data.result || [];
 }

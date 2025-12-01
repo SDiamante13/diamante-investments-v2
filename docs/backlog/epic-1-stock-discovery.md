@@ -121,6 +121,44 @@ Scenario: Preview list updates as user continues typing
 
 ---
 
+## Story 1.1c: Search returns US-exchange stocks only
+
+**Description:** Search results only include stocks from US exchanges that are accessible with the current API tier. This prevents users from seeing or selecting international exchange tickers that would fail when loading stock data.
+
+**Acceptance Criteria (Gherkin):**
+
+```gherkin
+Scenario: User searches and sees only US-exchange stocks
+  Given user is on the application homepage
+  When they type a ticker symbol in the search field
+  Then only stocks from US exchanges appear in results
+  And no stocks with exchange suffixes (e.g., .TO, .NE, .BC) are shown
+```
+
+```gherkin
+Scenario: User selects US stock and views data without errors
+  Given user has searched for a stock
+  And the preview list shows matching US stocks
+  When they click on any stock in the preview list
+  Then the stock data loads successfully
+  And no 403 authorization errors occur
+```
+
+**Integration:** Applied automatically to all search queries via FinnHub API `exchange=US` parameter.
+
+**Manual Testing:**
+1. Open the application in a browser
+2. Type "AAPL" in the search field
+3. Verify preview list shows "AAPL" (US stock)
+4. Verify no "AAPL.TO" (Toronto), "AAPL.NE" (NEO), or similar exchange suffixes appear
+5. Click on "AAPL" in the preview list
+6. Verify stock data loads without 403 errors
+7. Search for "SHOP" (company traded on both US and Canadian exchanges)
+8. Verify only US-exchange results appear
+9. Verify no stocks with exchange suffix dots are shown
+
+---
+
 ## Story 1.2: User clicks stock card to view detailed metrics
 
 **Description:** When a user clicks on a stock card from search results, detailed metrics are displayed including essential trading data and 52-week range information. This allows users to see comprehensive data on demand without cluttering the initial search results.
