@@ -5,10 +5,8 @@ import { useDebounce } from './useDebounce';
 
 export function useStockPreviews(query: string): {
   results: FinnhubSearchResult[];
-  showPreviews: boolean;
 } {
   const [results, setResults] = useState<FinnhubSearchResult[]>([]);
-  const [showPreviews, setShowPreviews] = useState(false);
   const debouncedQuery = useDebounce(query, 400);
 
   useEffect(() => {
@@ -16,14 +14,12 @@ export function useStockPreviews(query: string): {
       if (debouncedQuery.length >= 2) {
         const searchResults = await searchStock(debouncedQuery);
         setResults(searchResults);
-        setShowPreviews(true);
       } else {
         setResults([]);
-        setShowPreviews(false);
       }
     }
     void fetchPreviews();
   }, [debouncedQuery]);
 
-  return { results, showPreviews };
+  return { results };
 }
