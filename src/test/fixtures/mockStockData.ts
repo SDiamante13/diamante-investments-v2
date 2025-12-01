@@ -1,5 +1,4 @@
 export const mockAppleSearchResult = {
-  count: 1,
   result: [
     {
       description: 'APPLE INC',

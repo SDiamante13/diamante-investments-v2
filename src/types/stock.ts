@@ -1,3 +1,7 @@
+export interface FinnhubSearchResponse {
+  result: FinnhubSearchResult[];
+}
+
 export interface FinnhubSearchResult {
   description: string;
   displaySymbol: string;
