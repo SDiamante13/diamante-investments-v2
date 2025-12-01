@@ -21,7 +21,7 @@ export default function SearchForm({
   showPreviews,
   debouncedQuery,
   onSelect,
-}: SearchFormProps): ReactElement {
+}: Readonly<SearchFormProps>): ReactElement {
   return (
     <form onSubmit={onSubmit} className={styles.searchForm}>
       <div className={styles.searchWrapper}>
@@ -32,9 +32,7 @@ export default function SearchForm({
           className={styles.searchInput}
           placeholder="Search by ticker (e.g., AAPL)"
         />
-        {showPreviews && previewResults.length > 0 && (
-          <StockPreviewList results={previewResults} onSelect={onSelect} />
-        )}
+        {showPreviews && previewResults.length > 0 && <StockPreviewList results={previewResults} onSelect={onSelect} />}
         {showPreviews && debouncedQuery.length >= 2 && previewResults.length === 0 && (
           <div className={styles.noMatches}>No matches found</div>
         )}

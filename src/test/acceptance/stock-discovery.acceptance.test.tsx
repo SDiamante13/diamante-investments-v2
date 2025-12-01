@@ -70,9 +70,12 @@ describe('Stock Discovery', () => {
     const searchInput = screen.getByRole('textbox');
     await userEvent.type(searchInput, 'INVALID123');
 
-    await waitFor(() => {
-      expect(screen.getByText(/no matches found/i)).toBeInTheDocument();
-    }, { timeout: 600 });
+    await waitFor(
+      () => {
+        expect(screen.getByText(/no matches found/i)).toBeInTheDocument();
+      },
+      { timeout: 600 }
+    );
   });
 
   it('user types partial ticker and sees preview list with multiple matches', async () => {
@@ -92,9 +95,12 @@ describe('Stock Discovery', () => {
     const searchInput = screen.getByRole('textbox');
     await userEvent.type(searchInput, 'AAP');
 
-    await waitFor(() => {
-      expect(screen.getByText('AAPL')).toBeInTheDocument();
-    }, { timeout: 600 });
+    await waitFor(
+      () => {
+        expect(screen.getByText('AAPL')).toBeInTheDocument();
+      },
+      { timeout: 600 }
+    );
 
     expect(screen.getByText('APPLE INC')).toBeInTheDocument();
     expect(screen.getByText('AAPD')).toBeInTheDocument();
@@ -109,16 +115,12 @@ describe('Stock Discovery', () => {
 
         if (query === 'AAP') {
           return HttpResponse.json({
-            result: [
-              { symbol: 'AAPL', description: 'APPLE INC', displaySymbol: 'AAPL', type: 'Common Stock' },
-            ],
+            result: [{ symbol: 'AAPL', description: 'APPLE INC', displaySymbol: 'AAPL', type: 'Common Stock' }],
           });
         }
 
         return HttpResponse.json({
-          result: [
-            { symbol: 'AAPL', description: 'APPLE INC', displaySymbol: 'AAPL', type: 'Common Stock' },
-          ],
+          result: [{ symbol: 'AAPL', description: 'APPLE INC', displaySymbol: 'AAPL', type: 'Common Stock' }],
         });
       }),
       http.get(`${BASE_URL}/quote`, () =>

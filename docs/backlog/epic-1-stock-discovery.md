@@ -49,6 +49,78 @@ And negative changes are shown in red
 11. Verify an appropriate "no results found" message appears
 ---
 
+## Story 1.1b: User sees stock preview suggestions while typing
+
+**Description:** As users type partial ticker symbols, a preview list appears showing matching stocks. This enables quick discovery of stocks without needing to know the exact ticker symbol, and reduces typos by allowing users to select from suggestions.
+
+**Acceptance Criteria (Gherkin):**
+
+```gherkin
+Scenario: User types partial ticker and sees preview list with multiple matches
+  Given user is on the application homepage
+  When they type a partial ticker symbol (e.g., "AAP") in the search field
+  Then a preview list appears below the search field
+  And the preview list shows all matching stocks
+  And each preview item displays the stock symbol
+  And each preview item displays the company name
+```
+
+```gherkin
+Scenario: User clicks preview item to view full stock details
+  Given user has typed a partial ticker and preview list is visible
+  When they click on a preview item
+  Then the preview list closes
+  And the full stock result is displayed with current price
+  And the dollar amount change is displayed
+  And the percentage change is displayed
+```
+
+```gherkin
+Scenario: User types invalid partial ticker and sees no matches message
+  Given user is on the application homepage
+  When they type a partial ticker that has no matches (e.g., "ZZZZ")
+  Then a "No matches found" message appears in the preview dropdown
+  And no preview items are displayed
+```
+
+```gherkin
+Scenario: Preview list appears after user stops typing
+  Given user is on the application homepage
+  When they type characters in the search field
+  And they pause typing for a brief moment
+  Then the preview list appears with matching results
+```
+
+```gherkin
+Scenario: Preview list updates as user continues typing
+  Given user has typed "AA" and preview list is visible
+  When they type additional characters to make "AAP"
+  Then the preview list updates to show only stocks matching "AAP"
+  And previously visible non-matching stocks are removed from the list
+```
+
+**Integration:** Accessible from the search input field on the main application homepage. Preview appears automatically as user types, positioned directly below the search field.
+
+**Manual Testing:**
+1. Open the application in a browser
+2. Locate the search input field at the top of the page
+3. Type "AA" in the search field
+4. Wait briefly (less than 1 second)
+5. Verify a preview list appears below the search field
+6. Verify multiple matching stocks are shown (e.g., AAPL, AAL, etc.)
+7. Verify each preview item shows both symbol and company name
+8. Continue typing "P" to make "AAP"
+9. Verify the preview list updates to show only "AAP" matches
+10. Click on "AAPL" in the preview list
+11. Verify the preview list closes
+12. Verify full stock details appear with current price, dollar change, and percentage change
+13. Clear the search field
+14. Type "ZZZZ" in the search field
+15. Verify "No matches found" message appears in the preview dropdown
+16. Verify no preview items are shown
+
+---
+
 ## Story 1.2: User clicks stock card to view detailed metrics
 
 **Description:** When a user clicks on a stock card from search results, detailed metrics are displayed including essential trading data and 52-week range information. This allows users to see comprehensive data on demand without cluttering the initial search results.

@@ -18,7 +18,7 @@ function formatPercentChange(value: number): string {
   return `${prefix}${value.toFixed(2)}%`;
 }
 
-export default function StockResult({ stockData }: StockResultProps): ReactElement {
+export default function StockResult({ stockData }: Readonly<StockResultProps>): ReactElement {
   const changeClass = stockData.dollarChange >= 0 ? styles.positive : styles.negative;
 
   return (
