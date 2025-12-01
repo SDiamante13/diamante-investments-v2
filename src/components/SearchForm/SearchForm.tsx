@@ -1,7 +1,8 @@
 import type { ReactElement, FormEvent } from 'react';
-import type { FinnhubSearchResult } from '../../types/stock';
 import StockPreviewList from '../StockPreviewList/StockPreviewList';
 import styles from './SearchForm.module.css';
+
+import { FinnhubSearchResult } from '../../services/finnhub/types.ts';
 
 type SearchFormProps = {
   query: string;

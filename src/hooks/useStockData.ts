@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getStockData } from '../services/finnhub';
+import { getStockData } from '../services/finnhub/finnhub.ts';
 import type { StockData } from '../types/stock';
 
 export function useStockData(): {

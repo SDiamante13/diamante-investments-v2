@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
-import type { FinnhubSearchResult } from '../../types/stock';
 import StockPreviewItem from '../StockPreviewItem/StockPreviewItem';
 import styles from './StockPreviewList.module.css';
+
+import { FinnhubSearchResult } from '../../services/finnhub/types.ts';
 
 interface StockPreviewListProps {
   results: FinnhubSearchResult[];

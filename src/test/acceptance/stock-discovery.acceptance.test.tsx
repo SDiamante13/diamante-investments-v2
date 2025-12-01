@@ -5,7 +5,7 @@ import { server } from '../mocks/server';
 import App from '../../App';
 import userEvent from '@testing-library/user-event';
 import { mockAppleSearchResult, mockAppleQuote, mockMultipleSearchResults, mockEmptySearchResult } from '../fixtures/mockStockData';
-import { FinnhubQuote, FinnhubSearchResponse } from '../../types/stock.ts';
+import { FinnhubQuote, FinnhubSearchResponse } from '../../services/finnhub/types.ts';
 
 const BASE_URL = 'https://finnhub.io/api/v1';
 

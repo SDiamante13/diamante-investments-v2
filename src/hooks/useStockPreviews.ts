@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { searchStock } from '../services/finnhub';
-import type { FinnhubSearchResult } from '../types/stock';
+import { searchStock } from '../services/finnhub/finnhub.ts';
 import { useDebounce } from './useDebounce';
+import { FinnhubSearchResult } from '../services/finnhub/types.ts';
 
 export function useStockPreviews(query: string): {
   results: FinnhubSearchResult[];
