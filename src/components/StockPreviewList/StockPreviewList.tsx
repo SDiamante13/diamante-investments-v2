@@ -12,11 +12,7 @@ export default function StockPreviewList({ results, onSelect }: StockPreviewList
   return (
     <div className={styles.dropdown}>
       {results.map((result) => (
-        <StockPreviewItem
-          key={result.symbol}
-          result={result}
-          onSelect={() => onSelect(result.symbol)}
-        />
+        <StockPreviewItem key={result.symbol} result={result} onSelect={(): void => onSelect(result.symbol)} />
       ))}
     </div>
   );
