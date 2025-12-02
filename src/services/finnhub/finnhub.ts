@@ -17,12 +17,14 @@ export async function getQuote(symbol: string): Promise<FinnhubQuote> {
 
 export async function getStockData(symbol: string): Promise<StockData | null> {
   const normalizedSymbol = symbol.trim().toUpperCase();
-  const [searchResults, quote] = await Promise.all([searchStock(normalizedSymbol), getQuote(normalizedSymbol)]);
+  const searchResults = await searchStock(normalizedSymbol);
 
   const stockInfo = searchResults[0];
   if (!stockInfo) {
     return null;
   }
+
+  const quote = await getQuote(normalizedSymbol);
 
   return {
     symbol: stockInfo.symbol,
