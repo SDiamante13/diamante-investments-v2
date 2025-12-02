@@ -1,3 +1,25 @@
+## Architecture
+
+**Component Hierarchy:**
+```
+App → StockSearch (state container)
+  ├→ SearchForm → StockPreviewList → StockPreviewItem
+  └→ StockResult (after selection)
+```
+
+**Data Flow:** User input → `useStockPreviews()` → preview list → click → `useStockData()` → `StockResult`
+
+**API Integration:** All calls in `src/services/finnhub/finnhub.ts` (exports: `searchStock()`, `getQuote()`, `getStockData()`)
+
+**Types:** Two-layer structure
+- `src/services/finnhub/types.ts` - Raw API responses
+- `src/types/stock.ts` - App domain types
+- Service converts Finnhub → app types
+
+**Data Fetching Hooks:** `src/hooks/`
+- `useStockPreviews(query)` - Debounced search preview
+- `useStockData(symbol)` - Full stock data fetch
+
 ## Commiting
 
 When asked to commit: update any task lists, run `npm install`, commit (short message)
