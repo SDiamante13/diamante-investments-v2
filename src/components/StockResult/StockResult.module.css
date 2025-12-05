@@ -43,8 +43,40 @@
 }
 
 .priceSection {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: var(--border-width-thin) solid var(--border-default);
+  margin-bottom: var(--space-6);
+}
+
+.priceColumn {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-4);
+}
+
+.rangeColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-end;
+}
+
+.rangeLabel {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.rangeValues {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  display: flex;
+  gap: var(--space-2);
 }
 
 .currentPrice {
@@ -82,6 +114,41 @@
 
 .negative::before {
   content: '▼ ';
+}
+
+.metricsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.metricRow {
+  display: flex;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 100px;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

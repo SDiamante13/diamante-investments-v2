@@ -28,3 +28,27 @@ export const mockMultipleSearchResults = {
 };
 
 export const mockEmptySearchResult = { count: 0, result: [] };
+
+export const mockAppleProfile2 = {
+  marketCapitalization: 2750000,
+  name: 'Apple Inc',
+  ticker: 'AAPL',
+};
+
+export const mockAppleMetric = {
+  metric: {
+    '52WeekHigh': 198.23,
+    '52WeekLow': 124.17,
+    peBasicExclExtraTTM: 30.5,
+  },
+};
+
+export const mockAppleCandle = {
+  c: [145.52],
+  h: [146.12],
+  l: [143.89],
+  o: [144.2],
+  v: [52500000],
+  t: [1699564800],
+  s: 'ok',
+};

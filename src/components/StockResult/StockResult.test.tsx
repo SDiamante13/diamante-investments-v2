@@ -12,6 +12,14 @@ describe('StockResult', () => {
       currentPrice: 145.52,
       dollarChange: 2.35,
       percentChange: 1.64,
+      openPrice: 144.2,
+      high: 146.12,
+      low: 143.89,
+      volume: 52500000,
+      marketCap: 2750000,
+      peRatio: 30.5,
+      weekHigh52: 198.23,
+      weekLow52: 124.17,
     };
 
     render(<StockResult stockData={stockData} />);
@@ -30,6 +38,14 @@ describe('StockResult', () => {
       currentPrice: 50.0,
       dollarChange: -1.25,
       percentChange: -2.44,
+      openPrice: 51.0,
+      high: 51.5,
+      low: 49.8,
+      volume: null,
+      marketCap: null,
+      peRatio: null,
+      weekHigh52: null,
+      weekLow52: null,
     };
 
     render(<StockResult stockData={stockData} />);
