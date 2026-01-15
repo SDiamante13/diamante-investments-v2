@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+}
+
+.label {
+  color: var(--text-muted);
+}
+
+.value {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.rangeSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.rangeBar {
+  position: relative;
+  height: var(--space-4);
+  background: var(--bg-muted);
+  border-radius: var(--border-radius-sm);
+}
+
+.rangeLabels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+  border: 2px solid var(--bg-primary);
+}

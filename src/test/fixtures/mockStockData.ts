@@ -28,3 +28,19 @@ export const mockMultipleSearchResults = {
 };
 
 export const mockEmptySearchResult = { count: 0, result: [] };
+
+export const mockAppleProfile = {
+  name: 'Apple Inc',
+  ticker: 'AAPL',
+  marketCapitalization: 2800000,
+  exchange: 'NASDAQ',
+  currency: 'USD',
+};
+
+export const mockAppleMetrics = {
+  metric: {
+    '52WeekHigh': 185.0,
+    '52WeekLow': 124.0,
+    peBasicExclExtraTTM: 28.5,
+  },
+};
