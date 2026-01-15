@@ -35,6 +35,7 @@ export default function StockMetrics({ data }: Readonly<StockMetricsProps>): Rea
         </div>
       </div>
       <div className={styles.rangeSection}>
+        <div className={styles.rangeTitle}>52W Range</div>
         <div className={styles.rangeBar}>
           <div className={styles.marker} style={{ left: `${rangePosition}%` }} />
         </div>
