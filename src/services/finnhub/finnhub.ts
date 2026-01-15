@@ -4,24 +4,30 @@ import { FinnhubQuote, FinnhubSearchResponse, FinnhubSearchResult, FinnhubProfil
 const API_KEY = import.meta.env.VITE_FINNHUB_API_KEY;
 const BASE_URL = 'https://finnhub.io/api/v1';
 
+function buildUrl(path: string, params: Record<string, string>): string {
+  const allParams = { ...params, token: API_KEY };
+  const queryString = new URLSearchParams(allParams).toString();
+  return `${BASE_URL}${path}?${queryString}`;
+}
+
 export async function searchStock(query: string): Promise<FinnhubSearchResult[]> {
-  const response = await fetch(`${BASE_URL}/search?q=${query}&exchange=US&token=${API_KEY}`);
+  const response = await fetch(buildUrl('/search', { q: query, exchange: 'US' }));
   const data = (await response.json()) as FinnhubSearchResponse;
   return data.result || [];
 }
 
 export async function getQuote(symbol: string): Promise<FinnhubQuote> {
-  const response = await fetch(`${BASE_URL}/quote?symbol=${symbol}&token=${API_KEY}`);
+  const response = await fetch(buildUrl('/quote', { symbol }));
   return (await response.json()) as FinnhubQuote;
 }
 
 export async function getProfile(symbol: string): Promise<FinnhubProfile2> {
-  const response = await fetch(`${BASE_URL}/stock/profile2?symbol=${symbol}&token=${API_KEY}`);
+  const response = await fetch(buildUrl('/stock/profile2', { symbol }));
   return (await response.json()) as FinnhubProfile2;
 }
 
 export async function getMetrics(symbol: string): Promise<FinnhubMetrics> {
-  const response = await fetch(`${BASE_URL}/stock/metric?symbol=${symbol}&metric=all&token=${API_KEY}`);
+  const response = await fetch(buildUrl('/stock/metric', { symbol, metric: 'all' }));
   return (await response.json()) as FinnhubMetrics;
 }
 
