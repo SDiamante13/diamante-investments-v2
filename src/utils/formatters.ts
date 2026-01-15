@@ -21,10 +21,7 @@ export function calculateRangePosition(current: number, low: number, high: numbe
 }
 
 export function formatDollarChange(value: number): string {
-  if (value >= 0) {
-    return `+$${value}`;
-  }
-  return `-$${Math.abs(value)}`;
+  return `${value >= 0 ? '+' : '-'}$${Math.abs(value)}`;
 }
 
 export function formatPercentChange(value: number): string {
