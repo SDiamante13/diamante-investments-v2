@@ -35,8 +35,8 @@ export async function getStockData(symbol: string): Promise<StockData | null> {
   const normalizedSymbol = symbol.trim().toUpperCase();
   const searchResults = await searchStock(normalizedSymbol);
 
-  const stockInfo = searchResults[0];
-  if (!stockInfo) {
+  const firstResult = searchResults[0];
+  if (!firstResult) {
     return null;
   }
 
@@ -47,8 +47,8 @@ export async function getStockData(symbol: string): Promise<StockData | null> {
   ]);
 
   return {
-    symbol: stockInfo.symbol,
-    companyName: stockInfo.description,
+    symbol: firstResult.symbol,
+    companyName: firstResult.description,
     quote: {
       currentPrice: quote.c,
       dollarChange: quote.d,
