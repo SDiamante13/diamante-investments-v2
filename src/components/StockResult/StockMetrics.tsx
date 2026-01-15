@@ -7,32 +7,26 @@ interface StockMetricsProps {
   data: Pick<StockData, 'quote' | 'profile' | 'metrics'>;
 }
 
+function MetricItem({ label, value }: { label: string; value: string }): ReactElement {
+  return (
+    <div className={styles.metric}>
+      <span className={styles.label}>{label}</span>
+      <span className={styles.value}>{value}</span>
+    </div>
+  );
+}
+
 export default function StockMetrics({ data }: Readonly<StockMetricsProps>): ReactElement {
   const rangePosition = calculateRangePosition(data.quote.currentPrice, data.metrics.yearLow, data.metrics.yearHigh);
 
   return (
     <div className={styles.container}>
       <div className={styles.grid}>
-        <div className={styles.metric}>
-          <span className={styles.label}>Open</span>
-          <span className={styles.value}>${data.quote.open.toFixed(2)}</span>
-        </div>
-        <div className={styles.metric}>
-          <span className={styles.label}>High</span>
-          <span className={styles.value}>${data.quote.high.toFixed(2)}</span>
-        </div>
-        <div className={styles.metric}>
-          <span className={styles.label}>Low</span>
-          <span className={styles.value}>${data.quote.low.toFixed(2)}</span>
-        </div>
-        <div className={styles.metric}>
-          <span className={styles.label}>Mkt Cap</span>
-          <span className={styles.value}>{formatMarketCap(data.profile.marketCap)}</span>
-        </div>
-        <div className={styles.metric}>
-          <span className={styles.label}>P/E</span>
-          <span className={styles.value}>{formatMetricValue(data.metrics.peRatio)}</span>
-        </div>
+        <MetricItem label="Open" value={`$${data.quote.open.toFixed(2)}`} />
+        <MetricItem label="High" value={`$${data.quote.high.toFixed(2)}`} />
+        <MetricItem label="Low" value={`$${data.quote.low.toFixed(2)}`} />
+        <MetricItem label="Mkt Cap" value={formatMarketCap(data.profile.marketCap)} />
+        <MetricItem label="P/E" value={formatMetricValue(data.metrics.peRatio)} />
       </div>
       <div className={styles.rangeSection}>
         <div className={styles.rangeTitle}>52W Range</div>
