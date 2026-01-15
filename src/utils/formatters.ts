@@ -28,6 +28,5 @@ export function formatDollarChange(value: number): string {
 }
 
 export function formatPercentChange(value: number): string {
-  const prefix = value >= 0 ? '+' : '';
-  return `${prefix}${value.toFixed(2)}%`;
+  return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
 }
