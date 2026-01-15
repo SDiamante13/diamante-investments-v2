@@ -12,17 +12,17 @@ export async function searchStock(query: string): Promise<FinnhubSearchResult[]>
 
 export async function getQuote(symbol: string): Promise<FinnhubQuote> {
   const response = await fetch(`${BASE_URL}/quote?symbol=${symbol}&token=${API_KEY}`);
-  return (await response.json()) as Promise<FinnhubQuote>;
+  return (await response.json()) as FinnhubQuote;
 }
 
 export async function getProfile(symbol: string): Promise<FinnhubProfile2> {
   const response = await fetch(`${BASE_URL}/stock/profile2?symbol=${symbol}&token=${API_KEY}`);
-  return (await response.json()) as Promise<FinnhubProfile2>;
+  return (await response.json()) as FinnhubProfile2;
 }
 
 export async function getMetrics(symbol: string): Promise<FinnhubMetrics> {
   const response = await fetch(`${BASE_URL}/stock/metric?symbol=${symbol}&metric=all&token=${API_KEY}`);
-  return (await response.json()) as Promise<FinnhubMetrics>;
+  return (await response.json()) as FinnhubMetrics;
 }
 
 export async function getStockData(symbol: string): Promise<StockData | null> {
