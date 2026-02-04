@@ -1,0 +1,215 @@
+{
+  "project": "Diamante Investments",
+  "branchName": "ralph/stock-discovery-1.2-1.4",
+  "description": "Stock Discovery Stories 1.2-1.4: detailed metrics, watchlist, and search history",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Display open/high/low prices on stock card",
+      "description": "As a user, I want to see today's open, high, and low prices on the stock card so I can gauge daily trading range.",
+      "acceptanceCriteria": [
+        "Write acceptance test: render App, search for stock, verify open/high/low values display",
+        "Use MSW to stub /quote endpoint with known o, h, l values",
+        "Use given*/when*/then* helper naming convention",
+        "Stock card displays open price labeled 'Open'",
+        "Stock card displays high price labeled 'High'",
+        "Stock card displays low price labeled 'Low'",
+        "Values formatted as currency ($XXX.XX)",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Display market cap and PE ratio on stock card",
+      "description": "As a user, I want to see market cap and PE ratio on the stock card so I can evaluate the stock's valuation.",
+      "acceptanceCriteria": [
+        "Write acceptance test: render App, search for stock, verify mktcap and PE display",
+        "Use MSW to stub /stock/metric endpoint with known marketCapitalization, peBasicExclExtraTTM values",
+        "Test formatting: large numbers show as $1.2T, $450B, $12M",
+        "Test N/A displays when values missing",
+        "Add getStockMetrics(symbol) to finnhub service",
+        "Add StockMetrics type with marketCap, peRatio, week52High, week52Low",
+        "Stock card displays market cap and PE ratio with labels",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Display 52-week range with visual indicator",
+      "description": "As a user, I want to see the 52-week high/low and where current price sits so I can gauge recent performance.",
+      "acceptanceCriteria": [
+        "Write acceptance test: render App, search for stock, verify 52W high/low values display",
+        "Use MSW to stub /stock/metric with known 52WeekHigh, 52WeekLow values",
+        "Test visual indicator position calculation (current price between low and high)",
+        "Stock card displays '52W High' and '52W Low' values",
+        "Horizontal bar with marker shows current price position",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Add stock to watchlist from stock card",
+      "description": "As a user, I want to add a stock to my watchlist with one click so I can track it.",
+      "acceptanceCriteria": [
+        "Write acceptance test: render App, search for stock, click watchlist icon, verify icon state changes",
+        "Write acceptance test: verify toast message 'Added SYMBOL to watchlist' appears",
+        "Write acceptance test: verify stock persists in localStorage after add",
+        "Mock localStorage in tests",
+        "Create localStorage service with getWatchlist, addToWatchlist, removeFromWatchlist, isInWatchlist",
+        "Storage key: 'diamante-watchlist'",
+        "Stock card has star/bookmark SVG icon, outlined when not in watchlist",
+        "Clicking adds stock, icon becomes filled, toast appears for 3 seconds",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Remove stock from watchlist via stock card toggle",
+      "description": "As a user, I want to remove a stock from my watchlist by clicking the same icon so the interaction is intuitive.",
+      "acceptanceCriteria": [
+        "Write acceptance test: pre-populate localStorage with stock, render App, search for stock, verify icon is filled",
+        "Write acceptance test: click filled icon, verify icon becomes outlined",
+        "Write acceptance test: verify toast message 'Removed SYMBOL from watchlist' appears",
+        "Write acceptance test: verify stock removed from localStorage",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Display watchlist section on homepage with prices",
+      "description": "As a user, I want to see my watchlist on the homepage so I can monitor tracked stocks.",
+      "acceptanceCriteria": [
+        "Write acceptance test: pre-populate localStorage with 2 stocks, render App, verify watchlist section shows both",
+        "Write acceptance test: verify each item shows symbol, name, price, change ($/%)",
+        "Write acceptance test: verify empty state message when localStorage watchlist is empty",
+        "Use MSW to stub /quote for each watchlist symbol",
+        "Watchlist section appears below search area with 'Watchlist' header",
+        "Use positive/negative color tokens for change values",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Remove stock directly from watchlist section",
+      "description": "As a user, I want to remove stocks directly from the watchlist without opening the card.",
+      "acceptanceCriteria": [
+        "Write acceptance test: pre-populate watchlist, render App, click remove icon on item, verify item disappears",
+        "Write acceptance test: verify toast confirms removal",
+        "Write acceptance test: verify localStorage updated after removal",
+        "Each watchlist item has X or trash SVG icon on right side",
+        "Clicking icon removes stock immediately",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Click watchlist item to view full stock card",
+      "description": "As a user, I want to click a watchlist item to see its full details.",
+      "acceptanceCriteria": [
+        "Write acceptance test: pre-populate watchlist, render App, click watchlist item, verify stock card appears",
+        "Write acceptance test: verify stock card shows all metrics (open/high/low, mktcap, PE, 52-week)",
+        "Write acceptance test: verify watchlist icon on card is in filled state",
+        "Clicking item (not remove icon) displays full stock card",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Auto-refresh watchlist prices every 30 seconds",
+      "description": "As a user, I want watchlist prices to stay current while viewing.",
+      "acceptanceCriteria": [
+        "Write acceptance test: pre-populate watchlist, render App, use fake timers, advance 30s, verify new API calls made",
+        "Write acceptance test: verify displayed prices update to new values from stubbed response",
+        "Use MSW to return different prices on second call",
+        "Use vi.useFakeTimers() for timer control",
+        "Prices auto-refresh every 30 seconds",
+        "Interval clears on component unmount",
+        "No loading spinner during refresh",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Save searched stocks to history and display dropdown",
+      "description": "As a user, I want my searches saved and shown when I focus the search field.",
+      "acceptanceCriteria": [
+        "Write acceptance test: search for stock, click preview item, verify stock saved to localStorage history",
+        "Write acceptance test: focus empty search field, verify history dropdown shows saved stock",
+        "Write acceptance test: verify history limited to 5 items (add 6, verify oldest dropped)",
+        "Write acceptance test: verify duplicate moves to top instead of duplicating",
+        "Add localStorage functions: getSearchHistory, addToSearchHistory",
+        "Storage key: 'diamante-search-history'",
+        "History dropdown shows symbol and company name for each item",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Select from search history to view stock card directly",
+      "description": "As a user, I want to click a history item to jump directly to the stock card.",
+      "acceptanceCriteria": [
+        "Write acceptance test: pre-populate history, focus search field, click history item, verify stock card appears",
+        "Write acceptance test: verify preview list is NOT shown (bypasses preview step)",
+        "Write acceptance test: verify search field shows selected symbol",
+        "Write acceptance test: verify history dropdown closes on selection",
+        "Use MSW to stub /quote and /stock/metric for the selected symbol",
+        "All tests pass",
+        "Typecheck passes",
+        "Run test-feature skill to verify in browser"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
