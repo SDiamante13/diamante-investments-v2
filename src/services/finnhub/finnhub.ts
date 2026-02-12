@@ -1,4 +1,5 @@
 import type { StockData } from '../../types/stock.ts';
+import type { FinnhubBasicFinancials } from './types.ts';
 import { FinnhubQuote, FinnhubSearchResponse, FinnhubSearchResult } from './types.ts';
 
 const API_KEY = import.meta.env.VITE_FINNHUB_API_KEY;
@@ -12,7 +13,12 @@ export async function searchStock(query: string): Promise<FinnhubSearchResult[]>
 
 export async function getQuote(symbol: string): Promise<FinnhubQuote> {
   const response = await fetch(`${BASE_URL}/quote?symbol=${symbol}&token=${API_KEY}`);
-  return (await response.json()) as Promise<FinnhubQuote>;
+  return (await response.json()) as FinnhubQuote;
+}
+
+export async function getBasicFinancials(symbol: string): Promise<FinnhubBasicFinancials> {
+  const response = await fetch(`${BASE_URL}/stock/metric?symbol=${symbol}&metric=all&token=${API_KEY}`);
+  return (await response.json()) as FinnhubBasicFinancials;
 }
 
 export async function getStockData(symbol: string): Promise<StockData | null> {
@@ -24,7 +30,7 @@ export async function getStockData(symbol: string): Promise<StockData | null> {
     return null;
   }
 
-  const quote = await getQuote(normalizedSymbol);
+  const [quote, financials] = await Promise.all([getQuote(normalizedSymbol), getBasicFinancials(normalizedSymbol)]);
 
   return {
     symbol: stockInfo.symbol,
@@ -32,5 +38,12 @@ export async function getStockData(symbol: string): Promise<StockData | null> {
     currentPrice: quote.c,
     dollarChange: quote.d,
     percentChange: quote.dp,
+    open: quote.o,
+    high: quote.h,
+    low: quote.l,
+    marketCap: financials.metric.marketCapitalization,
+    peRatio: financials.metric.peBasicExclExtraTTM,
+    week52High: financials.metric['52WeekHigh'],
+    week52Low: financials.metric['52WeekLow'],
   };
 }
