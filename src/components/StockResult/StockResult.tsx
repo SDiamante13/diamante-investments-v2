@@ -1,5 +1,7 @@
 import type { ReactElement } from 'react';
 import type { StockData } from '../../types/stock';
+import MetricsGrid from './MetricsGrid';
+import WeekRange from './WeekRange';
 import styles from './StockResult.module.css';
 
 interface StockResultProps {
@@ -34,6 +36,14 @@ export default function StockResult({ stockData }: Readonly<StockResultProps>): 
           <div className={`${styles.change} ${changeClass}`}>{formatPercentChange(stockData.percentChange)}</div>
         </div>
       </div>
+      <MetricsGrid
+        open={stockData.open}
+        high={stockData.high}
+        low={stockData.low}
+        marketCap={stockData.marketCap}
+        peRatio={stockData.peRatio}
+      />
+      <WeekRange currentPrice={stockData.currentPrice} week52Low={stockData.week52Low} week52High={stockData.week52High} />
     </div>
   );
 }
