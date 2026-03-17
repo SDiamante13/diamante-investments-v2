@@ -6,10 +6,7 @@ import type { FinnhubQuote, FinnhubSearchResponse } from '../../services/finnhub
 
 const BASE_URL = 'https://finnhub.io/api/v1';
 
-export function givenStockDataIsAvailableFor(
-  searchResult: FinnhubSearchResponse,
-  stockQuote: FinnhubQuote
-): void {
+export function givenStockDataIsAvailableFor(searchResult: FinnhubSearchResponse, stockQuote: FinnhubQuote): void {
   server.use(
     http.get(`${BASE_URL}/search`, () => HttpResponse.json(searchResult)),
     http.get(`${BASE_URL}/quote`, () => HttpResponse.json(stockQuote)),
@@ -33,9 +30,7 @@ export function givenFullStockDataIsAvailableFor(
 }
 
 export function givenSearchReturnsNoMatches(): void {
-  server.use(
-    http.get(`${BASE_URL}/search`, () => HttpResponse.json({ count: 0, result: [] }))
-  );
+  server.use(http.get(`${BASE_URL}/search`, () => HttpResponse.json({ count: 0, result: [] })));
 }
 
 export function givenSearchReturnsMultipleMatches(results: FinnhubSearchResponse): void {
@@ -83,9 +78,7 @@ export async function thenUserSeesMessage(pattern: RegExp | string): Promise<voi
   );
 }
 
-export async function thenUserSeesSearchResults(
-  results: Array<{ symbol: string; description: string }>
-): Promise<void> {
+export async function thenUserSeesSearchResults(results: Array<{ symbol: string; description: string }>): Promise<void> {
   await waitFor(
     () => {
       expect(screen.getByText(results[0].symbol)).toBeInTheDocument();
@@ -114,4 +107,23 @@ export async function thenUserSeesMetrics(expected: {
   expect(screen.getByText(expected.low)).toBeInTheDocument();
   expect(screen.getByText(expected.marketCap)).toBeInTheDocument();
   expect(screen.getByText(expected.peRatio)).toBeInTheDocument();
+}
+
+export async function thenUserSeesFiftyTwoWeekRange(expected: {
+  low: string;
+  high: string;
+  currentPrice: number;
+  rangeMin: number;
+  rangeMax: number;
+}): Promise<void> {
+  await waitFor(() => {
+    expect(screen.getByText(expected.low)).toBeInTheDocument();
+  });
+
+  expect(screen.getByText(expected.high)).toBeInTheDocument();
+
+  const meter = screen.getByRole('meter');
+  expect(meter).toHaveAttribute('aria-valuenow', String(expected.currentPrice));
+  expect(meter).toHaveAttribute('aria-valuemin', String(expected.rangeMin));
+  expect(meter).toHaveAttribute('aria-valuemax', String(expected.rangeMax));
 }

@@ -20,6 +20,7 @@ import {
   thenUserSeesMessage,
   thenUserSeesSearchResults,
   thenUserSeesMetrics,
+  thenUserSeesFiftyTwoWeekRange,
 } from './acceptance-helpers';
 
 describe('Stock Discovery', () => {
@@ -91,6 +92,24 @@ describe('Stock Discovery', () => {
       low: '$143.89',
       marketCap: '$2.89T',
       peRatio: '29.84',
+    });
+  });
+
+  // [TEST] User sees 52-week range information on stock card (high, low, visual position indicator)
+  test('user sees 52-week range information on stock card', async () => {
+    givenFullStockDataIsAvailableFor(mockAppleSearchResult, mockAppleQuote, mockAppleProfile, mockAppleMetrics);
+    render(<App />);
+
+    whenUserTypesInSearch('AAP');
+    await thenUserSeesMessage('APPLE INC');
+    whenUserClicksPreviewItem('AAPL');
+
+    await thenUserSeesFiftyTwoWeekRange({
+      low: '$124.17',
+      high: '$178.49',
+      currentPrice: 145.52,
+      rangeMin: 124.17,
+      rangeMax: 178.49,
     });
   });
 
