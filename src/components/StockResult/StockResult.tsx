@@ -101,13 +101,7 @@ function FiftyTwoWeekRange({ stockData }: Readonly<{ stockData: StockData }>): R
         <span>{formatCurrency(low)}</span>
         <span>{formatCurrency(high)}</span>
       </div>
-      <div
-        className={styles.rangeTrack}
-        role="meter"
-        aria-valuenow={stockData.currentPrice}
-        aria-valuemin={low}
-        aria-valuemax={high}
-      >
+      <div className={styles.rangeTrack} role="meter" aria-valuenow={stockData.currentPrice} aria-valuemin={low} aria-valuemax={high}>
         <div className={styles.rangeMarker} style={{ left: `${position}%` }} />
       </div>
     </div>
