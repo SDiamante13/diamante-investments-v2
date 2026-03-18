@@ -62,29 +62,23 @@ export default function StockResult({ stockData }: Readonly<StockResultProps>): 
   );
 }
 
+function MetricItem({ label, value }: Readonly<{ label: string; value: string }>): ReactElement {
+  return (
+    <div className={styles.metric}>
+      <div className={styles.metricLabel}>{label}</div>
+      <div className={styles.metricValue}>{value}</div>
+    </div>
+  );
+}
+
 function MetricsGrid({ stockData }: Readonly<{ stockData: StockData }>): ReactElement {
   return (
     <div className={styles.metricsGrid}>
-      <div className={styles.metric}>
-        <div className={styles.metricLabel}>Open</div>
-        <div className={styles.metricValue}>{formatCurrency(stockData.open)}</div>
-      </div>
-      <div className={styles.metric}>
-        <div className={styles.metricLabel}>High</div>
-        <div className={styles.metricValue}>{formatCurrency(stockData.high)}</div>
-      </div>
-      <div className={styles.metric}>
-        <div className={styles.metricLabel}>Low</div>
-        <div className={styles.metricValue}>{formatCurrency(stockData.low)}</div>
-      </div>
-      <div className={styles.metric}>
-        <div className={styles.metricLabel}>Market Cap</div>
-        <div className={styles.metricValue}>{formatMarketCap(stockData.marketCap)}</div>
-      </div>
-      <div className={styles.metric}>
-        <div className={styles.metricLabel}>PE Ratio</div>
-        <div className={styles.metricValue}>{formatNullable(stockData.peRatio)}</div>
-      </div>
+      <MetricItem label="Open" value={formatCurrency(stockData.open)} />
+      <MetricItem label="High" value={formatCurrency(stockData.high)} />
+      <MetricItem label="Low" value={formatCurrency(stockData.low)} />
+      <MetricItem label="Market Cap" value={formatMarketCap(stockData.marketCap)} />
+      <MetricItem label="PE Ratio" value={formatNullable(stockData.peRatio)} />
     </div>
   );
 }
