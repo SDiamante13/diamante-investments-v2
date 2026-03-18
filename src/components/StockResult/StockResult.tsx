@@ -57,7 +57,7 @@ export default function StockResult({ stockData }: Readonly<StockResultProps>): 
         </div>
       </div>
       <MetricsGrid stockData={stockData} />
-      {hasRange && <FiftyTwoWeekRange stockData={stockData} />}
+      {hasRange && <FiftyTwoWeekRange currentPrice={stockData.currentPrice} low={stockData.fiftyTwoWeekLow!} high={stockData.fiftyTwoWeekHigh!} />}
     </div>
   );
 }
@@ -83,10 +83,14 @@ function MetricsGrid({ stockData }: Readonly<{ stockData: StockData }>): ReactEl
   );
 }
 
-function FiftyTwoWeekRange({ stockData }: Readonly<{ stockData: StockData }>): ReactElement {
-  const low = stockData.fiftyTwoWeekLow!;
-  const high = stockData.fiftyTwoWeekHigh!;
-  const position = calculateRangePosition(stockData.currentPrice, low, high);
+interface FiftyTwoWeekRangeProps {
+  currentPrice: number;
+  low: number;
+  high: number;
+}
+
+function FiftyTwoWeekRange({ currentPrice, low, high }: Readonly<FiftyTwoWeekRangeProps>): ReactElement {
+  const position = calculateRangePosition(currentPrice, low, high);
 
   return (
     <div className={styles.rangeSection}>
@@ -95,7 +99,7 @@ function FiftyTwoWeekRange({ stockData }: Readonly<{ stockData: StockData }>): R
         <span>{formatCurrency(low)}</span>
         <span>{formatCurrency(high)}</span>
       </div>
-      <div className={styles.rangeTrack} role="meter" aria-valuenow={stockData.currentPrice} aria-valuemin={low} aria-valuemax={high}>
+      <div className={styles.rangeTrack} role="meter" aria-valuenow={currentPrice} aria-valuemin={low} aria-valuemax={high}>
         <div className={styles.rangeMarker} style={{ left: `${position}%` }} />
       </div>
     </div>
