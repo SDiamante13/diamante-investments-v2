@@ -40,7 +40,7 @@ function calculateRangePosition(current: number, low: number, high: number): num
 }
 
 export default function StockResult({ stockData }: Readonly<StockResultProps>): ReactElement {
-  const changeClass = stockData.dollarChange >= 0 ? styles.positive : styles.negative;
+  const changeStyle = stockData.dollarChange >= 0 ? styles.positive : styles.negative;
   const hasRange = stockData.fiftyTwoWeekHigh !== null && stockData.fiftyTwoWeekLow !== null;
 
   return (
@@ -52,14 +52,20 @@ export default function StockResult({ stockData }: Readonly<StockResultProps>): 
       <div className={styles.priceSection}>
         <div className={styles.currentPrice}>${stockData.currentPrice}</div>
         <div className={styles.changes}>
-          <div className={`${styles.change} ${changeClass}`}>{formatDollarChange(stockData.dollarChange)}</div>
-          <div className={`${styles.change} ${changeClass}`}>{formatPercentChange(stockData.percentChange)}</div>
+          <ChangeValue style={changeStyle}>{formatDollarChange(stockData.dollarChange)}</ChangeValue>
+          <ChangeValue style={changeStyle}>{formatPercentChange(stockData.percentChange)}</ChangeValue>
         </div>
       </div>
       <MetricsGrid stockData={stockData} />
-      {hasRange && <FiftyTwoWeekRange currentPrice={stockData.currentPrice} low={stockData.fiftyTwoWeekLow!} high={stockData.fiftyTwoWeekHigh!} />}
+      {hasRange && (
+        <FiftyTwoWeekRange currentPrice={stockData.currentPrice} low={stockData.fiftyTwoWeekLow!} high={stockData.fiftyTwoWeekHigh!} />
+      )}
     </div>
   );
+}
+
+function ChangeValue({ style, children }: Readonly<{ style: string; children: string }>): ReactElement {
+  return <div className={`${styles.change} ${style}`}>{children}</div>;
 }
 
 function MetricItem({ label, value }: Readonly<{ label: string; value: string }>): ReactElement {
