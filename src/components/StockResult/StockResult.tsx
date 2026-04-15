@@ -44,8 +44,16 @@ function Metric({ label, value }: Readonly<{ label: string; value: string }>): R
   );
 }
 
-function formatDollar(value: number | undefined): string {
-  return value != null ? `$${value.toFixed(2)}` : 'N/A';
+function formatOptional(value: number | undefined, formatter: (v: number) => string): string {
+  return value != null ? formatter(value) : 'N/A';
+}
+
+function formatDollar(value: number): string {
+  return `$${value.toFixed(2)}`;
+}
+
+function formatRatio(value: number): string {
+  return value.toFixed(2);
 }
 
 function MetricsGrid({ stockData }: Readonly<{ stockData: StockData }>): ReactElement | null {
@@ -55,11 +63,11 @@ function MetricsGrid({ stockData }: Readonly<{ stockData: StockData }>): ReactEl
 
   return (
     <div className={styles.metricsGrid}>
-      <Metric label="Open" value={formatDollar(stockData.open)} />
-      <Metric label="Mkt Cap" value={stockData.marketCap != null ? formatMarketCap(stockData.marketCap) : 'N/A'} />
-      <Metric label="High" value={formatDollar(stockData.high)} />
-      <Metric label="P/E" value={stockData.peRatio != null ? stockData.peRatio.toFixed(2) : 'N/A'} />
-      <Metric label="Low" value={formatDollar(stockData.low)} />
+      <Metric label="Open" value={formatOptional(stockData.open, formatDollar)} />
+      <Metric label="Mkt Cap" value={formatOptional(stockData.marketCap, formatMarketCap)} />
+      <Metric label="High" value={formatOptional(stockData.high, formatDollar)} />
+      <Metric label="P/E" value={formatOptional(stockData.peRatio, formatRatio)} />
+      <Metric label="Low" value={formatOptional(stockData.low, formatDollar)} />
     </div>
   );
 }
