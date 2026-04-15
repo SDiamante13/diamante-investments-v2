@@ -35,6 +35,19 @@ function formatMarketCap(value: number): string {
   return `$${value.toFixed(2)}M`;
 }
 
+function Metric({ label, value }: Readonly<{ label: string; value: string }>): ReactElement {
+  return (
+    <div className={styles.metric}>
+      <span className={styles.metricLabel}>{label}</span>
+      <span className={styles.metricValue}>{value}</span>
+    </div>
+  );
+}
+
+function formatDollar(value: number | undefined): string {
+  return value != null ? `$${value.toFixed(2)}` : 'N/A';
+}
+
 function MetricsGrid({ stockData }: Readonly<{ stockData: StockData }>): ReactElement | null {
   if (stockData.open == null) {
     return null;
@@ -42,26 +55,11 @@ function MetricsGrid({ stockData }: Readonly<{ stockData: StockData }>): ReactEl
 
   return (
     <div className={styles.metricsGrid}>
-      <div className={styles.metric}>
-        <span className={styles.metricLabel}>Open</span>
-        <span className={styles.metricValue}>${stockData.open.toFixed(2)}</span>
-      </div>
-      <div className={styles.metric}>
-        <span className={styles.metricLabel}>Mkt Cap</span>
-        <span className={styles.metricValue}>{stockData.marketCap != null ? formatMarketCap(stockData.marketCap) : 'N/A'}</span>
-      </div>
-      <div className={styles.metric}>
-        <span className={styles.metricLabel}>High</span>
-        <span className={styles.metricValue}>${stockData.high?.toFixed(2)}</span>
-      </div>
-      <div className={styles.metric}>
-        <span className={styles.metricLabel}>P/E</span>
-        <span className={styles.metricValue}>{stockData.peRatio != null ? stockData.peRatio.toFixed(2) : 'N/A'}</span>
-      </div>
-      <div className={styles.metric}>
-        <span className={styles.metricLabel}>Low</span>
-        <span className={styles.metricValue}>${stockData.low?.toFixed(2)}</span>
-      </div>
+      <Metric label="Open" value={formatDollar(stockData.open)} />
+      <Metric label="Mkt Cap" value={stockData.marketCap != null ? formatMarketCap(stockData.marketCap) : 'N/A'} />
+      <Metric label="High" value={formatDollar(stockData.high)} />
+      <Metric label="P/E" value={stockData.peRatio != null ? stockData.peRatio.toFixed(2) : 'N/A'} />
+      <Metric label="Low" value={formatDollar(stockData.low)} />
     </div>
   );
 }
