@@ -12,7 +12,7 @@ function formatSignedChange(value: number, formatter: (v: number) => string): st
 }
 
 function formatDollarChange(value: number): string {
-  return formatSignedChange(value, (v) => `$${v}`);
+  return formatSignedChange(value, (v) => `$${v.toFixed(2)}`);
 }
 
 function formatPercentChange(value: number): string {

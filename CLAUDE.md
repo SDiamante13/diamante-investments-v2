@@ -9,7 +9,7 @@ App → StockSearch (state container)
 
 **Data Flow:** User input → `useStockPreviews()` → preview list → click → `useStockData()` → `StockResult`
 
-**API Integration:** All calls in `src/services/finnhub/finnhub.ts` (exports: `searchStock()`, `getQuote()`, `getStockData()`)
+**API Integration:** All calls in `src/services/finnhub/finnhub.ts` (exports: `searchStock()`, `getQuote()`, `getProfile()`, `getMetrics()`, `getStockData()`). `getStockData()` uses `Promise.allSettled` — quote is required, profile2/metric degrade gracefully.
 
 **Types:** Two-layer structure
 - `src/services/finnhub/types.ts` - Raw API responses
