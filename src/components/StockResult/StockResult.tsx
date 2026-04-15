@@ -6,16 +6,17 @@ interface StockResultProps {
   stockData: StockData;
 }
 
+function formatSignedChange(value: number, formatter: (v: number) => string): string {
+  const sign = value >= 0 ? '+' : '-';
+  return `${sign}${formatter(Math.abs(value))}`;
+}
+
 function formatDollarChange(value: number): string {
-  if (value >= 0) {
-    return `+$${value}`;
-  }
-  return `-$${Math.abs(value)}`;
+  return formatSignedChange(value, (v) => `$${v}`);
 }
 
 function formatPercentChange(value: number): string {
-  const prefix = value >= 0 ? '+' : '';
-  return `${prefix}${value.toFixed(2)}%`;
+  return formatSignedChange(value, (v) => `${v.toFixed(2)}%`);
 }
 
 function calculateRangePosition(current: number, low: number, high: number): number {
