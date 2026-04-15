@@ -1,11 +1,25 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, test } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '../mocks/server';
 import App from '../../App';
 import userEvent from '@testing-library/user-event';
-import { mockAppleSearchResult, mockAppleQuote, mockMultipleSearchResults, mockEmptySearchResult } from '../fixtures/mockStockData';
+import {
+  mockAppleSearchResult,
+  mockAppleQuote,
+  mockMultipleSearchResults,
+  mockEmptySearchResult,
+  mockAppleProfile,
+  mockAppleMetrics,
+} from '../fixtures/mockStockData';
 import { FinnhubQuote, FinnhubSearchResponse } from '../../services/finnhub/types.ts';
+import {
+  thenUserSeesStockDetails,
+  thenUserSeesDetailedMetrics,
+  thenUserSees52WeekRange,
+  thenUserSeesMessage,
+  thenUserSeesSearchResults,
+} from './acceptance-helpers';
 
 const BASE_URL = 'https://finnhub.io/api/v1';
 
@@ -18,7 +32,7 @@ describe('Stock Discovery', () => {
 
     await thenUserSeesStockDetails({
       symbol: 'AAPL',
-      company: 'APPLE INC',
+      company: 'Apple Inc',
       price: '$145.52',
       change: '+$2.35',
       percent: '+1.64%',
@@ -56,10 +70,42 @@ describe('Stock Discovery', () => {
 
     await thenUserSeesStockDetails({
       symbol: 'AAPL',
-      company: 'APPLE INC',
+      company: 'Apple Inc',
       price: '$145.52',
       change: '+$2.35',
       percent: '+1.64%',
+    });
+  });
+
+  test('user clicks preview item and sees open, high, low, market cap, and PE ratio on stock card', async () => {
+    givenStockDataIsAvailableFor(mockAppleSearchResult, mockAppleQuote);
+    render(<App />);
+
+    whenUserTypesInSearch('AAP');
+    await thenUserSeesMessage('APPLE INC');
+    whenUserClicksPreviewItem('AAPL');
+
+    await thenUserSeesDetailedMetrics({
+      open: '$144.20',
+      high: '$146.12',
+      low: '$143.89',
+      marketCap: '$2.80T',
+      peRatio: '28.50',
+    });
+  });
+
+  test('user clicks preview item and sees 52-week high, low, and visual range indicator on stock card', async () => {
+    givenStockDataIsAvailableFor(mockAppleSearchResult, mockAppleQuote);
+    render(<App />);
+
+    whenUserTypesInSearch('AAP');
+    await thenUserSeesMessage('APPLE INC');
+    whenUserClicksPreviewItem('AAPL');
+
+    await thenUserSees52WeekRange({
+      low: '$124.17',
+      high: '$152.84',
+      positionPercent: 74,
     });
   });
 
@@ -73,10 +119,12 @@ describe('Stock Discovery', () => {
   });
 });
 
-function givenStockDataIsAvailableFor(searchResult: FinnhubSearchResponse, stockQuote: FinnhubQuote) {
+function givenStockDataIsAvailableFor(searchResult: FinnhubSearchResponse, stockQuote: FinnhubQuote): void {
   server.use(
     http.get(`${BASE_URL}/search`, () => HttpResponse.json(searchResult)),
-    http.get(`${BASE_URL}/quote`, () => HttpResponse.json(stockQuote))
+    http.get(`${BASE_URL}/quote`, () => HttpResponse.json(stockQuote)),
+    http.get(`${BASE_URL}/stock/profile2`, () => HttpResponse.json(mockAppleProfile)),
+    http.get(`${BASE_URL}/stock/metric`, () => HttpResponse.json(mockAppleMetrics))
   );
 }
 
@@ -89,56 +137,13 @@ function givenSearchReturnsMultipleMatches(results: FinnhubSearchResponse): void
 }
 
 function whenUserSearchesFor(ticker: string): void {
-  const searchInput = screen.getByRole('textbox');
-  userEvent.type(searchInput, `${ticker}{enter}`);
+  userEvent.type(screen.getByRole('textbox'), `${ticker}{enter}`);
 }
 
 function whenUserTypesInSearch(partial: string): void {
-  const searchInput = screen.getByRole('textbox');
-  userEvent.type(searchInput, partial);
+  userEvent.type(screen.getByRole('textbox'), partial);
 }
 
 function whenUserClicksPreviewItem(symbol: string): void {
-  const previewItem = screen.getByText(symbol).closest('div');
-  userEvent.click(previewItem!);
-}
-
-async function thenUserSeesStockDetails(expected: {
-  symbol: string;
-  company: string;
-  price: string;
-  change: string;
-  percent: string;
-}): Promise<void> {
-  await waitFor(() => {
-    expect(screen.getByText(expected.symbol)).toBeInTheDocument();
-  });
-
-  expect(screen.getByText(expected.company)).toBeInTheDocument();
-  expect(screen.getByText(expected.price)).toBeInTheDocument();
-  expect(screen.getByText(expected.change)).toBeInTheDocument();
-  expect(screen.getByText(expected.percent)).toBeInTheDocument();
-}
-
-async function thenUserSeesMessage(pattern: RegExp | string): Promise<void> {
-  await waitFor(
-    () => {
-      expect(screen.getByText(pattern)).toBeInTheDocument();
-    },
-    { timeout: 600 }
-  );
-}
-
-async function thenUserSeesSearchResults(results: Array<{ symbol: string; description: string }>): Promise<void> {
-  await waitFor(
-    () => {
-      expect(screen.getByText(results[0].symbol)).toBeInTheDocument();
-    },
-    { timeout: 600 }
-  );
-
-  results.forEach(({ symbol, description }) => {
-    expect(screen.getByText(symbol)).toBeInTheDocument();
-    expect(screen.getByText(description)).toBeInTheDocument();
-  });
+  userEvent.click(screen.getByText(symbol).closest('div')!);
 }

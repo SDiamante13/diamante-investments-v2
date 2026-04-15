@@ -84,6 +84,84 @@
   content: '▼ ';
 }
 
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: var(--border-width-thin) solid var(--border-default);
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.metricLabel {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.metricValue {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.rangeSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: var(--border-width-thin) solid var(--border-default);
+}
+
+.rangeLabel {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.rangeBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.rangeTrack {
+  flex: 1;
+  position: relative;
+  height: var(--space-1);
+  background: var(--border-default);
+  border-radius: var(--border-radius-sm);
+}
+
+.rangeDot {
+  position: absolute;
+  top: 50%;
+  width: var(--space-3);
+  height: var(--space-3);
+  background: var(--accent-primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rangeValue {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .card {
     padding: var(--space-6);
