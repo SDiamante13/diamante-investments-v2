@@ -20,6 +20,19 @@ export const mockAppleQuote = {
   t: 1699564800,
 };
 
+export const mockAppleProfile = {
+  marketCapitalization: 2_800_000,
+};
+
+export const mockAppleMetrics = {
+  metric: {
+    peBasicExclExtraTTM: 28.5,
+    peNormalizedAnnual: 27.9,
+    '52WeekHigh': 152.84,
+    '52WeekLow': 124.17,
+  },
+};
+
 export const mockMultipleSearchResults = {
   result: [
     { symbol: 'AAPL', description: 'APPLE INC', displaySymbol: 'AAPL', type: 'Common Stock' },

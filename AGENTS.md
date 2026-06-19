@@ -11,6 +11,8 @@ App → StockSearch (state container)
 
 **API Integration:** All calls in `src/services/finnhub/finnhub.ts` (exports: `searchStock()`, `getQuote()`, `getProfile()`, `getMetrics()`, `getStockData()`). `getStockData()` uses `Promise.allSettled` — quote is required, profile2/metric degrade gracefully.
 
+Finnhub may return error-shaped HTTP 200 responses. Runtime-validate required quote data before mapping it to domain types.
+
 **Types:** Two-layer structure
 - `src/services/finnhub/types.ts` - Raw API responses
 - `src/types/stock.ts` - App domain types
@@ -51,6 +53,10 @@ When asked to commit: update any task lists, run `npm install`, commit (short me
 - Work on one thin slice at a time (e.g., Story 1.1 only)
 - No gold-plating or features beyond acceptance criteria
 - Ask clarifying questions one-by-one before planning
+
+## Browser Test Artifacts
+
+- Store browser screenshots under `docs/test-artifacts/<story>/`, never in the repository root.
 
 ## Acceptance Test Guidelines
 
@@ -105,4 +111,3 @@ When asked to commit: update any task lists, run `npm install`, commit (short me
 - Shadows: Use `--shadow-{sm,md,lg}` scale, `--shadow-inset` for recessed inputs
 - Border tokens: Use `--border-width-*` and `--border-radius-*` (never hardcode px values)
 - Font scale: `xs/sm/base/lg/xl/2xl/3xl/4xl/5xl` - pick appropriate size for hierarchy
-

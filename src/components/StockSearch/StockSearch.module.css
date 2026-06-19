@@ -56,6 +56,20 @@
   font-weight: var(--font-weight-medium);
 }
 
+.loadingCard {
+  width: 100%;
+  max-width: 640px;
+  margin-top: var(--space-8);
+  padding: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: var(--border-width-medium) solid var(--border-default);
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
 @media (max-width: 1024px) {
   .title {
     font-size: var(--font-size-4xl);

@@ -2,7 +2,7 @@ import type { ReactElement, FormEvent } from 'react';
 import StockPreviewList from '../StockPreviewList/StockPreviewList';
 import styles from './SearchForm.module.css';
 
-import { FinnhubSearchResult } from '../../services/finnhub/types.ts';
+import type { FinnhubSearchResult } from '../../services/finnhub/types.ts';
 
 type SearchFormProps = {
   query: string;
@@ -11,7 +11,7 @@ type SearchFormProps = {
   previewResults: FinnhubSearchResult[];
   showPreviews: boolean;
   debouncedQuery: string;
-  onSelect: (symbol: string) => void;
+  onSelect: (result: FinnhubSearchResult) => void;
 };
 
 export default function SearchForm({

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story 1.2 — Detailed Stock Metrics Plan</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f5f1e8;
+        --panel: #fffaf1;
+        --ink: #1c1c1c;
+        --muted: #5c5c5c;
+        --accent: #b8581d;
+        --teal: #2f4f4f;
+        --line: #c8bca8;
+        --green: #2d5016;
+        --red: #8b2e2e;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        width: min(1040px, calc(100% - 32px));
+        margin: 48px auto;
+      }
+
+      header, section {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        box-shadow: 6px 6px 0 rgb(47 79 79 / 14%);
+      }
+
+      header { padding: 40px; }
+      section { margin-top: 24px; padding: 28px; }
+      h1, h2, h3 { line-height: 1.15; }
+      h1 { margin: 8px 0 12px; font-size: clamp(2rem, 6vw, 4.5rem); }
+      h2 { margin-top: 0; color: var(--teal); }
+      h3 { margin-bottom: 8px; }
+      p:last-child, ul:last-child, ol:last-child { margin-bottom: 0; }
+
+      .eyebrow, code, pre, .badge {
+        font-family: "SFMono-Regular", Consolas, monospace;
+      }
+
+      .eyebrow { color: var(--accent); font-weight: 700; letter-spacing: 0.08em; }
+      .summary { max-width: 760px; color: var(--muted); font-size: 1.1rem; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+      .card { padding: 20px; border-left: 4px solid var(--accent); background: #fff; }
+      .badge { display: inline-block; padding: 2px 8px; background: var(--teal); color: white; }
+      .red { color: var(--red); }
+      .green { color: var(--green); }
+
+      pre {
+        overflow-x: auto;
+        padding: 20px;
+        border: 1px solid var(--line);
+        background: #1f2929;
+        color: #f8f4eb;
+        line-height: 1.4;
+      }
+
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+      th { color: var(--teal); }
+      li + li { margin-top: 8px; }
+      code { padding: 1px 5px; background: #eee4d5; }
+
+      @media (max-width: 720px) {
+        main { margin: 20px auto; }
+        header, section { padding: 20px; box-shadow: 3px 3px 0 rgb(47 79 79 / 14%); }
+        .grid { grid-template-columns: 1fr; }
+        table, tbody, tr, td { display: block; }
+        thead { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">IMPLEMENTATION PLAN · STORY 1.2 ONLY</div>
+        <h1>Detailed stock metrics</h1>
+        <p class="summary">
+          Expand the selected-stock card with daily trading metrics, fundamentals, and an accessible
+          52-week position indicator. Preserve useful quote data when optional Finnhub endpoints fail.
+        </p>
+      </header>
+
+      <section>
+        <h2>Outcome and boundaries</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Scenario 1</h3>
+            <p>After preview selection, show current, open, day high, day low, market cap, and P/E.</p>
+          </div>
+          <div class="card">
+            <h3>Scenario 2</h3>
+            <p>Show 52-week low/high and visually locate current price within that range.</p>
+          </div>
+        </div>
+        <p><strong>Excluded:</strong> watchlists, expanded cards, charts, visible range percentage, and Story 1.3+ work.</p>
+      </section>
+
+      <section>
+        <h2>Approved design</h2>
+        <pre aria-label="Approved compact dashboard wireframe">┌──────────────────────────────────────────┐
+│ AAPL  APPLE INC              $145.52     │
+│                              ▲ +1.64%    │
+├───────────┬───────────┬──────────────────┤
+│ OPEN      │ DAY HIGH  │ DAY LOW          │
+│ $144.20   │ $146.12   │ $143.89          │
+├───────────┴───────────┼──────────────────┤
+│ MARKET CAP $2.8T      │ P/E 28.50        │
+├──────────────────────────────────────────┤
+│ 52-WEEK RANGE                          │
+│ $124.17  ━━━━━━━━━━━●━━━━━━  $152.84     │
+└──────────────────────────────────────────┘</pre>
+        <ul>
+          <li>Desktop: three-column daily-metric row; two-column fundamentals row.</li>
+          <li>Mobile: two-column metric grid; market cap may span both columns.</li>
+          <li>Range uses a dot only. Assistive technology receives the computed position.</li>
+          <li>Loading selection replaces the old card with a compact loading card.</li>
+          <li>Missing fields render <code>N/A</code>; a warning names each unavailable field.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Data and architecture</h2>
+        <table>
+          <thead><tr><th>Source</th><th>Fields</th><th>Policy</th></tr></thead>
+          <tbody>
+            <tr><td><code>/quote</code></td><td><code>c</code>, <code>o</code>, <code>h</code>, <code>l</code>, change</td><td>Required. Failure keeps existing error behavior.</td></tr>
+            <tr><td><code>/stock/profile2</code></td><td><code>marketCapitalization</code></td><td>Optional; Finnhub value is millions, format compactly as USD.</td></tr>
+            <tr><td><code>/stock/metric?metric=all</code></td><td>52-week high/low, P/E</td><td>Optional; prefer trailing basic P/E, then normalized annual.</td></tr>
+          </tbody>
+        </table>
+        <ol>
+          <li>Add strict raw Finnhub response types and nullable domain metric fields.</li>
+          <li>Refactor selection to pass a typed stock preview into detail loading, avoiding a duplicate search request.</li>
+          <li>Fetch quote, profile, and metrics concurrently. Quote is required; optional requests degrade independently.</li>
+          <li>Translate missing, absent, non-finite, or non-positive optional values to unavailable domain values.</li>
+          <li>Compute range position with a pure function, clamp to 0–100, and return unavailable for invalid/equal bounds.</li>
+          <li>Keep formatting and unavailable-field derivation in small pure helpers; keep components under project limits.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Execution sequence</h2>
+        <h3><span class="badge red">RED</span> TDD walking skeleton</h3>
+        <ol>
+          <li>Add only <code>[TEST]</code> comments for the two acceptance scenarios and supporting behavior; pause for confirmation.</li>
+          <li>Replace the first comment with an App-level MSW acceptance test covering all detailed metrics.</li>
+          <li>Predict compile failure, run all tests, add the smallest types/API surface needed to compile.</li>
+          <li>Predict assertion failure, run all tests, then minimally map and render the metrics.</li>
+          <li>Repeat the two-step red cycle for the 52-week range and accessible position.</li>
+          <li>Add behavior coverage for partial optional-endpoint failures, named warnings/N/A, loading replacement, and P/E fallback only where required to stabilize the agreed contract.</li>
+        </ol>
+
+        <h3><span class="badge green">GREEN</span> Minimal implementation</h3>
+        <ol>
+          <li>Introduce profile and metric clients plus concurrent orchestration.</li>
+          <li>Update preview selection flow to reuse its typed symbol/company identity.</li>
+          <li>Build focused metric-grid, warning, loading, and range-indicator presentation pieces as complexity demands.</li>
+          <li>Use existing CSS tokens only; add semantic tokens first if the design needs a value not represented.</li>
+          <li>Run the complete suite after every green step.</li>
+        </ol>
+
+        <h3><span class="badge">TIDY</span> After all tests pass</h3>
+        <ol>
+          <li>Invoke <strong>tidy</strong>; verify baseline tests are green.</li>
+          <li>Scan production code for dead code, naming, methods over 25 lines, duplication, conditionals, locals, and imports.</li>
+          <li>Present numbered opportunities and wait for approval. Do not alter test code during tidy.</li>
+          <li>Apply approved refactors individually, running all tests after each.</li>
+        </ol>
+
+        <h3>Quality gates</h3>
+        <p><code>npm test</code> · <code>npm run type-check</code> · <code>npm run lint</code> · <code>npm run prettier:check</code> · <code>npm run build</code></p>
+      </section>
+
+      <section>
+        <h2>Browser acceptance verification</h2>
+        <p>After both scenarios pass automated tests, invoke <strong>test-feature</strong> with the configured <strong>agent-browser</strong>.</p>
+        <ol>
+          <li>Start Vite in a shared tmux session and retain logs.</li>
+          <li>Search AAPL, select its preview, and verify every Scenario 1 metric visually.</li>
+          <li>Verify 52-week labels, marker placement, and accessible progress semantics.</li>
+          <li>Check the loading replacement and two-column mobile layout.</li>
+          <li>Record failures and UX suggestions in <code>test-report-story-1-2-YYYY-MM-DD-HH-MM.md</code>; capture issue screenshots.</li>
+        </ol>
+        <pre>tmux new-session -d -s diamante-story-1-2 \
+  'npm run dev -- --host 0.0.0.0 2&gt;&amp;1 | tee /tmp/diamante-story-1-2.log'
+
+# View the live app logs in tmux
+tmux attach -t diamante-story-1-2
+
+# Detach without stopping the app: Ctrl-b, then d</pre>
+      </section>
+
+      <section>
+        <h2>Final review</h2>
+        <ol>
+          <li>Invoke <strong>review</strong> in verification-only mode after implementation, tidy, and browser acceptance.</li>
+          <li>Inspect correctness, endpoint degradation, stale-state races, SRP/limits, formatting, responsive overflow, large text, accessibility, and focus behavior.</li>
+          <li>Report findings by severity with file/line, trigger, impact, verification summary, and residual risk.</li>
+          <li>Do not silently expand scope; any review fixes require explicit authorization.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Definition of done</h2>
+        <ul>
+          <li>Both Story 1.2 acceptance scenarios pass through the full App with MSW.</li>
+          <li>Quote failure is fatal; profile/metrics failures produce named warning and N/A fields.</li>
+          <li>Selected preview identity is reused; no redundant search request occurs.</li>
+          <li>Range marker is clamped, visually correct, keyboard-neutral, and screen-reader meaningful.</li>
+          <li>Loading card prevents stale details; desktop and mobile layouts remain readable.</li>
+          <li>All quality gates, tidy workflow, browser report, and final review complete.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

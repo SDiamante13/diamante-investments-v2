@@ -6,12 +6,21 @@ import { useStockPreviews } from '../../hooks/useStockPreviews';
 import { useStockData } from '../../hooks/useStockData';
 import { useDebounce } from '../../hooks/useDebounce';
 import styles from './StockSearch.module.css';
+import type { FinnhubSearchResult } from '../../services/finnhub/types';
+
+function LoadingCard({ symbol }: { symbol: string }): ReactElement {
+  return (
+    <div className={styles.loadingCard} role="status" aria-label={`Loading ${symbol} details`}>
+      Loading {symbol} details…
+    </div>
+  );
+}
 
 export default function StockSearch(): ReactElement {
   const [query, setQuery] = useState('');
   const [showPreviews, setShowPreviews] = useState(false);
   const { results } = useStockPreviews(query);
-  const { stockData, error, loadStockData } = useStockData();
+  const { stockData, error, loadingSymbol, loadStockData } = useStockData();
   const debouncedQuery = useDebounce(query, 400);
 
   useEffect(() => {
@@ -24,9 +33,9 @@ export default function StockSearch(): ReactElement {
     await loadStockData(query);
   }
 
-  function handleSelect(symbol: string): void {
+  function handleSelect(result: FinnhubSearchResult): void {
     setShowPreviews(false);
-    void loadStockData(symbol);
+    void loadStockData(result);
   }
 
   return (
@@ -43,6 +52,7 @@ export default function StockSearch(): ReactElement {
         onSelect={handleSelect}
       />
       {error && <div className={styles.error}>{error}</div>}
+      {loadingSymbol && <LoadingCard symbol={loadingSymbol} />}
       {stockData && <StockResult stockData={stockData} />}
     </div>
   );

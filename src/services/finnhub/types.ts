@@ -19,3 +19,16 @@ export interface FinnhubQuote {
   pc: number;
   t: number;
 }
+
+export interface FinnhubProfile {
+  marketCapitalization?: number;
+}
+
+export interface FinnhubMetrics {
+  metric?: {
+    '52WeekHigh'?: number;
+    '52WeekLow'?: number;
+    peBasicExclExtraTTM?: number;
+    peNormalizedAnnual?: number;
+  };
+}

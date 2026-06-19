@@ -159,7 +159,7 @@ Scenario: User selects US stock and views data without errors
 
 ---
 
-## Story 1.2: User sees detailed metrics on stock card
+## ✅ Story 1.2: User sees detailed metrics on stock card
 
 **Description:** Stock cards display comprehensive metrics directly in search results, including essential trading data and 52-week range information. This allows users to see all relevant data at a glance during stock discovery without requiring additional interactions.
 

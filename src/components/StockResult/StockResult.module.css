@@ -84,6 +84,50 @@
   content: '▼ ';
 }
 
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: var(--space-6);
+  border-top: var(--border-width-thin) solid var(--border-default);
+  border-left: var(--border-width-thin) solid var(--border-default);
+}
+
+.metric {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-right: var(--border-width-thin) solid var(--border-default);
+  border-bottom: var(--border-width-thin) solid var(--border-default);
+}
+
+.metric:nth-child(4) {
+  grid-column: span 2;
+}
+
+.metricLabel {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.metricValue {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+}
+
+.warning {
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--text-negative);
+  border-left: var(--border-width-thick) solid var(--text-negative);
+}
+
 @media (max-width: 768px) {
   .card {
     padding: var(--space-6);
@@ -108,5 +152,9 @@
 
   .changes {
     gap: var(--space-4);
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
