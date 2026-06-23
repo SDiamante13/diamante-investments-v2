@@ -12,10 +12,7 @@ interface StockResultProps {
 }
 
 function formatDollarChange(value: number): string {
-  if (value >= 0) {
-    return `+$${value}`;
-  }
-  return `-$${Math.abs(value)}`;
+  return value >= 0 ? `+$${value.toFixed(2)}` : `-$${Math.abs(value).toFixed(2)}`;
 }
 
 function formatPercentChange(value: number): string {
@@ -47,16 +44,21 @@ function Metric({ label, value }: Readonly<{ label: string; value: string }>): R
   );
 }
 
-function StockHeader({
-  stock,
-  isWatched,
-  onToggleWatchlist,
-}: Readonly<{
+interface StockHeaderProps {
   stock: StockData;
   isWatched: boolean;
   onToggleWatchlist?: () => void;
-}>): ReactElement {
-  const label = isWatched ? `Stop watching ${stock.symbol}` : `Watch ${stock.symbol}`;
+}
+
+function watchButtonLabel(stock: StockData, isWatched: boolean): string {
+  return isWatched ? `Stop watching ${stock.symbol}` : `Watch ${stock.symbol}`;
+}
+
+function watchButtonText(isWatched: boolean): string {
+  return isWatched ? '★ Watching' : '☆ Watch';
+}
+
+function StockHeader({ stock, isWatched, onToggleWatchlist }: Readonly<StockHeaderProps>): ReactElement {
   return (
     <div className={styles.header}>
       <div>
@@ -64,8 +66,14 @@ function StockHeader({
         <div className={styles.company}>{stock.companyName}</div>
       </div>
       {onToggleWatchlist && (
-        <button className={styles.watchButton} type="button" aria-label={label} onClick={onToggleWatchlist} aria-pressed={isWatched}>
-          {isWatched ? '★ Watching' : '☆ Watch'}
+        <button
+          className={styles.watchButton}
+          type="button"
+          aria-label={watchButtonLabel(stock, isWatched)}
+          onClick={onToggleWatchlist}
+          aria-pressed={isWatched}
+        >
+          {watchButtonText(isWatched)}
         </button>
       )}
     </div>
@@ -97,20 +105,24 @@ function StockMetrics({ stock }: Readonly<{ stock: StockData }>): ReactElement {
   );
 }
 
-function unavailableFields(stock: StockData): string[] {
-  const fields = [
+function unavailableMetricFields(stock: StockData): string[] {
+  const fields: ReadonlyArray<readonly [string, number | null | undefined]> = [
     ['Open', stock.openPrice],
     ['Day high', stock.dayHigh],
     ['Day low', stock.dayLow],
     ['Market cap', stock.marketCap],
     ['P/E ratio', stock.peRatio],
-  ] as const;
-  const unavailable: string[] = fields.filter(([, value]) => !isPositiveFiniteNumber(value)).map(([label]) => label);
-  const validRange = isPositiveFiniteNumber(stock.yearHigh) && isPositiveFiniteNumber(stock.yearLow) && stock.yearHigh > stock.yearLow;
-  if (!validRange) {
-    unavailable.push('52-week range');
-  }
-  return unavailable;
+  ];
+  return fields.filter(([, value]) => !isPositiveFiniteNumber(value)).map(([label]) => label);
+}
+
+function hasValidYearRange(stock: StockData): boolean {
+  return isPositiveFiniteNumber(stock.yearHigh) && isPositiveFiniteNumber(stock.yearLow) && stock.yearHigh > stock.yearLow;
+}
+
+function unavailableFields(stock: StockData): string[] {
+  const rangeFields = hasValidYearRange(stock) ? [] : ['52-week range'];
+  return [...unavailableMetricFields(stock), ...rangeFields];
 }
 
 export default function StockResult({
