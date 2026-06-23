@@ -48,6 +48,35 @@
   animation: slideInFromTop var(--duration-slower) var(--ease-elastic);
 }
 
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.tab {
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-secondary);
+  background: transparent;
+  border: var(--border-width-thin) solid var(--border-default);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+}
+
+.tab[aria-selected='true'] {
+  color: var(--bg-primary);
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.tab:focus-visible {
+  outline: var(--border-width-medium) solid var(--accent-primary);
+  outline-offset: var(--space-1);
+}
+
 .error {
   margin-top: var(--space-4);
   font-family: var(--font-body);

@@ -18,7 +18,8 @@
 
 .header {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: var(--space-2);
   margin-bottom: var(--space-6);
   padding-bottom: var(--space-6);
@@ -40,6 +41,29 @@
   font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
   line-height: var(--line-height-normal);
+}
+
+.watchButton {
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--accent-primary);
+  background: transparent;
+  border: var(--border-width-thin) solid var(--accent-primary);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+}
+
+.watchButton[aria-pressed='true'] {
+  color: var(--bg-primary);
+  background: var(--accent-primary);
+}
+
+.watchButton:focus-visible {
+  outline: var(--border-width-medium) solid var(--accent-secondary);
+  outline-offset: var(--space-1);
 }
 
 .priceSection {
@@ -128,10 +152,21 @@
   border-left: var(--border-width-thick) solid var(--text-negative);
 }
 
+.watchStatus {
+  margin-top: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--accent-secondary);
+}
+
 @media (max-width: 768px) {
   .card {
     padding: var(--space-6);
     margin-top: var(--space-6);
+  }
+
+  .header {
+    flex-direction: column;
   }
 
   .symbol {

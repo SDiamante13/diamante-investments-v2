@@ -6,6 +6,9 @@ import styles from './StockResult.module.css';
 
 interface StockResultProps {
   stockData: StockData;
+  isWatched?: boolean;
+  watchlistStatus?: string;
+  onToggleWatchlist?: () => void;
 }
 
 function formatDollarChange(value: number): string {
@@ -44,11 +47,27 @@ function Metric({ label, value }: Readonly<{ label: string; value: string }>): R
   );
 }
 
-function StockHeader({ stock }: Readonly<{ stock: StockData }>): ReactElement {
+function StockHeader({
+  stock,
+  isWatched,
+  onToggleWatchlist,
+}: Readonly<{
+  stock: StockData;
+  isWatched: boolean;
+  onToggleWatchlist?: () => void;
+}>): ReactElement {
+  const label = isWatched ? `Stop watching ${stock.symbol}` : `Watch ${stock.symbol}`;
   return (
     <div className={styles.header}>
-      <div className={styles.symbol}>{stock.symbol}</div>
-      <div className={styles.company}>{stock.companyName}</div>
+      <div>
+        <div className={styles.symbol}>{stock.symbol}</div>
+        <div className={styles.company}>{stock.companyName}</div>
+      </div>
+      {onToggleWatchlist && (
+        <button className={styles.watchButton} type="button" aria-label={label} onClick={onToggleWatchlist} aria-pressed={isWatched}>
+          {isWatched ? '★ Watching' : '☆ Watch'}
+        </button>
+      )}
     </div>
   );
 }
@@ -94,13 +113,23 @@ function unavailableFields(stock: StockData): string[] {
   return unavailable;
 }
 
-export default function StockResult({ stockData }: Readonly<StockResultProps>): ReactElement {
+export default function StockResult({
+  stockData,
+  isWatched = false,
+  watchlistStatus = '',
+  onToggleWatchlist,
+}: Readonly<StockResultProps>): ReactElement {
   const missingFields = unavailableFields(stockData);
 
   return (
     <div className={styles.card}>
-      <StockHeader stock={stockData} />
+      <StockHeader stock={stockData} isWatched={isWatched} onToggleWatchlist={onToggleWatchlist} />
       <PriceSection stock={stockData} />
+      {watchlistStatus && (
+        <div className={styles.watchStatus} role="status">
+          {watchlistStatus}
+        </div>
+      )}
       <StockMetrics stock={stockData} />
       <StockRange current={stockData.currentPrice} high={stockData.yearHigh} low={stockData.yearLow} />
       {missingFields.length > 0 && (

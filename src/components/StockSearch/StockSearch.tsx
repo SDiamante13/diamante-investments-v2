@@ -1,59 +1,55 @@
-import type { ReactElement, FormEvent } from 'react';
-import { useState, useEffect } from 'react';
-import StockResult from '../StockResult/StockResult';
-import SearchForm from '../SearchForm/SearchForm';
-import { useStockPreviews } from '../../hooks/useStockPreviews';
-import { useStockData } from '../../hooks/useStockData';
-import { useDebounce } from '../../hooks/useDebounce';
+import type { ReactElement } from 'react';
+import { useState } from 'react';
+import WatchlistView from '../WatchlistView/WatchlistView';
+import StockSearchPanel from './StockSearchPanel';
+import StockTabs from './StockTabs';
 import styles from './StockSearch.module.css';
-import type { FinnhubSearchResult } from '../../services/finnhub/types';
+import type { StockSearchTab } from './stockSearchTypes';
+import { useSelectedWatchlist } from './useSelectedWatchlist';
+import { useStockSearchFlow } from './useStockSearchFlow';
+import type { SelectedWatchlist } from './useSelectedWatchlist';
+import type { StockSearchFlow } from './useStockSearchFlow';
 
-function LoadingCard({ symbol }: { symbol: string }): ReactElement {
+interface StockSearchLayoutProps {
+  activeTab: StockSearchTab;
+  onTabSelect: (tab: StockSearchTab) => void;
+  search: StockSearchFlow;
+  watchlist: SelectedWatchlist;
+}
+
+function StockSearchLayout({ activeTab, onTabSelect, search, watchlist }: Readonly<StockSearchLayoutProps>): ReactElement {
   return (
-    <div className={styles.loadingCard} role="status" aria-label={`Loading ${symbol} details`}>
-      Loading {symbol} details…
+    <div className={styles.container}>
+      <div className={styles.decorativeLines} />
+      <h1 className={styles.title}>Diamante Investments</h1>
+      <StockTabs activeTab={activeTab} onSelect={onTabSelect} />
+      {activeTab === 'search' ? (
+        <StockSearchPanel
+          query={search.query}
+          onQueryChange={search.onQueryChange}
+          onSubmit={search.onSubmit}
+          previewResults={search.previewResults}
+          showPreviews={search.showPreviews}
+          debouncedQuery={search.debouncedQuery}
+          onSelect={search.onSelect}
+          error={search.error}
+          loadingSymbol={search.loadingSymbol}
+          stockData={search.stockData}
+          isWatched={watchlist.isWatched}
+          watchlistStatus={watchlist.status}
+          onToggleWatchlist={watchlist.onToggle}
+        />
+      ) : (
+        <WatchlistView items={watchlist.items} />
+      )}
     </div>
   );
 }
 
 export default function StockSearch(): ReactElement {
-  const [query, setQuery] = useState('');
-  const [showPreviews, setShowPreviews] = useState(false);
-  const { results } = useStockPreviews(query);
-  const { stockData, error, loadingSymbol, loadStockData } = useStockData();
-  const debouncedQuery = useDebounce(query, 400);
+  const [activeTab, setActiveTab] = useState<StockSearchTab>('search');
+  const search = useStockSearchFlow();
+  const watchlist = useSelectedWatchlist(search.stockData);
 
-  useEffect(() => {
-    setShowPreviews(debouncedQuery.length >= 2);
-  }, [debouncedQuery]);
-
-  async function handleSubmit(e: FormEvent): Promise<void> {
-    e.preventDefault();
-    setShowPreviews(false);
-    await loadStockData(query);
-  }
-
-  function handleSelect(result: FinnhubSearchResult): void {
-    setShowPreviews(false);
-    void loadStockData(result);
-  }
-
-  return (
-    <div className={styles.container}>
-      <div className={styles.decorativeLines} />
-      <h1 className={styles.title}>Diamante Investments</h1>
-      <SearchForm
-        query={query}
-        onQueryChange={setQuery}
-        onSubmit={handleSubmit}
-        previewResults={results}
-        showPreviews={showPreviews}
-        debouncedQuery={debouncedQuery}
-        onSelect={handleSelect}
-      />
-      {error && <div className={styles.error}>{error}</div>}
-      {loadingSymbol && <LoadingCard symbol={loadingSymbol} />}
-      {stockData && <StockResult stockData={stockData} />}
-    </div>
-  );
+  return <StockSearchLayout activeTab={activeTab} onTabSelect={setActiveTab} search={search} watchlist={watchlist} />;
 }

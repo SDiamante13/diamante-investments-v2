@@ -1,0 +1,79 @@
+.panel {
+  width: 100%;
+  max-width: 640px;
+  margin-top: var(--space-8);
+}
+
+.heading {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+}
+
+.empty,
+.item {
+  padding: var(--space-5);
+  background: var(--bg-secondary);
+  border: var(--border-width-medium) solid var(--border-default);
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.empty {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.symbol,
+.price,
+.values {
+  font-family: var(--font-mono);
+}
+
+.symbol,
+.price {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.company {
+  margin-top: var(--space-1);
+  color: var(--text-secondary);
+}
+
+.values {
+  display: grid;
+  gap: var(--space-1);
+  text-align: right;
+}
+
+.positive {
+  color: var(--text-positive);
+}
+
+.negative {
+  color: var(--text-negative);
+}
+
+@media (max-width: 768px) {
+  .item {
+    flex-direction: column;
+  }
+
+  .values {
+    text-align: left;
+  }
+}
