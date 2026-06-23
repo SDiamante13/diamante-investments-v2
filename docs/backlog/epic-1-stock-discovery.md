@@ -199,7 +199,7 @@ Scenario: User sees 52-week range information on stock card
 
 ---
 
-## Story 1.3: User adds stock to watchlist from stock card
+## ✅ Story 1.3: User adds stock to watchlist from stock card
 
 **Description:** Users can add a stock to their watchlist from the stock card with a single click. This enables quick tracking of stocks discovered through search.
 
