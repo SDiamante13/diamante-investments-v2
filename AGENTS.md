@@ -21,6 +21,9 @@ Finnhub may return error-shaped HTTP 200 responses. Runtime-validate required qu
 **Data Fetching Hooks:** `src/hooks/`
 - `useStockPreviews(query)` - Debounced search preview
 - `useStockData(symbol)` - Full stock data fetch
+- `useWatchlist()` - localStorage-backed watchlist under `diamante.watchlist.v1`; pure watchlist operations live in `src/utils/watchlist.ts`
+
+**Navigation:** Story 1.3 uses same-page `Search` and `Watchlist` tabs, not routing.
 
 ## Commiting
 
