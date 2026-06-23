@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story 1.3 - Watchlist From Stock Card Plan</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f5f1e8;
+        --panel: #fffaf1;
+        --ink: #1c1c1c;
+        --muted: #5c5c5c;
+        --accent: #b8581d;
+        --teal: #2f4f4f;
+        --line: #c8bca8;
+        --green: #2d5016;
+        --red: #8b2e2e;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgb(47 79 79 / 5%) 1px, transparent 1px) 0 0 / 48px 48px,
+          var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        width: min(1080px, calc(100% - 32px));
+        margin: 48px auto;
+      }
+
+      header,
+      section {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        box-shadow: 6px 6px 0 rgb(47 79 79 / 14%);
+      }
+
+      header {
+        padding: 40px;
+      }
+
+      section {
+        margin-top: 24px;
+        padding: 28px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.15;
+      }
+
+      h1 {
+        margin: 8px 0 12px;
+        font-size: clamp(2rem, 6vw, 4.5rem);
+      }
+
+      h2 {
+        margin-top: 0;
+        color: var(--teal);
+      }
+
+      h3 {
+        margin-bottom: 8px;
+      }
+
+      p:last-child,
+      ul:last-child,
+      ol:last-child {
+        margin-bottom: 0;
+      }
+
+      .eyebrow,
+      code,
+      pre,
+      .badge {
+        font-family: "SFMono-Regular", Consolas, monospace;
+      }
+
+      .eyebrow {
+        color: var(--accent);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+
+      .summary {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        padding: 20px;
+        border-left: 4px solid var(--accent);
+        background: var(--white);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        background: var(--teal);
+        color: var(--white);
+      }
+
+      .red {
+        color: var(--red);
+      }
+
+      .green {
+        color: var(--green);
+      }
+
+      pre {
+        overflow-x: auto;
+        padding: 20px;
+        border: 1px solid var(--line);
+        background: #1f2929;
+        color: #f8f4eb;
+        line-height: 1.4;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--teal);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        padding: 1px 5px;
+        background: #eee4d5;
+      }
+
+      @media (max-width: 720px) {
+        main {
+          margin: 20px auto;
+        }
+
+        header,
+        section {
+          padding: 20px;
+          box-shadow: 3px 3px 0 rgb(47 79 79 / 14%);
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        table,
+        tbody,
+        tr,
+        td {
+          display: block;
+        }
+
+        thead {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">IMPLEMENTATION PLAN - STORY 1.3 ONLY</div>
+        <h1>Watchlist from stock card</h1>
+        <p class="summary">
+          Add a compact watch control to the selected stock card, persist watched snapshot rows in localStorage,
+          and expose a same-page watchlist tab so the user can verify the stock was tracked.
+        </p>
+      </header>
+
+      <section>
+        <h2>Interview decisions</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Stock card control</h3>
+            <p>A3 header action chip: <code>[☆ Watch]</code> inactive and <code>[★ Watching]</code> active.</p>
+          </div>
+          <div class="card">
+            <h3>Navigation</h3>
+            <p>Same-page tabs: <code>Search</code> and <code>Watchlist</code>.</p>
+          </div>
+          <div class="card">
+            <h3>Persistence</h3>
+            <p><code>useWatchlist()</code> backed by localStorage.</p>
+          </div>
+          <div class="card">
+            <h3>Duplicates</h3>
+            <p>Symbol is unique; adding an existing symbol updates the stored snapshot.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Scope</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Included</h3>
+            <ul>
+              <li>Add/remove toggle from selected stock card.</li>
+              <li>Active visual state when stock is already watched.</li>
+              <li>Status message for add and remove.</li>
+              <li>Watchlist tab with snapshot summary rows.</li>
+              <li>localStorage save and restore for watched snapshots.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Excluded</h3>
+            <ul>
+              <li>No backend account storage.</li>
+              <li>No live refetch in watchlist rows.</li>
+              <li>No expanded watchlist cards.</li>
+              <li>No remove control inside the watchlist view; Story 2.3 owns that.</li>
+              <li>No charts, search history, or multi-list organization.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Approved UI</h2>
+        <h3>Search tab stock card</h3>
+        <pre aria-label="Selected stock card with watch action">+------------------------------------------------+
+| AAPL  Apple Inc.              [☆ Watch]       |
+| $145.52      +$2.35      +1.64%               |
+| Open 144.20 | Day high 146.12 | Day low 143.89|
+| Market cap 2.8T        P/E 28.50              |
+| 52-week range: 124.17 ----o------ 152.84      |
++------------------------------------------------+
+
+After click:
++------------------------------------------------+
+| AAPL  Apple Inc.           [★ Watching]       |
+| $145.52      +$2.35      +1.64%               |
+| Added AAPL to watchlist                        |
++------------------------------------------------+</pre>
+
+        <h3>Same-page tabs</h3>
+        <pre aria-label="Same-page tabs with watchlist snapshot rows">+------------------------------------------------+
+| Diamante Investments                           |
+| [ Search ] [ Watchlist ]                       |
++------------------------------------------------+
+| Search tab                                     |
+| Search input...                                |
+| Selected stock card...                         |
++------------------------------------------------+
+
++------------------------------------------------+
+| Diamante Investments                           |
+| [ Search ] [ Watchlist ]                       |
++------------------------------------------------+
+| Watchlist                                      |
+| +--------------------------------------------+ |
+| | AAPL      Apple Inc.          $145.52      | |
+| |           +$2.35              +1.64%       | |
+| +--------------------------------------------+ |
++------------------------------------------------+</pre>
+
+        <h3>Empty watchlist state</h3>
+        <pre aria-label="Empty watchlist state">+------------------------------------------------+
+| Watchlist                                      |
+| No stocks watched yet.                         |
++------------------------------------------------+</pre>
+
+        <ul>
+          <li>Use existing stock-card typography and tokens; action chip uses existing accent and border tokens.</li>
+          <li>Use star icon text for now, not an icon dependency, because the project has no icon library.</li>
+          <li>Button label remains textual enough to avoid mystery controls: <code>Watch</code> / <code>Watching</code>.</li>
+          <li>Status message uses <code>role="status"</code> and copy matches action vocabulary.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Data model</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Fields</th>
+              <th>Rule</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>WatchlistItem</code></td>
+              <td><code>symbol</code>, <code>companyName</code>, <code>currentPrice</code>, <code>dollarChange</code>, <code>percentChange</code></td>
+              <td>Snapshot copied from selected <code>StockData</code>.</td>
+            </tr>
+            <tr>
+              <td><code>WatchlistState</code></td>
+              <td><code>items: WatchlistItem[]</code></td>
+              <td>Stored as JSON under versioned key <code>diamante.watchlist.v1</code>.</td>
+            </tr>
+            <tr>
+              <td>Identity</td>
+              <td><code>symbol</code></td>
+              <td>Case-normalized unique key. Latest add updates existing snapshot.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Architecture</h2>
+        <ol>
+          <li>Add <code>src/types/watchlist.ts</code> for the snapshot value object.</li>
+          <li>Add pure helpers for <code>toWatchlistItem(stock)</code>, <code>upsertWatchlistItem(items, item)</code>, and <code>removeWatchlistSymbol(items, symbol)</code>.</li>
+          <li>Add <code>useWatchlist()</code> to load, validate, update, and persist localStorage-backed items.</li>
+          <li>Validate parsed storage shape, not just JSON syntax; ignore rows missing required typed fields.</li>
+          <li>Lift app-level tab and watchlist state into <code>StockSearch</code> unless the file would exceed limits; extract <code>StockDiscoveryShell</code> if needed.</li>
+          <li>Pass <code>isWatched</code> and <code>onToggleWatchlist</code> into <code>StockResult</code>.</li>
+          <li>Add <code>WatchlistView</code> and <code>WatchlistItemCard</code> for snapshot rows.</li>
+          <li>Keep all formatting helpers small and shared only when a second component needs the same behavior.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Execution sequence</h2>
+        <h3><span class="badge red">RED</span> Acceptance first</h3>
+        <ol>
+          <li>Add Story 1.3 acceptance tests for add, active state on re-search, remove toggle, and watchlist tab display.</li>
+          <li>Use visible test data per <code>docs/rules/TESTING-RULES.md</code>; keep helpers local and DAMP.</li>
+          <li>Reset localStorage before each watchlist test so persistence assertions do not leak between cases.</li>
+          <li>Predict compile failure before adding new hook/component contracts.</li>
+        </ol>
+
+        <h3><span class="badge green">GREEN</span> Minimal implementation</h3>
+        <ol>
+          <li>Create watchlist types and pure list operations.</li>
+          <li>Implement localStorage hook with corrupt-storage fallback to empty list.</li>
+          <li>Add tabs and watchlist view using snapshot rows.</li>
+          <li>Add stock-card watch chip and status message.</li>
+          <li>Wire selected stock toggle to latest-snapshot upsert and remove.</li>
+        </ol>
+
+        <h3><span class="badge">TIDY</span> Refactor after green</h3>
+        <ol>
+          <li>Check file length, function length, SRP, and duplicated formatting logic.</li>
+          <li>Extract shell, tabs, or formatter modules only if limits or clarity demand it.</li>
+          <li>Keep Story 2 behavior out of the refactor.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Testing plan</h2>
+        <ol>
+          <li>Acceptance: add AAPL from card, see <code>★ Watching</code>, see <code>Added AAPL to watchlist</code>.</li>
+          <li>Acceptance: return to Search, load AAPL again, control starts active, click removes, see removal status.</li>
+          <li>Acceptance: navigate to Watchlist tab and verify snapshot row includes symbol, company, price, dollar change, percent change.</li>
+          <li>Acceptance: after removing AAPL, navigate to Watchlist tab and verify AAPL no longer appears.</li>
+          <li>Unit: pure upsert updates existing symbol instead of duplicating.</li>
+          <li>Unit: localStorage hook restores valid items, ignores invalid JSON safely, and filters malformed item rows.</li>
+        </ol>
+        <p><strong>Quality gates:</strong> <code>npm test</code> · <code>npm run type-check</code> · <code>npm run lint</code> · <code>npm run prettier:check</code> · <code>npm run build</code></p>
+      </section>
+
+      <section>
+        <h2>Manual verification</h2>
+        <ol>
+          <li>Search AAPL, select preview, click <code>Watch</code>.</li>
+          <li>Confirm chip changes to <code>★ Watching</code> and status says <code>Added AAPL to watchlist</code>.</li>
+          <li>Open Watchlist tab and confirm AAPL snapshot row appears.</li>
+          <li>Search AAPL again and confirm active state is restored.</li>
+          <li>Click <code>Watching</code> and confirm removal status plus empty watchlist state.</li>
+          <li>Refresh browser and confirm localStorage-backed state survives.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Risks and mitigations</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Risk</th>
+              <th>Mitigation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Story 1.3 overlaps Epic 2 watchlist management.</td>
+              <td>Build only minimal snapshot display and no watchlist-row remove control.</td>
+            </tr>
+            <tr>
+              <td>Stale watchlist prices look live.</td>
+              <td>Plan labels them as snapshots and avoids refetch until Epic 2/3 decides live behavior.</td>
+            </tr>
+            <tr>
+              <td>localStorage parse errors break app load.</td>
+              <td>Hook catches invalid storage, filters malformed rows, and returns empty list when no valid items remain.</td>
+            </tr>
+            <tr>
+              <td>Persistent watchlist tests leak state across cases.</td>
+              <td>Clear localStorage in test setup and seed only the data each case needs.</td>
+            </tr>
+            <tr>
+              <td>Stock card file crosses project limits.</td>
+              <td>Extract watch chip and status pieces before adding more branches.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Definition of done</h2>
+        <ul>
+          <li>Story 1.3 acceptance scenarios pass through the full app.</li>
+          <li>Watch chip uses approved A3 design and accessible button labels.</li>
+          <li>Same-page Watchlist tab displays snapshot rows from localStorage state.</li>
+          <li>Duplicate symbol upserts latest snapshot without duplicate rows.</li>
+          <li>Add and remove status messages are visible and announced.</li>
+          <li>All quality gates pass.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
