@@ -13,4 +13,8 @@ describe('recordSearch', () => {
   test('moves a repeated search to the top instead of duplicating it', () => {
     expect(recordSearch([microsoft, apple], apple)).toEqual([apple, microsoft]);
   });
+
+  test('treats a differently-cased symbol as the same search', () => {
+    expect(recordSearch([apple], { symbol: 'aapl', companyName: 'APPLE INC' })).toEqual([apple]);
+  });
 });
