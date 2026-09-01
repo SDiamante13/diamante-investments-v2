@@ -75,6 +75,19 @@ describe('Search history', () => {
 
     await thenRecentSearchesAre(['NVDA', 'META', 'AMZN', 'GOOGL', 'MSFT']);
   }, 20000);
+
+  test('user typing a query sees a matched symbol only once, in the matches list', async () => {
+    givenStocksAreSearchable();
+    render(<App />);
+
+    await whenUserSearchesAndSelects('AAPL');
+    await whenUserSearchesAndSelects('MSFT');
+
+    whenUserTypesInTheSearchField('AAPL');
+
+    await thenMatchedSymbolsAre(['AAPL']);
+    await thenRecentSearchesAre(['MSFT']);
+  });
 });
 
 function givenStocksAreSearchable(): void {
@@ -104,6 +117,16 @@ function whenUserFocusesTheSearchField(): void {
   userEvent.click(searchField);
 }
 
+function whenUserTypesInTheSearchField(query: string): void {
+  const searchField = screen.getByRole('textbox');
+  userEvent.clear(searchField);
+  userEvent.type(searchField, query);
+}
+
+async function thenMatchedSymbolsAre(expected: string[]): Promise<void> {
+  await waitFor(() => expect(symbolsListedUnder('Matches')).toEqual(expected), { timeout: 1200 });
+}
+
 function whenUserClicksRecentSearch(symbol: string): void {
   const recent = screen.getByRole('region', { name: 'Recent' });
   userEvent.click(within(recent).getByText(symbol));
@@ -116,8 +139,13 @@ async function thenUserSeesStockCardFor(expected: { symbol: string; company: str
 }
 
 async function thenRecentSearchesAre(expected: string[]): Promise<void> {
-  const recent = await screen.findByRole('region', { name: 'Recent' }, { timeout: 600 });
+  await waitFor(() => expect(symbolsListedUnder('Recent')).toEqual(expected), { timeout: 1200 });
+}
+
+function symbolsListedUnder(regionName: string): string[] {
   const tickerShapedText = /^[A-Z]+$/;
-  const shownSymbols = within(recent).getAllByText(tickerShapedText);
-  expect(shownSymbols.map((symbol) => symbol.textContent)).toEqual(expected);
+  const region = screen.getByRole('region', { name: regionName });
+  return within(region)
+    .getAllByText(tickerShapedText)
+    .map((symbol) => symbol.textContent ?? '');
 }
