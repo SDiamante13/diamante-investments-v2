@@ -22,8 +22,21 @@ Finnhub may return error-shaped HTTP 200 responses. Runtime-validate required qu
 - `useStockPreviews(query)` - Debounced search preview
 - `useStockData(symbol)` - Full stock data fetch
 - `useWatchlist()` - localStorage-backed watchlist under `diamante.watchlist.v1`; pure watchlist operations live in `src/utils/watchlist.ts`
+- `useSearchHistory()` - localStorage-backed search history under `diamante.searchHistory.v1`, capped at 5; pure operations live in `src/utils/searchHistory.ts`
+- `usePersistedList(key, isItem)` - shared localStorage list persistence (parse, `{ items: [...] }` shape check, per-row validation, corrupt-storage fallback). Both list hooks build on it; its setter only accepts functional updates.
 
 **Navigation:** Story 1.3 uses same-page `Search` and `Watchlist` tabs, not routing.
+
+**Search dropdown:** `SearchForm` owns one absolutely-positioned dropdown containing the matches list, the
+no-matches note, then the `Recent` list. It opens on focus *and* click (clicking an already-focused input
+fires no focus event) and closes on blur and on select. The dropdown wrapper prevents `mousedown` default so
+a row click lands before the input blurs. `StockPreviewList` is generic over `StockListRow { symbol;
+description }` and renders a named region - `Matches`, or `Recent` when given a `heading`.
+
+**Search history:** A search is recorded only when a stock card loads successfully, so `loadStockData`
+resolves to `StockData | null` (null for no-result and for superseded requests). Selecting a recent row fills
+the input with its symbol, so `useStockSearchFlow` suppresses matches for that exact query until the user
+types again. Symbols visible under `Matches` are excluded from `Recent`.
 
 ## Commiting
 
