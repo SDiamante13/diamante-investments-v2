@@ -38,6 +38,7 @@ export default function SearchForm({
           value={query}
           onChange={(e): void => onQueryChange(e.target.value)}
           onFocus={onFocus}
+          onClick={onFocus}
           onBlur={onBlur}
           className={styles.searchInput}
           placeholder="Search by ticker (e.g., AAPL)"
