@@ -2,19 +2,25 @@ import type { ReactElement } from 'react';
 import StockPreviewItem from '../StockPreviewItem/StockPreviewItem';
 import styles from './StockPreviewList.module.css';
 
-import type { FinnhubSearchResult } from '../../services/finnhub/types.ts';
+import type { StockListRow } from '../../types/stockListRow';
 
-interface StockPreviewListProps {
-  results: FinnhubSearchResult[];
-  onSelect: (result: FinnhubSearchResult) => void;
+interface StockPreviewListProps<T extends StockListRow> {
+  results: T[];
+  onSelect: (result: T) => void;
+  heading?: string;
 }
 
-export default function StockPreviewList({ results, onSelect }: StockPreviewListProps): ReactElement {
+export default function StockPreviewList<T extends StockListRow>({
+  results,
+  onSelect,
+  heading,
+}: Readonly<StockPreviewListProps<T>>): ReactElement {
   return (
-    <div className={styles.dropdown}>
+    <section className={styles.list} aria-label={heading ?? 'Matches'}>
+      {heading && <h2 className={styles.heading}>{heading}</h2>}
       {results.map((result) => (
         <StockPreviewItem key={result.symbol} result={result} onSelect={(): void => onSelect(result)} />
       ))}
-    </div>
+    </section>
   );
 }

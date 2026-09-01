@@ -1,7 +1,4 @@
-.dropdown {
-  position: absolute;
-  top: 100%;
-  width: 100%;
+.list {
   max-height: 400px;
   overflow-y: auto;
   background: var(--bg-secondary);
@@ -20,4 +17,16 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.heading {
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-align: left;
 }

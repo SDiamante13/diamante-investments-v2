@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { delay, http, HttpResponse } from 'msw';
-import { describe, test } from 'vitest';
+import { beforeEach, describe, test } from 'vitest';
 import App from '../../App';
 import {
   mockAppleMetrics,
@@ -15,6 +15,10 @@ import { server } from '../mocks/server';
 const BASE_URL = 'https://finnhub.io/api/v1';
 
 describe('Detailed Stock Metrics', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   test('user selects a stock preview and sees current, open, high, low, market cap, and P/E', async () => {
     givenAppleStockDataIsAvailable();
     render(<App />);

@@ -28,10 +28,13 @@ function StockSearchLayout({ activeTab, onTabSelect, search, watchlist }: Readon
           query={search.query}
           onQueryChange={search.onQueryChange}
           onSubmit={search.onSubmit}
+          onFocus={search.onFocus}
+          onBlur={search.onBlur}
           previewResults={search.previewResults}
-          showPreviews={search.showPreviews}
-          debouncedQuery={search.debouncedQuery}
+          showMatches={search.showMatches}
+          recentRows={search.recentRows}
           onSelect={search.onSelect}
+          onSelectRecent={search.onSelectRecent}
           error={search.error}
           loadingSymbol={search.loadingSymbol}
           stockData={search.stockData}

@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { describe, test } from 'vitest';
+import { beforeEach, describe, test } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '../mocks/server';
 import App from '../../App';
@@ -10,6 +10,10 @@ import { FinnhubQuote, FinnhubSearchResponse } from '../../services/finnhub/type
 const BASE_URL = 'https://finnhub.io/api/v1';
 
 describe('Stock Discovery', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   test('user searches valid ticker and sees stock data with symbol, company name, price, dollar change, and percent change', async () => {
     givenStockDataIsAvailableFor(mockAppleSearchResult, mockAppleQuote);
     render(<App />);

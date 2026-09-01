@@ -1,10 +1,10 @@
 import type { ReactElement } from 'react';
 import styles from './StockPreviewItem.module.css';
 
-import type { FinnhubSearchResult } from '../../services/finnhub/types.ts';
+import type { StockListRow } from '../../types/stockListRow';
 
 interface StockPreviewItemProps {
-  result: FinnhubSearchResult;
+  result: StockListRow;
   onSelect: () => void;
 }
 

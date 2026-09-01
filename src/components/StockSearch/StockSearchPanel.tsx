@@ -3,20 +3,24 @@ import SearchForm from '../SearchForm/SearchForm';
 import StockResult from '../StockResult/StockResult';
 import type { FinnhubSearchResult } from '../../services/finnhub/types';
 import type { StockData } from '../../types/stock';
+import type { StockListRow } from '../../types/stockListRow';
 import styles from './StockSearch.module.css';
 
 interface StockSearchPanelProps {
-  debouncedQuery: string;
   error: string;
   isWatched: boolean;
   loadingSymbol: string;
+  onBlur: () => void;
+  onFocus: () => void;
   onQueryChange: (query: string) => void;
   onSelect: (result: FinnhubSearchResult) => void;
+  onSelectRecent: (row: StockListRow) => void;
   onSubmit: (e: FormEvent) => Promise<void>;
   onToggleWatchlist: () => void;
   previewResults: FinnhubSearchResult[];
   query: string;
-  showPreviews: boolean;
+  recentRows: StockListRow[];
+  showMatches: boolean;
   stockData: StockData | null;
   watchlistStatus: string;
 }
@@ -33,10 +37,13 @@ export default function StockSearchPanel({
   query,
   onQueryChange,
   onSubmit,
+  onFocus,
+  onBlur,
   previewResults,
-  showPreviews,
-  debouncedQuery,
+  showMatches,
+  recentRows,
   onSelect,
+  onSelectRecent,
   error,
   loadingSymbol,
   stockData,
@@ -50,10 +57,13 @@ export default function StockSearchPanel({
         query={query}
         onQueryChange={onQueryChange}
         onSubmit={onSubmit}
+        onFocus={onFocus}
+        onBlur={onBlur}
         previewResults={previewResults}
-        showPreviews={showPreviews}
-        debouncedQuery={debouncedQuery}
+        showMatches={showMatches}
+        recentRows={recentRows}
         onSelect={onSelect}
+        onSelectRecent={onSelectRecent}
       />
       {error && <div className={styles.error}>{error}</div>}
       {loadingSymbol && <LoadingCard symbol={loadingSymbol} />}

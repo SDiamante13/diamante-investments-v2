@@ -40,10 +40,14 @@
   box-shadow: var(--shadow-sm);
 }
 
-.noMatches {
+.dropdown {
   position: absolute;
   top: 100%;
+  z-index: 10;
   width: 100%;
+}
+
+.noMatches {
   padding: var(--space-4);
   font-family: var(--font-body);
   font-size: var(--font-size-sm);
