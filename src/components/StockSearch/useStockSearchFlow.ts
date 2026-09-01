@@ -5,7 +5,7 @@ import { useStockPreviews } from '../../hooks/useStockPreviews';
 import type { FinnhubSearchResult } from '../../services/finnhub/types';
 import type { StockData } from '../../types/stock';
 import type { StockListRow } from '../../types/stockListRow';
-import { toStockListRow } from '../../utils/searchHistory';
+import { excludeSymbols, toStockListRow } from '../../utils/searchHistory';
 import { useRecordedSearch } from './useRecordedSearch';
 
 export interface StockSearchFlow {
@@ -31,6 +31,8 @@ export function useStockSearchFlow(): StockSearchFlow {
   const { results } = useStockPreviews(query);
   const { stockData, error, loadingSymbol, recentEntries, search } = useRecordedSearch();
   const debouncedQuery = useDebounce(query, 400);
+  const showMatches = isOpen && debouncedQuery.length >= 2 && debouncedQuery !== suppressedQuery;
+  const matchedSymbols = showMatches ? results.map((result) => result.symbol) : [];
 
   function runSearch(stock: string | FinnhubSearchResult): void {
     setIsOpen(false);
@@ -60,8 +62,8 @@ export function useStockSearchFlow(): StockSearchFlow {
     },
     previewResults: results,
     query,
-    recentRows: isOpen ? recentEntries.map(toStockListRow) : [],
-    showMatches: isOpen && debouncedQuery.length >= 2 && debouncedQuery !== suppressedQuery,
+    recentRows: isOpen ? excludeSymbols(recentEntries, matchedSymbols).map(toStockListRow) : [],
+    showMatches,
     stockData,
   };
 }
