@@ -12,6 +12,9 @@ const COMPANY_NAMES: Record<string, string> = {
   AAPL: 'APPLE INC',
   MSFT: 'MICROSOFT CORP',
   GOOGL: 'ALPHABET INC',
+  AMZN: 'AMAZON.COM INC',
+  META: 'META PLATFORMS INC',
+  NVDA: 'NVIDIA CORP',
 };
 
 describe('Search history', () => {
@@ -60,6 +63,18 @@ describe('Search history', () => {
     await thenRecentSearchesAre(['AAPL']);
     expect(screen.queryByRole('region', { name: 'Matches' })).not.toBeInTheDocument();
   });
+
+  test('user searches six stocks and sees only the five most recent', async () => {
+    givenStocksAreSearchable();
+    render(<App />);
+
+    for (const symbol of ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA']) {
+      await whenUserSearchesAndSelects(symbol);
+    }
+    whenUserFocusesTheSearchField();
+
+    await thenRecentSearchesAre(['NVDA', 'META', 'AMZN', 'GOOGL', 'MSFT']);
+  }, 20000);
 });
 
 function givenStocksAreSearchable(): void {
@@ -102,6 +117,7 @@ async function thenUserSeesStockCardFor(expected: { symbol: string; company: str
 
 async function thenRecentSearchesAre(expected: string[]): Promise<void> {
   const recent = await screen.findByRole('region', { name: 'Recent' }, { timeout: 600 });
-  const shownSymbols = within(recent).getAllByText(new RegExp(`^(${expected.join('|')})$`));
+  const tickerShapedText = /^[A-Z]+$/;
+  const shownSymbols = within(recent).getAllByText(tickerShapedText);
   expect(shownSymbols.map((symbol) => symbol.textContent)).toEqual(expected);
 }
