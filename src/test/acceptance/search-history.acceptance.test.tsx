@@ -29,6 +29,21 @@ describe('Search history', () => {
 
     await thenRecentSearchesAre(['MSFT', 'AAPL']);
   });
+
+  test('user clicks a recent search and sees the stock card without the preview list', async () => {
+    givenStocksAreSearchable();
+    render(<App />);
+
+    await whenUserSearchesAndSelects('AAPL');
+    await whenUserSearchesAndSelects('MSFT');
+    whenUserFocusesTheSearchField();
+    await thenRecentSearchesAre(['MSFT', 'AAPL']);
+
+    whenUserClicksRecentSearch('AAPL');
+
+    await thenUserSeesStockCardFor({ symbol: 'AAPL', company: 'APPLE INC', price: '$145.52' });
+    expect(screen.queryByRole('region', { name: 'Matches' })).not.toBeInTheDocument();
+  });
 });
 
 function givenStocksAreSearchable(): void {
@@ -56,6 +71,17 @@ function whenUserFocusesTheSearchField(): void {
   const searchField = screen.getByRole('textbox');
   userEvent.clear(searchField);
   userEvent.click(searchField);
+}
+
+function whenUserClicksRecentSearch(symbol: string): void {
+  const recent = screen.getByRole('region', { name: 'Recent' });
+  userEvent.click(within(recent).getByText(symbol));
+}
+
+async function thenUserSeesStockCardFor(expected: { symbol: string; company: string; price: string }): Promise<void> {
+  const card = await screen.findByRole('article', { name: `${expected.symbol} stock card` }, { timeout: 600 });
+  expect(within(card).getByText(expected.company)).toBeInTheDocument();
+  expect(within(card).getByText(expected.price)).toBeInTheDocument();
 }
 
 async function thenRecentSearchesAre(expected: string[]): Promise<void> {
