@@ -44,6 +44,22 @@ describe('Search history', () => {
     await thenUserSeesStockCardFor({ symbol: 'AAPL', company: 'APPLE INC', price: '$145.52' });
     expect(screen.queryByRole('region', { name: 'Matches' })).not.toBeInTheDocument();
   });
+
+  test('user refocuses after picking a recent search and is not shown matches for the filled-in symbol', async () => {
+    givenStocksAreSearchable();
+    render(<App />);
+
+    await whenUserSearchesAndSelects('AAPL');
+    whenUserFocusesTheSearchField();
+    await thenRecentSearchesAre(['AAPL']);
+    whenUserClicksRecentSearch('AAPL');
+    await thenUserSeesStockCardFor({ symbol: 'AAPL', company: 'APPLE INC', price: '$145.52' });
+
+    userEvent.click(screen.getByRole('textbox'));
+
+    await thenRecentSearchesAre(['AAPL']);
+    expect(screen.queryByRole('region', { name: 'Matches' })).not.toBeInTheDocument();
+  });
 });
 
 function givenStocksAreSearchable(): void {
