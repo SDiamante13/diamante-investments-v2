@@ -248,6 +248,52 @@ Scenario: Watchlist persists after adding stock
 
 ---
 
+## Story 1.3b: User removes stock from watchlist in the watchlist view
+
+**Description:** Users can remove a stock directly from the watchlist view. Today removal requires searching for the stock and toggling the control off on its card.
+
+**Acceptance Criteria (Gherkin):**
+
+```gherkin
+Scenario: User removes stock from watchlist view
+  Given user has stocks in their watchlist
+  When they view the watchlist
+  And they click the remove control on a watchlist entry
+  Then that stock no longer appears in the watchlist
+  And the remaining watchlist entries are unchanged
+```
+
+```gherkin
+Scenario: Removal persists
+  Given user has removed a stock from the watchlist view
+  When they reload the application
+  Then the removed stock does not appear in the watchlist
+```
+
+```gherkin
+Scenario: Watchlist becomes empty after removing last stock
+  Given user has exactly one stock in their watchlist
+  When they remove it from the watchlist view
+  Then an empty watchlist message is displayed
+```
+
+**Integration:** A remove control on each entry in the watchlist view.
+
+**Manual Testing:**
+1. Open the application in a browser
+2. Search for "AAPL" and add it to the watchlist from the stock card
+3. Search for "MSFT" and add it to the watchlist from the stock card
+4. Navigate to the watchlist view
+5. Verify both AAPL and MSFT appear
+6. Click the remove control on AAPL
+7. Verify AAPL disappears and MSFT remains
+8. Reload the page and navigate to the watchlist view
+9. Verify AAPL is still absent and MSFT is still present
+10. Remove MSFT
+11. Verify an empty watchlist message is displayed
+
+---
+
 ## Story 1.4: User views search history for quick access
 
 **Description:** Users can see their recently searched stocks for quick access to stocks they've looked up before. Clicking a history item displays the stock card immediately, bypassing the preview list. This reduces the need to re-type searches and improves efficiency.
