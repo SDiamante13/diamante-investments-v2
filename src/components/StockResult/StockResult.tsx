@@ -134,7 +134,7 @@ export default function StockResult({
   const missingFields = unavailableFields(stockData);
 
   return (
-    <div className={styles.card}>
+    <article className={styles.card} aria-label={`${stockData.symbol} stock card`}>
       <StockHeader stock={stockData} isWatched={isWatched} onToggleWatchlist={onToggleWatchlist} />
       <PriceSection stock={stockData} />
       {watchlistStatus && (
@@ -149,6 +149,6 @@ export default function StockResult({
           Some data unavailable: {missingFields.join(', ')}
         </div>
       )}
-    </div>
+    </article>
   );
 }
