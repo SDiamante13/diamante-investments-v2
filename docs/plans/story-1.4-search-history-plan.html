@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story 1.4 - Search History Plan</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f5f1e8;
+        --panel: #fffaf1;
+        --ink: #1c1c1c;
+        --muted: #5c5c5c;
+        --accent: #b8581d;
+        --teal: #2f4f4f;
+        --line: #c8bca8;
+        --green: #2d5016;
+        --red: #8b2e2e;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgb(47 79 79 / 5%) 1px, transparent 1px) 0 0 / 48px 48px,
+          var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        width: min(1080px, calc(100% - 32px));
+        margin: 48px auto;
+      }
+
+      header,
+      section {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        box-shadow: 6px 6px 0 rgb(47 79 79 / 14%);
+      }
+
+      header {
+        padding: 40px;
+      }
+
+      section {
+        margin-top: 24px;
+        padding: 28px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.15;
+      }
+
+      h1 {
+        margin: 8px 0 12px;
+        font-size: clamp(2rem, 6vw, 4.5rem);
+      }
+
+      h2 {
+        margin-top: 0;
+        color: var(--teal);
+      }
+
+      h3 {
+        margin-bottom: 8px;
+      }
+
+      p:last-child,
+      ul:last-child,
+      ol:last-child {
+        margin-bottom: 0;
+      }
+
+      .eyebrow,
+      code,
+      pre,
+      .badge {
+        font-family: "SFMono-Regular", Consolas, monospace;
+      }
+
+      .eyebrow {
+        color: var(--accent);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+
+      .summary {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        padding: 20px;
+        border-left: 4px solid var(--accent);
+        background: var(--white);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        background: var(--teal);
+        color: var(--white);
+      }
+
+      .red {
+        color: var(--red);
+      }
+
+      .green {
+        color: var(--green);
+      }
+
+      pre {
+        overflow-x: auto;
+        padding: 20px;
+        border: 1px solid var(--line);
+        background: #1f2929;
+        color: #f8f4eb;
+        line-height: 1.4;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--teal);
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        padding: 1px 5px;
+        background: #eee4d5;
+      }
+
+      @media (max-width: 720px) {
+        main {
+          margin: 20px auto;
+        }
+
+        header,
+        section {
+          padding: 20px;
+          box-shadow: 3px 3px 0 rgb(47 79 79 / 14%);
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        table,
+        tbody,
+        tr,
+        td {
+          display: block;
+        }
+
+        thead {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">IMPLEMENTATION PLAN - STORY 1.4 ONLY</div>
+        <h1>Search history for quick access</h1>
+        <p class="summary">
+          Focusing the search field reveals the last 5 successfully-loaded stocks under a
+          <code>Recent</code> heading. Clicking one loads its card immediately, without a trip through the
+          preview list.
+        </p>
+      </header>
+
+      <section>
+        <h2>Interview decisions</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Opening</h3>
+            <p>Dropdown opens on focus. Matches on top, <code>Recent</code> stacked below.</p>
+          </div>
+          <div class="card">
+            <h3>Row shape</h3>
+            <p>A recent row is symbol + company name, identical to a match row.</p>
+          </div>
+          <div class="card">
+            <h3>Controls</h3>
+            <p><code>Recent</code> label only. No clear-all, no per-row remove, no keyboard nav.</p>
+          </div>
+          <div class="card">
+            <h3>What counts as a search</h3>
+            <p>Recorded only when a stock card loads successfully.</p>
+          </div>
+          <div class="card">
+            <h3>Storage</h3>
+            <p><code>{ items: [{ symbol, companyName }] }</code> under <code>diamante.searchHistory.v1</code>, capped at 5 on write.</p>
+          </div>
+          <div class="card">
+            <h3>Selecting a recent row</h3>
+            <p>Fills the input with the symbol, so the debounced preview refetch is suppressed for that query.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Scope</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Included</h3>
+            <ul>
+              <li>Recent list revealed on focus, most recent first.</li>
+              <li>Click a recent row to load the card directly.</li>
+              <li>Cap of 5 entries, applied at write.</li>
+              <li>Symbols already visible in Matches are filtered out of Recent.</li>
+              <li>localStorage save and restore.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Excluded</h3>
+            <ul>
+              <li>Clear-all and per-row remove controls.</li>
+              <li>Keyboard navigation of the dropdown.</li>
+              <li>Timestamps or "searched N minutes ago".</li>
+              <li>Syncing history across devices.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Refactor first</h2>
+        <p>
+          <code>useWatchlist</code> owns ~40 lines of localStorage parse/validate/persist code. A second hook
+          copying it breaches the 5% jscpd budget, so extract before adding.
+        </p>
+        <ul>
+          <li><code>src/utils/guards.ts</code> - <code>isRecord</code>, <code>isFiniteNumber</code>.</li>
+          <li><code>src/utils/symbols.ts</code> - <code>normalizeSymbol</code>; <code>normalizeWatchlistSymbol</code> delegates to it.</li>
+          <li><code>src/hooks/usePersistedList.ts</code> - <code>usePersistedList&lt;T&gt;(key, isValid)</code> owning parse, shape check, row validation, corrupt-storage fallback and the persist effect.</li>
+          <li><code>useWatchlist</code> shrinks to its own row guard plus <code>isWatched</code> / <code>upsert</code> / <code>remove</code>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Modules</h2>
+        <table>
+          <thead>
+            <tr><th>Module</th><th>Responsibility</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>types/searchHistory.ts</code></td><td><code>SearchHistoryEntry { symbol; companyName }</code>.</td></tr>
+            <tr><td><code>utils/searchHistory.ts</code></td><td>Pure <code>toSearchHistoryEntry</code>, <code>recordSearch(entries, entry, limit)</code>, <code>excludeSymbols(entries, symbols)</code>.</td></tr>
+            <tr><td><code>hooks/useSearchHistory.ts</code></td><td><code>usePersistedList</code> under <code>diamante.searchHistory.v1</code>, exposing <code>entries</code> and <code>record</code>.</td></tr>
+            <tr><td><code>hooks/useStockData.ts</code></td><td><code>loadStockData</code> resolves to <code>StockData | null</code> so the flow records only real successes.</td></tr>
+            <tr><td><code>StockSearch/useStockSearchFlow.ts</code></td><td>Focus-driven <code>isOpen</code>, <code>suppressedQuery</code>, derived <code>showMatches</code> and <code>recent</code>.</td></tr>
+            <tr><td><code>StockPreviewList</code></td><td>Generic over <code>{ symbol; description }</code> with a <code>variant</code> prop rendering the <code>Recent</code> heading.</td></tr>
+            <tr><td><code>SearchForm</code></td><td><code>onFocus</code>/<code>onBlur</code>, and <code>onMouseDown</code> prevented on the dropdown so a row click lands before the blur.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Acceptance scenarios</h2>
+        <pre>
+Scenario: Recently searched stocks appear in history
+  Given user has searched for multiple stocks
+  When they focus the search field
+  Then a list of recently searched stocks appears below the search field
+  And the most recent searches appear at the top of the list
+
+Scenario: User selects stock from search history and sees card
+  Given user has previously searched for a stock
+  When they click that stock in the search history
+  Then the stock card is displayed immediately with all detailed metrics
+  And the preview list is not shown
+
+Scenario: Search history is limited to recent searches
+  Given user has searched for many stocks
+  When they view their search history
+  Then only the most recent 5 searches are displayed</pre>
+      </section>
+
+      <section>
+        <h2>TDD sequence</h2>
+        <ol>
+          <li><span class="badge">REFACTOR</span> guards / symbols / <code>usePersistedList</code>; <code>useWatchlist</code> rebuilt on it. Existing tests are the safety net.</li>
+          <li><span class="badge">RED</span> <code>search-history.acceptance.test.tsx</code> for the three scenarios. Commit failing.</li>
+          <li><span class="badge">RED</span> to <span class="badge">GREEN</span> <code>searchHistory.test.ts</code>: order, dedupe, cap, cross-section exclude - then the pure module.</li>
+          <li><span class="badge">RED</span> to <span class="badge">GREEN</span> <code>useSearchHistory</code> restore and record.</li>
+          <li><span class="badge">GREEN</span> wire <code>useStockData</code> return value, flow state, list variant, form focus. Acceptance turns green.</li>
+          <li><span class="badge">TIDY</span> file and function limits, jscpd, naming.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Verification</h2>
+        <ul>
+          <li><code>npm test</code>, <code>npm run type-check</code>, <code>npm run lint</code>, <code>npm run prettier:check</code>, <code>npm run build</code>.</li>
+          <li><code>npx jscpd src</code> - confirm the extraction kept duplication under 5%.</li>
+          <li>Manual: search AAPL, MSFT, GOOGL; focus the empty field and confirm <code>Recent</code> lists GOOGL, MSFT, AAPL; click AAPL and confirm the card appears with no preview list; type <code>AAP</code> and confirm AAPL is absent from Recent; reload and confirm history survived.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
