@@ -7,14 +7,22 @@ const microsoft: SearchHistoryEntry = { symbol: 'MSFT', companyName: 'MICROSOFT 
 
 describe('recordSearch', () => {
   test('puts the newest search at the top', () => {
-    expect(recordSearch([apple], microsoft)).toEqual([microsoft, apple]);
+    expect(recordSearch([apple], microsoft, 5)).toEqual([microsoft, apple]);
   });
 
   test('moves a repeated search to the top instead of duplicating it', () => {
-    expect(recordSearch([microsoft, apple], apple)).toEqual([apple, microsoft]);
+    expect(recordSearch([microsoft, apple], apple, 5)).toEqual([apple, microsoft]);
   });
 
   test('treats a differently-cased symbol as the same search', () => {
-    expect(recordSearch([apple], { symbol: 'aapl', companyName: 'APPLE INC' })).toEqual([apple]);
+    expect(recordSearch([apple], { symbol: 'aapl', companyName: 'APPLE INC' }, 5)).toEqual([apple]);
+  });
+
+  test('keeps only the newest entries up to the limit', () => {
+    const older = [microsoft, apple];
+
+    const entries = recordSearch(older, { symbol: 'GOOGL', companyName: 'ALPHABET INC' }, 2);
+
+    expect(entries).toEqual([{ symbol: 'GOOGL', companyName: 'ALPHABET INC' }, microsoft]);
   });
 });
