@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import type { SearchHistoryEntry } from '../types/searchHistory';
-import { recordSearch } from './searchHistory';
+import { excludeSymbols, recordSearch } from './searchHistory';
 
 const apple: SearchHistoryEntry = { symbol: 'AAPL', companyName: 'APPLE INC' };
 const microsoft: SearchHistoryEntry = { symbol: 'MSFT', companyName: 'MICROSOFT CORP' };
@@ -24,5 +24,11 @@ describe('recordSearch', () => {
     const entries = recordSearch(older, { symbol: 'GOOGL', companyName: 'ALPHABET INC' }, 2);
 
     expect(entries).toEqual([{ symbol: 'GOOGL', companyName: 'ALPHABET INC' }, microsoft]);
+  });
+});
+
+describe('excludeSymbols', () => {
+  test('drops entries whose symbol is already listed elsewhere', () => {
+    expect(excludeSymbols([microsoft, apple], ['aapl'])).toEqual([microsoft]);
   });
 });

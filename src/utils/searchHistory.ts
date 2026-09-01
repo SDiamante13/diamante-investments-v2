@@ -9,6 +9,11 @@ export function recordSearch(entries: SearchHistoryEntry[], entry: SearchHistory
   return [newest, ...older].slice(0, limit);
 }
 
+export function excludeSymbols(entries: SearchHistoryEntry[], symbols: string[]): SearchHistoryEntry[] {
+  const excluded = symbols.map(normalizeSymbol);
+  return entries.filter((entry) => !excluded.includes(normalizeSymbol(entry.symbol)));
+}
+
 export function toSearchHistoryEntry(stock: StockData): SearchHistoryEntry {
   return { symbol: normalizeSymbol(stock.symbol), companyName: stock.companyName };
 }
