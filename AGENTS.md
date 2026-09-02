@@ -2,12 +2,27 @@
 
 **Component Hierarchy:**
 ```
-App → StockSearch (state container)
-  ├→ SearchForm → StockPreviewList → StockPreviewItem
-  └→ StockResult (after selection)
+App → StockSearch (tab state)
+  ├→ StockTabs
+  ├→ StockSearchPanel (Search tab)
+  │    ├→ SearchForm → StockPreviewList (matches, then recent) → StockPreviewItem
+  │    └→ StockResult → StockRange
+  └→ WatchlistView (Watchlist tab)
 ```
 
-**Data Flow:** User input → `useStockPreviews()` → preview list → click → `useStockData()` → `StockResult`
+**Hook Composition:**
+```
+StockSearch
+  ├→ useStockSearchFlow (query, dropdown open state, match suppression)
+  │    ├→ useStockPreviews → useDebounce
+  │    └→ useRecordedSearch
+  │         ├→ useStockData
+  │         └→ useSearchHistory → usePersistedList
+  └→ useSelectedWatchlist → useWatchlist → usePersistedList
+```
+
+**Data Flow:** User input → `useStockPreviews()` → matches list → click → `useStockData()` → `StockResult`. A
+successful load is recorded by `useRecordedSearch`, which feeds the `Recent` list on the next focus.
 
 **API Integration:** All calls in `src/services/finnhub/finnhub.ts` (exports: `searchStock()`, `getQuote()`, `getProfile()`, `getMetrics()`, `getStockData()`). `getStockData()` uses `Promise.allSettled` — quote is required, profile2/metric degrade gracefully.
 

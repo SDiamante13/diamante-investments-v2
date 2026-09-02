@@ -42,3 +42,11 @@
 - All assertions should use helpers OR all should be inline
 - Wrong: `await thenUserSees('X')` then `expect(screen.getByText('Y'))`
 - Right: `await thenUserSees('X')` then `await thenUserSees('Y')`
+
+### Scope Queries to Named Regions
+- The same ticker can appear in Matches, Recent and the stock card at once, so bare `getByText` is ambiguous
+- Query the enclosing landmark, then use `within()`: `getByRole('region', { name: 'Recent' })`, `getByRole('article', { name: 'AAPL stock card' })`
+- Give a component an accessible name when a test needs to scope to it, rather than reaching through the DOM with `closest()`
+- Assert on the full contents of a region, not just the items you expect: match the shape (`/^[A-Z]+$/` for tickers) and compare the whole array, so an unexpected extra row fails the test
+- Wait on content, not on the container - `findByRole` resolves as soon as the region exists, which can be before its rows have settled
+
