@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story 1.4 Search History</title>
+<style>
+  :root {
+    --bg: #f7f4ec;
+    --surface: #fffdf8;
+    --surface-2: #efe9db;
+    --ink: #1d1b16;
+    --ink-soft: #5a5446;
+    --line: #cfc6b0;
+    --accent: #b4511c;
+    --accent-2: #1f6b6b;
+    --ok: #2f6b34;
+    --bad: #a3262e;
+    --code-bg: #f1ecdf;
+    --focus: #1f6b6b;
+    --font-body: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    --font-ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17160f; --surface: #211f17; --surface-2: #2a2820; --ink: #ece6d6; --ink-soft: #b3aa94;
+      --line: #4a4536; --accent: #e8874f; --accent-2: #6cc3c3; --ok: #86c98c; --bad: #ef8a90;
+      --code-bg: #26241c; --focus: #6cc3c3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17160f; --surface: #211f17; --surface-2: #2a2820; --ink: #ece6d6; --ink-soft: #b3aa94;
+    --line: #4a4536; --accent: #e8874f; --accent-2: #6cc3c3; --ok: #86c98c; --bad: #ef8a90;
+    --code-bg: #26241c; --focus: #6cc3c3;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--font-body); font-size: 18px; line-height: 1.65;
+    padding: 40px 16px 80px;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  h1, h2, h3 { font-family: var(--font-ui); line-height: 1.2; }
+  h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); margin: 0 0 12px; }
+  h2 { font-size: 1.6rem; margin: 56px 0 12px; padding-top: 12px; border-top: 2px solid var(--line); }
+  h3 { font-size: 1.15rem; margin: 32px 0 8px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent-2); }
+  a:focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .meta { font-family: var(--font-ui); font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 20px; }
+  .summary { font-size: 1.1rem; }
+  code { overflow-wrap: anywhere; font-family: var(--font-mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 4px; border-radius: 3px; }
+  pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; overflow-x: auto; margin: 0 0 16px; white-space: pre; line-height: 1.5; }
+  pre code { background: none; padding: 0; font-size: 0.8rem; white-space: pre; }
+  .cite { overflow-wrap: anywhere; font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); display: block; margin: -10px 0 16px; }
+  nav.toc { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 20px; font-family: var(--font-ui); font-size: 0.95rem; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; }
+  .callout { border-left: 4px solid var(--accent-2); background: var(--surface); padding: 12px 16px; margin: 0 0 18px; border-radius: 0 6px 6px 0; }
+  .callout.warn { border-left-color: var(--accent); }
+  .callout .label { font-family: var(--font-ui); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); display: block; margin-bottom: 4px; }
+  .callout p:last-child { margin-bottom: 0; }
+  details.skip { background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 10px 16px; margin-bottom: 18px; }
+  details.skip summary { font-family: var(--font-ui); font-weight: 600; cursor: pointer; }
+  figure { margin: 0 0 24px; }
+  figcaption { font-family: var(--font-ui); font-size: 0.85rem; color: var(--ink-soft); margin-top: 8px; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--font-ui); font-size: 0.88rem; }
+  .table-wrap { overflow-x: auto; margin-bottom: 8px; }
+  th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--surface-2); }
+  td code { white-space: nowrap; }
+
+  /* UI mock */
+  .ui { max-width: 380px; margin: 0 auto; font-family: var(--font-ui); }
+  .ui .input { border: 2px solid var(--accent); background: var(--surface); padding: 10px 12px; border-radius: 4px; color: var(--ink-soft); }
+  .ui .drop { border: 1px solid var(--line); background: var(--surface-2); border-radius: 4px; margin-top: 4px; }
+  .ui .drop .hd { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.12em; color: var(--ink-soft); padding: 6px 12px; border-bottom: 1px solid var(--line); }
+  .ui .drop .row { display: flex; gap: 10px; padding: 8px 12px; align-items: baseline; }
+  .ui .drop .row b { font-family: var(--font-mono); }
+  .ui .drop .row span { color: var(--ink-soft); font-size: 0.85rem; }
+  .ui .card { border: 1px solid var(--line); background: var(--surface); border-radius: 4px; padding: 10px 12px; margin-top: 10px; font-size: 0.85rem; color: var(--ink-soft); }
+
+  /* Before/after */
+  .ba { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+  .ba > div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-family: var(--font-ui); font-size: 0.9rem; }
+  .ba h4 { margin: 0 0 6px; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .ba .before h4 { color: var(--bad); }
+  .ba .after h4 { color: var(--ok); }
+  .ba ol { margin: 0; padding-left: 18px; }
+
+  /* Flow diagram */
+  .flow { display: grid; gap: 0; font-family: var(--font-ui); font-size: 0.9rem; }
+  .node { background: var(--surface); border: 2px solid var(--ink-soft); border-radius: 8px; padding: 8px 12px; }
+  .node b { font-family: var(--font-mono); font-size: 0.85rem; }
+  .node small { display: block; color: var(--ink-soft); }
+  .node.store { border-style: dashed; border-color: var(--accent-2); }
+  .arrow { display: grid; grid-template-columns: 24px 1fr; align-items: center; padding: 4px 0 4px 18px; color: var(--ink-soft); }
+  .arrow::before { content: '↓'; font-size: 1.2rem; color: var(--accent); }
+  .arrow code { font-size: 0.78rem; white-space: normal; }
+
+  /* Toy table highlight */
+  .new { color: var(--ok); font-weight: 700; }
+  .gone { color: var(--bad); text-decoration: line-through; }
+  dl.glossary { display: grid; grid-template-columns: minmax(120px, max-content) 1fr; gap: 6px 16px; font-size: 0.95rem; }
+  dl.glossary dt { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; }
+  dl.glossary dd { margin: 0; }
+  @media (max-width: 520px) { dl.glossary { grid-template-columns: 1fr; } dl.glossary dd { margin-bottom: 8px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>How Story 1.4's search history works</h1>
+  <p class="meta">Scope: commits <code>3955140..ab56917</code> (25 commits) on branch <code>taming-the-dragon-10-16-26-techfusedsm</code>, diamante-investments-v2. Generated 2026-10-16.</p>
+  <p class="summary">
+    Before this change, the search box was forgetful: every visit to a stock started with typing its ticker. Story 1.4 gives it a short memory.
+    Every stock card that successfully loads is recorded in a five-item list in <code>localStorage</code>. Focusing an empty search field shows
+    that list, and clicking a row loads the card directly, with no preview list. Making this work cleanly needed one preparatory refactor (a shared
+    persisted-state hook), one small pure function that does most of the real work, and one browser event-ordering trick that is easy to forget.
+  </p>
+
+  <nav class="toc" aria-label="Contents">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#background">Background</a></li>
+      <li><a href="#intuition">Intuition</a></li>
+      <li><a href="#code">Code</a></li>
+      <li><a href="#edges">Edge cases and trade-offs</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="background">1. Background</h2>
+
+  <details class="skip">
+    <summary>A beginner's mental model of this app (skip if you know React hooks)</summary>
+    <p>The app is a single React page. React components are functions that take data (<em>props</em>) and return what should be on screen.
+      When a component needs to remember something between renders (such as the text typed in a box), it uses <em>state</em> via <code>useState</code>.
+      When something must happen <em>because</em> state changed, such as writing to storage, it uses <code>useEffect</code>, which runs after the render that changed it.</p>
+    <p>A <em>custom hook</em> is just a function whose name starts with <code>use</code> and that calls other hooks. This codebase uses them heavily
+      to keep components short: the component renders and the hook decides.</p>
+    <p><code>localStorage</code> is a small key-value store in the browser that survives page reloads. It stores only strings, so objects are
+      written with <code>JSON.stringify</code> and read back with <code>JSON.parse</code>. Since anyone can edit it in DevTools, what comes back must be checked.</p>
+  </details>
+
+  <p>The change touches the search half of the app. Its shape before the story:</p>
+  <ul>
+    <li><code>useStockSearchFlow</code> is the state container for searching. It owns the query text, a debounced copy of it, the preview list,
+      and the loaded <code>stockData</code> (from <code>useStockData</code>).</li>
+    <li><code>SearchForm</code> renders the input and, below it, either the preview dropdown or a "No matches found" box.</li>
+    <li>Previews only appear once the debounced query has 2 or more characters, 400&nbsp;ms after the user stops typing.</li>
+    <li>There are three ways to load a card: click a preview, press Enter, or (new) click a history row. All three end in
+      <code>loadStockData(...)</code>, which clears <code>stockData</code> to <code>null</code>, fetches, then sets it to the new value.</li>
+    <li>Story 1.3 had already added a persisted watchlist (<code>useWatchlist</code>) with its own copy of the
+      "read JSON from storage, validate, write back on change" logic.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="label">Contract worth remembering</span>
+    <p><code>stockData</code> becomes non-null <em>only</em> after a successful load. A typo like <code>INVALID123</code> leaves it
+      <code>null</code> and sets an error instead. The whole history feature relies on this: it records what <em>loaded</em>, not what was <em>typed</em>.</p>
+  </div>
+
+  <h2 id="intuition">2. Intuition</h2>
+
+  <p>Think of the history as a tiny most-recently-used (MRU) list, a deck where every card you look at goes on top. If the card was already in the deck,
+    it moves rather than duplicates. If the deck grows past five, the bottom card falls off.</p>
+
+  <figure>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Action (card loaded)</th><th>History after, top first</th></tr></thead>
+        <tbody>
+          <tr><td>AAPL</td><td><span class="new">AAPL</span></td></tr>
+          <tr><td>MSFT</td><td><span class="new">MSFT</span>, AAPL</td></tr>
+          <tr><td>GOOGL</td><td><span class="new">GOOGL</span>, MSFT, AAPL</td></tr>
+          <tr><td>aapl (lower-case, via history or Enter)</td><td><span class="new">AAPL</span>, GOOGL, MSFT &nbsp;<small>(old AAPL removed, symbol upper-cased)</small></td></tr>
+          <tr><td>AMZN, TSLA, NVDA</td><td><span class="new">NVDA</span>, TSLA, AMZN, AAPL, GOOGL &nbsp;<span class="gone">MSFT</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figcaption>Toy run of <code>recordSearch</code>. Newest goes first, a repeated symbol moves to the top, and the sixth distinct entry pushes out the oldest.</figcaption>
+  </figure>
+
+  <p>The second idea is <em>when</em> the list is visible. The search box can now show two different dropdowns, and they must never overlap.
+    The rule is a single boolean:</p>
+  <pre><code>isOpen = inputIsFocused &amp;&amp; query.trim().length &lt; 2 &amp;&amp; history has entries</code></pre>
+  <p>Previews need 2+ characters and history needs fewer than 2, so the two dropdowns are kept apart by the same threshold
+    (now one shared constant, <code>MIN_PREVIEW_QUERY_LENGTH</code>).</p>
+
+  <figure>
+    <div class="ui" role="img" aria-label="Mock UI: empty focused search input, below it a RECENT SEARCHES panel listing GOOGL, MSFT, AAPL, and a stock card beneath">
+      <div class="input">Search by ticker (e.g., AAPL)</div>
+      <div class="drop">
+        <div class="hd">RECENT SEARCHES</div>
+        <div class="row">◷ <b>GOOGL</b><span>ALPHABET INC-CL A</span></div>
+        <div class="row">◷ <b>MSFT</b><span>MICROSOFT CORP</span></div>
+        <div class="row">◷ <b>AAPL</b><span>APPLE INC</span></div>
+      </div>
+      <div class="card">[ last loaded stock card, partly covered by the dropdown ]</div>
+    </div>
+    <figcaption>What the user sees after focusing an empty search box. Each row is a real <code>&lt;button&gt;</code>; the clock glyph is hidden from screen readers.</figcaption>
+  </figure>
+
+  <div class="ba">
+    <div class="before">
+      <h4>Before: revisiting AAPL</h4>
+      <ol>
+        <li>Type <code>AA</code>…</li>
+        <li>Wait 400&nbsp;ms for previews</li>
+        <li>Click the AAPL preview</li>
+        <li>Card loads</li>
+      </ol>
+    </div>
+    <div class="after">
+      <h4>After: revisiting AAPL</h4>
+      <ol>
+        <li>Focus the empty input</li>
+        <li>Click AAPL under "Recent searches"</li>
+        <li>Card loads; no preview list ever renders</li>
+      </ol>
+    </div>
+  </div>
+  <p style="margin-top:12px">Note that the history stores only <code>{ symbol, companyName }</code>, never a price. Clicking a row always fetches a fresh quote,
+    so the dropdown can't show a stale number.</p>
+
+  <h2 id="code">3. Code</h2>
+
+  <p>The changes group naturally into four layers, presented here in dependency order: shared storage plumbing, pure history logic,
+    the persisted hook, and the UI wiring.</p>
+
+  <figure>
+    <div class="flow">
+      <div class="node"><b>useStockData</b><small>a card finishes loading</small></div>
+      <div class="arrow"><code>stockData = { symbol: 'AAPL', companyName: 'APPLE INC', currentPrice: 145.52, … }</code></div>
+      <div class="node"><b>useRecordedSearchHistory</b><small>effect: if stockData, record(stockData)</small></div>
+      <div class="arrow"><code>toSearchHistoryEntry → { symbol: 'AAPL', companyName: 'APPLE INC' }</code></div>
+      <div class="node"><b>useSearchHistory → recordSearch</b><small>pure MRU update</small></div>
+      <div class="arrow"><code>{ items: [AAPL, GOOGL, MSFT] }</code></div>
+      <div class="node store"><b>useLocalStorageState</b><small>effect writes key diamante.searchHistory.v1</small></div>
+      <div class="arrow"><code>entries = [AAPL, GOOGL, MSFT]</code></div>
+      <div class="node"><b>useSearchHistoryDropdown</b><small>isOpen = focused &amp;&amp; query &lt; 2 chars &amp;&amp; entries</small></div>
+      <div class="arrow"><code>{ entries, isOpen: true, onFocus, onBlur, onSelect }</code></div>
+      <div class="node"><b>SearchForm → SearchHistoryList</b><small>renders rows; click → onSelect(entry)</small></div>
+      <div class="arrow"><code>loadSymbol('MSFT') → loadStockData('MSFT')</code></div>
+      <div class="node"><b>useStockData</b><small>the loop closes: a new stockData is recorded again</small></div>
+    </div>
+    <figcaption>Data flow for recording and replaying a search. The flow is a loop: a history click is just another load, so it gets recorded and moves that stock to the top.</figcaption>
+  </figure>
+
+  <h3>3.1 Make the change easy: shared storage helpers</h3>
+  <p>The first commit (<code>032652c</code>) added no feature. It took the watchlist's persistence logic and split it into reusable parts,
+    so the history wouldn't need a near-copy of it. That was a real constraint, since the repo's duplication gate (jscpd, max 5%) runs on every commit.</p>
+  <pre><code>export function useLocalStorageState&lt;T&gt;(key: string, parse: (raw: string | null) =&gt; T) {
+  const [value, setValue] = useState&lt;T&gt;(() =&gt; parse(localStorage.getItem(key)));
+  useEffect(() =&gt; {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+  return [value, setValue];
+}</code></pre>
+  <span class="cite">src/hooks/useLocalStorageState.ts:4</span>
+  <p>Two details matter here. The initial read is <em>lazy</em> (a function passed to <code>useState</code>), so storage is read once per mount, not on every render.
+    And the write happens in an effect, after React commits the new state, rather than inline in a setter. This avoids writing a value the render later replaces.</p>
+  <pre><code>export function parseStoredItems&lt;T&gt;(raw: string | null, guard: (value: unknown) =&gt; value is T): T[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!isRecord(parsed) || !Array.isArray(parsed.items)) return [];
+    return parsed.items.filter(guard);
+  } catch {
+    return [];
+  }
+}</code></pre>
+  <span class="cite">src/utils/storage.ts:9</span>
+  <p>Both stores use the same envelope, <code>{ "items": [...] }</code>. The caller supplies a <em>type guard</em> that decides which rows are valid.
+    Bad JSON becomes an empty list; individually bad rows are dropped while good ones survive. Later refactor commits also moved symbol comparison into
+    <code>src/utils/symbols.ts</code> (<code>normalizeSymbol</code>, <code>withoutSymbol</code>, <code>hasSymbol</code>), now shared by both features.</p>
+
+  <h3>3.2 The pure core: <code>recordSearch</code></h3>
+  <pre><code>export const SEARCH_HISTORY_LIMIT = 5;
+
+export function recordSearch(entries: SearchHistoryEntry[], entry: SearchHistoryEntry): SearchHistoryEntry[] {
+  const symbol = normalizeSymbol(entry.symbol);
+  return [{ ...entry, symbol }, ...withoutSymbol(entries, symbol)].slice(0, SEARCH_HISTORY_LIMIT);
+}</code></pre>
+  <span class="cite">src/utils/searchHistory.ts:8</span>
+  <p>All three acceptance rules (newest first, no duplicates, cap at five) live in this one line, and each was driven by its own unit test
+    (<code>src/utils/searchHistory.test.ts:8</code>, <code>:12</code>, <code>:16</code>). Order matters: removing the old copy <em>before</em> slicing
+    means a repeat search never pushes out an innocent fifth entry.</p>
+  <div class="callout">
+    <span class="label">Invariant</span>
+    <p>After any <code>recordSearch</code>, the list has at most 5 entries, symbols are upper-case, and no symbol appears twice. Symbol comparison
+      ignores case and surrounding whitespace.</p>
+  </div>
+  <p>The same file holds <code>toSearchHistoryEntry</code> (keeps only symbol and company name) and <code>isSearchHistoryEntry</code>, the guard
+    that requires both fields to be strings (<code>src/utils/searchHistory.ts:17</code>).</p>
+
+  <h3>3.3 The persisted hook: <code>useSearchHistory</code></h3>
+  <pre><code>const STORAGE_KEY = 'diamante.searchHistory.v1';
+
+export function useSearchHistory(): SearchHistory {
+  const [state, setState] = useLocalStorageState(STORAGE_KEY, parseSearchHistoryState);
+  const record = useCallback(
+    (stock: StockData): void =&gt; {
+      setState((current) =&gt; ({ items: recordSearch(current.items, toSearchHistoryEntry(stock)) }));
+    },
+    [setState]
+  );
+  return { entries: state.items, record };
+}</code></pre>
+  <span class="cite">src/hooks/useSearchHistory.ts:23</span>
+  <p>Two choices here work together. The <em>functional update</em> (<code>setState(current =&gt; …)</code>) means <code>record</code> never reads a stale copy
+    of the list. And because <code>record</code> doesn't close over the list, <code>useCallback</code> can keep it <em>stable</em>, the same function on every render.
+    That stability matters in the next step, where <code>record</code> is an effect dependency.</p>
+
+  <h3>3.4 Recording: an effect on <code>stockData</code></h3>
+  <pre><code>export function useRecordedSearchHistory(stockData: StockData | null): SearchHistoryEntry[] {
+  const { entries, record } = useSearchHistory();
+  useEffect(() =&gt; {
+    if (stockData) record(stockData);
+  }, [stockData, record]);
+  return entries;
+}</code></pre>
+  <span class="cite">src/components/StockSearch/useRecordedSearchHistory.ts:6</span>
+  <p>Rather than adding a "record" call to each of the three load paths (preview click, Enter, history click), the code watches the <em>result</em> of
+    every load. One effect covers all paths, including any future ones. The <code>if</code> guard is what keeps failed lookups out: they leave
+    <code>stockData</code> as <code>null</code>.</p>
+  <div class="callout">
+    <span class="label">Why the effect runs once per load (inference from the code)</span>
+    <p>The effect re-runs when <code>stockData</code> changes identity. Each <code>loadStockData</code> call sets it to <code>null</code> and then to a freshly
+      built object (<code>src/hooks/useStockData.ts:21</code>, <code>:26</code>), so each successful load triggers exactly one record. Since <code>record</code>
+      is stable, it never triggers an extra run on its own. If <code>record</code> were recreated every render, the effect would fire on every render; that's harmless
+      here only because <code>recordSearch</code> is idempotent for the top entry, but it would be wasted work.</p>
+  </div>
+
+  <h3>3.5 Visibility: <code>useSearchHistoryDropdown</code></h3>
+  <pre><code>const [isFocused, setIsFocused] = useState(false);
+const isOpen = isFocused &amp;&amp; query.trim().length &lt; MIN_PREVIEW_QUERY_LENGTH &amp;&amp; entries.length &gt; 0;
+
+function handleSelect(entry: SearchHistoryEntry): void {
+  setIsFocused(false);
+  loadSymbol(entry.symbol);
+}</code></pre>
+  <span class="cite">src/components/StockSearch/useSearchHistoryDropdown.ts:18</span>
+  <p>The hook owns only a focus flag; <code>isOpen</code> is <em>derived</em>, never stored, so it can't drift out of sync with the query.
+    It returns one view object, <code>SearchHistoryView</code>, which travels <code>StockSearch → StockSearchPanel → SearchForm</code> as a single
+    <code>history</code> prop instead of five separate ones.</p>
+  <p>In <code>useStockSearchFlow</code> the wiring is one line plus a tiny loader (<code>src/components/StockSearch/useStockSearchFlow.ts:33</code>, <code>:39</code>):</p>
+  <pre><code>const history = useSearchHistoryDropdown(useRecordedSearchHistory(stockData), query, loadFromHistory);
+
+function loadFromHistory(symbol: string): void {
+  void loadStockData(symbol);
+}</code></pre>
+  <p>Note what <code>loadFromHistory</code> does <em>not</em> do: it doesn't write the symbol into the input. If it did, the debounce effect would see a
+    2+ character query 400&nbsp;ms later and open the preview list, breaking the "preview list is not shown" criterion. Passing the symbol as a string
+    means <code>getStockData</code> re-resolves it through a search call and takes the first result (<code>src/services/finnhub/finnhub.ts:43</code>).</p>
+
+  <h3>3.6 Rendering, and the blur-before-click problem</h3>
+  <pre><code>function keepInputFocused(event: MouseEvent): void {
+  event.preventDefault();
+}
+…
+&lt;button type="button" onMouseDown={keepInputFocused} onClick={(): void =&gt; onSelect(entry)}&gt;</code></pre>
+  <span class="cite">src/components/SearchHistoryList/SearchHistoryList.tsx:10, :25</span>
+  <p>This is the subtlest line in the change. When you click a button, the browser fires <code>mousedown</code>, then moves focus (the input gets <code>blur</code>), then fires
+    <code>click</code>. The input's <code>onBlur</code> sets <code>isFocused</code> to false, React re-renders, the list unmounts, and the button is gone before its
+    <code>click</code> arrives. Calling <code>preventDefault()</code> on <code>mousedown</code> stops the focus move, so the list survives long enough to be clicked.</p>
+  <div class="callout warn">
+    <span class="label">Observed, not theorized</span>
+    <p>During development, the Scenario 2 acceptance test was run with <code>onSelect</code> wired but without this guard, and it failed; adding the guard made it pass.
+      The <code>user-event</code> library reproduces the real mousedown → blur → click order.</p>
+  </div>
+  <p>The list itself is a <code>&lt;section aria-labelledby&gt;</code>, which gives it the accessible role <em>region</em> named "Recent searches". The tests find it
+    that way, just as a screen reader would. In <code>SearchForm</code>, the input gains <code>onFocus</code>/<code>onBlur</code>, and the list renders above
+    the preview branch (<code>src/components/SearchForm/SearchForm.tsx:40–45</code>).</p>
+
+  <h3>3.7 Tests</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Test</th><th>Proves</th></tr></thead>
+      <tbody>
+        <tr><td><code>searchHistory.acceptance.test.tsx:16</code></td><td>Search AAPL, MSFT, GOOGL via Enter; focus empty field; rows read GOOGL, MSFT, AAPL.</td></tr>
+        <tr><td><code>:32</code></td><td>Click AAPL in history → card with price and metrics; after 500&nbsp;ms, no dropdown and AAPL appears once.</td></tr>
+        <tr><td><code>:48</code></td><td>Six searches → only the five newest shown. Mutation-checked by removing the cap.</td></tr>
+        <tr><td><code>useSearchHistory.test.tsx:12, :22</code></td><td>Survives remount through storage; malformed rows are dropped.</td></tr>
+        <tr><td><code>searchHistory.test.ts:8–16</code></td><td>Newest first, dedupe with case-insensitive match, cap at 5.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="edges">4. Edge cases and trade-offs</h2>
+  <ul>
+    <li><strong>History hides while text is in the box.</strong> After any search the ticker stays in the input, so re-focusing shows nothing until it's
+      cleared below 2 characters. This follows the chosen rule but means the backlog's manual test (step 5, "click on the search field again") needs the field cleared first.
+      It's an open product question.</li>
+    <li><strong>Typing one character keeps history open.</strong> "A" still shows history (it isn't filtered by the text). At "AA" history hides immediately
+      while previews arrive 400&nbsp;ms later, so there's a brief moment with no dropdown at all.</li>
+    <li><strong>Escape doesn't close it.</strong> Only blur or a selection does. This is out of scope by decision, as is keyboard arrow navigation.</li>
+    <li><strong>Company name can refresh.</strong> A history click re-resolves the symbol, and the newly loaded <code>companyName</code> replaces the stored one when it's recorded again.</li>
+    <li><strong>Not covered by a test:</strong> failed searches staying out of history. The <code>if (stockData)</code> guard enforces it, but no test pins it.</li>
+    <li><strong>Pre-existing, not from this story:</strong> after Enter, previews can reopen ~400&nbsp;ms later because the debounce effect fires after submit.</li>
+  </ul>
+
+  <h2 id="glossary">5. Glossary</h2>
+  <dl class="glossary">
+    <dt>MRU list</dt><dd>Most-recently-used list: newest on top, repeats move up, oldest fall off.</dd>
+    <dt>debounce</dt><dd>Waiting until input has been quiet for a fixed time (400&nbsp;ms here) before acting on it.</dd>
+    <dt>effect</dt><dd>A <code>useEffect</code> callback; runs after React commits a render in which its dependencies changed.</dd>
+    <dt>functional update</dt><dd><code>setState(prev =&gt; next)</code>: computes new state from the latest value, avoiding stale closures.</dd>
+    <dt>stale closure</dt><dd>A function that captured an old value of a variable and keeps using it after the value changed.</dd>
+    <dt>stable callback</dt><dd>A function that keeps the same identity across renders (via <code>useCallback</code>), so it doesn't retrigger effects.</dd>
+    <dt>type guard</dt><dd>A TypeScript function returning <code>value is T</code>; a runtime check that also narrows the type.</dd>
+    <dt>envelope</dt><dd>The <code>{ items: [...] }</code> wrapper both stores use in <code>localStorage</code>.</dd>
+    <dt>lazy initial state</dt><dd>Passing a function to <code>useState</code> so the initial value is computed only on first mount.</dd>
+    <dt>blur</dt><dd>The event fired when an element loses focus.</dd>
+    <dt>preventDefault</dt><dd>Cancels the browser's default action for an event; on <code>mousedown</code>, that includes moving focus.</dd>
+    <dt>region</dt><dd>An ARIA landmark role; a labelled <code>&lt;section&gt;</code> gets it automatically.</dd>
+    <dt>jscpd</dt><dd>Copy-paste detector run in the pre-commit hook; fails above 5% duplication.</dd>
+    <dt>acceptance test</dt><dd>A test that drives the whole app through the UI to check a user-facing scenario.</dd>
+    <dt>mutation check</dt><dd>Deliberately breaking code to confirm a test fails, proving the test actually guards it.</dd>
+    <dt>Finnhub</dt><dd>The stock-data API this app calls for search, quotes, profiles, and metrics.</dd>
+    <dt>MSW</dt><dd>Mock Service Worker; intercepts network calls in tests and returns canned responses.</dd>
+  </dl>
+</main>
+</body>
+</html>
