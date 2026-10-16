@@ -1,6 +1,6 @@
 import type { StockData } from '../types/stock';
 import type { WatchlistItem } from '../types/watchlist';
-import { normalizeSymbol } from './symbols';
+import { normalizeSymbol, withoutSymbol } from './symbols';
 
 export function toWatchlistItem(stock: StockData): WatchlistItem {
   return {
@@ -14,10 +14,9 @@ export function toWatchlistItem(stock: StockData): WatchlistItem {
 
 export function upsertWatchlistItem(items: WatchlistItem[], item: WatchlistItem): WatchlistItem[] {
   const normalizedItem = { ...item, symbol: normalizeSymbol(item.symbol) };
-  return [normalizedItem, ...items.filter((existing) => normalizeSymbol(existing.symbol) !== normalizedItem.symbol)];
+  return [normalizedItem, ...withoutSymbol(items, normalizedItem.symbol)];
 }
 
 export function removeWatchlistSymbol(items: WatchlistItem[], symbol: string): WatchlistItem[] {
-  const normalizedSymbol = normalizeSymbol(symbol);
-  return items.filter((item) => normalizeSymbol(item.symbol) !== normalizedSymbol);
+  return withoutSymbol(items, symbol);
 }
