@@ -1,6 +1,6 @@
 import type { WatchlistItem } from '../types/watchlist';
 import { isFiniteNumber, isRecord, parseStoredItems } from '../utils/storage';
-import { normalizeSymbol } from '../utils/symbols';
+import { hasSymbol } from '../utils/symbols';
 import { removeWatchlistSymbol, upsertWatchlistItem } from '../utils/watchlist';
 import { useLocalStorageState } from './useLocalStorageState';
 
@@ -34,14 +34,9 @@ export function useWatchlist(): {
   const [state, setState] = useLocalStorageState(STORAGE_KEY, parseWatchlistState);
   const { items } = state;
 
-  function isWatched(symbol: string): boolean {
-    const normalizedSymbol = normalizeSymbol(symbol);
-    return items.some((item) => normalizeSymbol(item.symbol) === normalizedSymbol);
-  }
-
   return {
     items,
-    isWatched,
+    isWatched: (symbol) => hasSymbol(items, symbol),
     remove: (symbol) => setState((current) => ({ items: removeWatchlistSymbol(current.items, symbol) })),
     upsert: (item) => setState((current) => ({ items: upsertWatchlistItem(current.items, item) })),
   };
