@@ -22,6 +22,7 @@ Finnhub may return error-shaped HTTP 200 responses. Runtime-validate required qu
 - `useStockPreviews(query)` - Debounced search preview
 - `useStockData(symbol)` - Full stock data fetch
 - `useWatchlist()` - localStorage-backed watchlist under `diamante.watchlist.v1`; pure watchlist operations live in `src/utils/watchlist.ts`
+- `useSearchHistory()` - localStorage-backed last 5 loaded stocks under `diamante.searchHistory.v1`; pure ops in `src/utils/searchHistory.ts`. Persisted stores build on `useLocalStorageState` + `parseStoredItems` (`src/utils/storage.ts`)
 
 **Navigation:** Story 1.3 uses same-page `Search` and `Watchlist` tabs, not routing.
 
