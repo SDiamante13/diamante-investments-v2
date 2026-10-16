@@ -30,7 +30,7 @@ export function useStockSearchFlow(): StockSearchFlow {
   const { stockData, error, loadingSymbol, loadStockData } = useStockData();
   const debouncedQuery = useDebounce(query, 400);
   const { entries, record } = useSearchHistory();
-  const history = useSearchHistoryDropdown(entries, query);
+  const history = useSearchHistoryDropdown(entries, query, loadFromHistory);
 
   useEffect(() => {
     if (stockData) record(stockData);
@@ -39,6 +39,10 @@ export function useStockSearchFlow(): StockSearchFlow {
   useEffect(() => {
     setShowPreviews(debouncedQuery.length >= 2);
   }, [debouncedQuery]);
+
+  function loadFromHistory(symbol: string): void {
+    void loadStockData(symbol);
+  }
 
   async function handleSubmit(e: FormEvent): Promise<void> {
     e.preventDefault();

@@ -1,10 +1,14 @@
-import type { ReactElement } from 'react';
+import type { MouseEvent, ReactElement } from 'react';
 import type { SearchHistoryEntry } from '../../types/searchHistory';
 import styles from './SearchHistoryList.module.css';
 
 interface SearchHistoryListProps {
   entries: SearchHistoryEntry[];
   onSelect: (entry: SearchHistoryEntry) => void;
+}
+
+function keepInputFocused(event: MouseEvent): void {
+  event.preventDefault();
 }
 
 export default function SearchHistoryList({ entries, onSelect }: Readonly<SearchHistoryListProps>): ReactElement {
@@ -14,7 +18,7 @@ export default function SearchHistoryList({ entries, onSelect }: Readonly<Search
         Recent searches
       </h2>
       {entries.map((entry) => (
-        <button key={entry.symbol} type="button" className={styles.row} onClick={(): void => onSelect(entry)}>
+        <button key={entry.symbol} type="button" className={styles.row} onMouseDown={keepInputFocused} onClick={(): void => onSelect(entry)}>
           <span className={styles.icon} aria-hidden="true">
             ◷
           </span>
