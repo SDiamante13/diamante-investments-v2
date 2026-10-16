@@ -294,7 +294,7 @@ Scenario: Watchlist becomes empty after removing last stock
 
 ---
 
-## Story 1.4: User views search history for quick access
+## ✅ Story 1.4: User views search history for quick access
 
 **Description:** Users can see their recently searched stocks for quick access to stocks they've looked up before. Clicking a history item displays the stock card immediately, bypassing the preview list. This reduces the need to re-type searches and improves efficiency.
 

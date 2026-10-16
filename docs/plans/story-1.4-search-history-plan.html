@@ -1,0 +1,493 @@
+<title>Story 1.4 Search History</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+  /* Layout: a comic issue — cover, then "pages" of bordered panels on a halftone newsprint ground, read top-left to bottom-right. */
+  :root {
+    --paper: #f3ecd9;
+    --panel: #fffdf6;
+    --ink: #141414;
+    --ink-soft: #4a4538;
+    --cyan: #1c9bd6;
+    --magenta: #d6246e;
+    --yellow: #ffd23f;
+    --dot: rgb(214 36 110 / 13%);
+    --code-bg: #fff4c7;
+    --shadow: #141414;
+    --ok: #2c7a3f;
+    --font-display: 'Bangers', 'Impact', 'Arial Black', sans-serif;
+    --font-body: 'Comic Neue', 'Trebuchet MS', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --border: 3px solid var(--ink);
+  }
+  :root { color-scheme: light; }
+
+  * { box-sizing: border-box; }
+  body {
+    background: radial-gradient(var(--dot) 1.4px, transparent 1.6px) 0 0 / 9px 9px, var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  main { max-width: 1060px; margin: 0 auto; display: grid; gap: 40px; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: 0.04em; line-height: 1.05; margin: 0; text-wrap: balance; }
+  h2 { font-size: clamp(2rem, 5vw, 2.8rem); }
+  h3 { font-size: 1.45rem; }
+  p { margin: 0; }
+  code, pre { font-family: var(--font-mono); font-size: 0.82em; }
+  code { background: var(--code-bg); padding: 0 4px; border-radius: 3px; }
+  pre { background: var(--code-bg); border: 2px solid var(--ink); padding: 12px 14px; margin: 0; overflow-x: auto; line-height: 1.45; }
+  pre code { background: none; padding: 0; }
+  ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+
+  .panel { background: var(--panel); border: var(--border); box-shadow: 6px 6px 0 var(--shadow); padding: 20px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .grid-2 { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+  .wide { grid-column: 1 / -1; }
+
+  /* Cover */
+  .cover { position: relative; border: 4px solid var(--ink); box-shadow: 10px 10px 0 var(--shadow); background:
+      repeating-conic-gradient(from 0deg at 82% 30%, var(--yellow) 0deg 9deg, var(--panel) 9deg 18deg);
+    padding: 28px; display: grid; gap: 18px; overflow: hidden; }
+  .masthead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; border-bottom: 4px solid var(--ink); padding-bottom: 10px; }
+  .masthead .brand { font-family: var(--font-display); font-size: clamp(1.3rem, 4vw, 2rem); letter-spacing: 0.08em; }
+  .issue { font-family: var(--font-mono); font-weight: 700; background: var(--ink); color: var(--paper); padding: 4px 10px; }
+  .cover h1 { font-size: clamp(3rem, 11vw, 6.5rem); color: var(--magenta); -webkit-text-stroke: 2px var(--ink); text-shadow: 5px 5px 0 var(--ink); max-width: 13ch; }
+  .cover .tagline { max-width: 52ch; background: var(--panel); border: var(--border); padding: 12px 14px; font-size: 1.1rem; }
+  .burst { position: absolute; right: 6%; top: 22%; width: 150px; aspect-ratio: 1; max-width: 100%; display: grid; place-items: center; text-align: center;
+    background: var(--cyan); color: var(--ink); font-family: var(--font-display); font-size: 1.5rem; line-height: 1;
+    clip-path: polygon(50% 0, 61% 18%, 82% 7%, 79% 30%, 100% 33%, 85% 50%, 100% 67%, 79% 70%, 82% 93%, 61% 82%, 50% 100%, 39% 82%, 18% 93%, 21% 70%, 0 67%, 15% 50%, 0 33%, 21% 30%, 18% 7%, 39% 18%); transform: rotate(-8deg); }
+  @media (max-width: 640px) { .burst { position: static; justify-self: end; width: 120px; margin-top: -10px; } }
+
+  /* Chapter heading */
+  .chapter { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .chapter .tag { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; background: var(--yellow); color: #141414; border: var(--border); padding: 4px 10px; transform: rotate(-2deg); }
+  .caption { background: var(--yellow); color: #141414; border: 2px solid var(--ink); padding: 8px 12px; font-weight: 700; justify-self: start; max-width: 60ch; }
+  .sfx { font-family: var(--font-display); font-size: 2rem; color: var(--magenta); -webkit-text-stroke: 1px var(--ink); transform: rotate(-6deg); justify-self: start; line-height: 1; }
+
+  /* Speech bubbles */
+  .bubble { position: relative; background: var(--panel); border: 2.5px solid var(--ink); border-radius: 22px; padding: 12px 16px; }
+  .bubble::after { content: ''; position: absolute; left: 28px; bottom: -14px; width: 22px; height: 14px; background: var(--ink); clip-path: polygon(0 0, 100% 0, 10% 100%); }
+  .bubble::before { content: ''; position: absolute; left: 31px; bottom: -9px; width: 15px; height: 10px; background: var(--panel); clip-path: polygon(0 0, 100% 0, 12% 100%); z-index: 1; }
+  .speaker { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-top: 6px; }
+  .answer { border-left: 5px solid var(--cyan); padding-left: 12px; }
+  .answer strong { color: var(--magenta); }
+  .chip { display: inline-block; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: 2px solid var(--ink); padding: 1px 7px; }
+  .chip.you { background: var(--cyan); color: #141414; }
+  .chip.default { background: var(--panel); color: var(--ink); border-style: dashed; }
+
+  /* Wireframe */
+  .mock { display: grid; gap: 0; max-width: 420px; width: 100%; justify-self: center; font-family: var(--font-mono); }
+  .mock .input { border: var(--border); padding: 12px 14px; background: var(--panel); color: var(--ink-soft); box-shadow: 0 0 0 4px var(--cyan); }
+  .mock .dropdown { border: var(--border); border-top: 0; background: var(--panel); margin-top: 8px; border-top: var(--border); }
+  .mock .head { font-size: 0.72rem; letter-spacing: 0.16em; font-weight: 700; padding: 6px 14px; border-bottom: 2px solid var(--ink); color: var(--ink-soft); }
+  .mock .row { display: grid; grid-template-columns: 22px 64px 1fr; gap: 6px; padding: 9px 14px; font-size: 0.88rem; border-bottom: 1px dashed var(--ink-soft); align-items: center; }
+  .mock .row:last-child { border-bottom: 0; }
+  .mock .row:first-of-type { background: var(--code-bg); }
+  .mock .row b { color: var(--magenta); }
+  .mock .row span:last-child { font-family: var(--font-body); color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* State strip */
+  .strip { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .frame { border: var(--border); background: var(--panel); padding: 12px; display: grid; gap: 8px; align-content: start; }
+  .frame .when { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 0.04em; color: var(--cyan); }
+  .frame .then { font-size: 0.95rem; }
+
+  /* Tree diagram */
+  .tree { font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.7; white-space: pre; overflow-x: auto; background: var(--code-bg); border: 2px solid var(--ink); padding: 12px 14px; }
+  .tree .new { color: var(--magenta); font-weight: 700; }
+  .tree .chg { color: var(--cyan); font-weight: 700; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  .table-wrap { overflow-x: auto; }
+  th, td { border: 2px solid var(--ink); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { font-family: var(--font-display); font-weight: 400; letter-spacing: 0.06em; font-size: 1.1rem; background: var(--yellow); color: #141414; }
+  td code { white-space: nowrap; }
+  .new-badge { color: var(--magenta); font-weight: 700; }
+  .chg-badge { color: var(--cyan); font-weight: 700; }
+
+  /* Villains */
+  .villain { border: var(--border); background: var(--panel); box-shadow: 6px 6px 0 var(--magenta); padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .villain h3 { color: var(--magenta); }
+  .villain .defeat { border-top: 2px dashed var(--ink); padding-top: 8px; }
+  .villain .defeat b { font-family: var(--font-display); letter-spacing: 0.05em; color: var(--ok); font-weight: 400; font-size: 1.1rem; }
+
+  /* Battle plan */
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; counter-reset: step; }
+  .steps li { counter-increment: step; display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: start; border: var(--border); background: var(--panel); padding: 12px; }
+  .steps li::before { content: counter(step); font-family: var(--font-display); font-size: 2rem; line-height: 1; text-align: center; background: var(--ink); color: var(--paper); padding: 8px 0; }
+  .steps .kind { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-right: 6px; }
+  .kind.r { color: var(--magenta); } .kind.g { color: var(--ok); } .kind.f { color: var(--cyan); }
+  .steps li > div { min-width: 0; display: grid; gap: 4px; }
+
+  .end { text-align: center; font-family: var(--font-display); font-size: clamp(2rem, 6vw, 3.2rem); letter-spacing: 0.06em; }
+  .end small { display: block; font-family: var(--font-body); font-size: 1rem; letter-spacing: 0; color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .burst { animation: wobble 3s ease-in-out infinite; }
+    @keyframes wobble { 50% { transform: rotate(-3deg) scale(1.05); } }
+  }
+</style>
+
+<main>
+  <!-- COVER -->
+  <header class="cover">
+    <div class="masthead">
+      <span class="brand">Diamante Investments Comics</span>
+      <span class="issue">EPIC 1 · ISSUE #1.4</span>
+    </div>
+    <h1>The Return of the Recent Search!</h1>
+    <p class="tagline">A user looked up AAPL, MSFT and GOOGL. Now they want AAPL back without typing it again. One focus on the search field, one click, and the card is there.</p>
+    <div class="burst">5 MOST<br>RECENT!</div>
+  </header>
+
+  <!-- CHAPTER 1 -->
+  <section class="grid">
+    <div class="chapter wide"><span class="tag">Chapter 1</span><h2>The Mission</h2></div>
+    <div class="panel">
+      <p class="caption">Scenario 1: history on focus</p>
+      <p>User has searched for several stocks. They click or focus the search field. A list of recent stocks appears below it, <strong>most recent at the top</strong>.</p>
+    </div>
+    <div class="panel">
+      <p class="caption">Scenario 2: straight to the card</p>
+      <p>Clicking a history row shows the stock card with current price and every metric. <strong>The preview list never appears.</strong></p>
+    </div>
+    <div class="panel">
+      <p class="caption">Scenario 3: only 5</p>
+      <p>After many searches, the history shows the <strong>5 most recent</strong>. Older entries drop off.</p>
+    </div>
+    <div class="panel wide">
+      <p class="sfx">Out of scope!</p>
+      <p>No clear-history button, no per-row delete, no filtering history by typed text, no keyboard arrow navigation, no prices in the dropdown. These are not in the acceptance criteria.</p>
+    </div>
+  </section>
+
+  <!-- CHAPTER 2 -->
+  <section class="grid-2">
+    <div class="chapter wide"><span class="tag">Chapter 2</span><h2>The Interrogation</h2></div>
+    <div class="panel">
+      <div class="bubble">What counts as a "search" in history?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip you">you chose</span><p><strong>A successful card load</strong>, from any path: preview click, Enter submit, or a history click. Typos like <code>INVALID123</code> never get recorded.</p></div>
+    </div>
+    <div class="panel">
+      <div class="bubble">What does an entry hold?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip you">you chose</span><p><strong><code>{ symbol, companyName }</code></strong>. Prices are always fetched fresh on click, so the dropdown never shows a stale quote.</p></div>
+    </div>
+    <div class="panel">
+      <div class="bubble">AAPL searched twice?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip you">you chose</span><p><strong>Move it to the top, no duplicates.</strong> Same upsert-to-front rule as the watchlist, then cap at 5.</p></div>
+    </div>
+    <div class="panel">
+      <div class="bubble">Does history survive a reload?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip you">you chose</span><p><strong>Yes, in localStorage</strong> under <code>diamante.searchHistory.v1</code>, validated on read like the watchlist.</p></div>
+    </div>
+    <div class="panel">
+      <div class="bubble">When does history show instead of previews?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip you">you chose</span><p><strong>Focused and query shorter than 2 characters.</strong> At 2+ characters previews take over. The two dropdowns never render together.</p></div>
+    </div>
+    <div class="panel">
+      <div class="bubble">How does it close?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip you">you chose</span><p><strong>Selecting a row, or blur / click outside.</strong> Escape is not included.</p></div>
+    </div>
+    <div class="panel">
+      <div class="bubble">What happens to the input text after a history click?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip default">default</span><p><strong>Leave it unchanged.</strong> Filling it with <code>AAPL</code> would re-open previews 400&nbsp;ms later through the debounce effect, which breaks Scenario 2.</p></div>
+    </div>
+    <div class="panel">
+      <div class="bubble">Focus with no history yet?</div>
+      <p class="speaker">Claude</p>
+      <div class="answer"><span class="chip default">default</span><p><strong>No dropdown at all.</strong> An empty-state message is extra scope.</p></div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 3 -->
+  <section class="grid-2">
+    <div class="chapter wide"><span class="tag">Chapter 3</span><h2>The Look</h2></div>
+    <div class="panel">
+      <p class="caption">Design A: "Recent" header list</p>
+      <div class="mock" aria-label="Search history dropdown wireframe">
+        <div class="input">Search by ticker (e.g., AAPL)</div>
+        <div class="dropdown">
+          <div class="head">RECENT</div>
+          <div class="row"><span>◷</span><b>GOOGL</b><span>Alphabet Inc</span></div>
+          <div class="row"><span>◷</span><b>MSFT</b><span>Microsoft Corp</span></div>
+          <div class="row"><span>◷</span><b>AAPL</b><span>Apple Inc</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Styling rules</h3>
+      <ul>
+        <li>Reuse the preview dropdown shell (position, border, shadow) so both lists feel like one control.</li>
+        <li><code>RECENT</code> header: <code>--font-mono</code>, <code>--font-size-xs</code>, letter-spaced, <code>--text-secondary</code>.</li>
+        <li>Ticker in <code>--font-mono</code>, company name in <code>--font-body</code>, truncated with an ellipsis.</li>
+        <li>Clock glyph <code>◷</code> is decorative: <code>aria-hidden="true"</code>.</li>
+        <li>Hover and focus states use <code>--duration-*</code> / <code>--ease-*</code> tokens, disabled under <code>prefers-reduced-motion</code>.</li>
+        <li>Tokens only in <code>SearchHistoryList.module.css</code>. No raw colors or px.</li>
+      </ul>
+    </div>
+    <div class="panel wide">
+      <h3>The four frames of the dropdown</h3>
+      <div class="strip">
+        <div class="frame"><span class="when">Focus, empty input</span><span class="then">History shows if it has entries.</span></div>
+        <div class="frame"><span class="when">Type "A"</span><span class="then">History stays open (query under 2 chars).</span></div>
+        <div class="frame"><span class="when">Type "AA"</span><span class="then">History hides at once. Previews appear after the 400&nbsp;ms debounce.</span></div>
+        <div class="frame"><span class="when">Click a row or blur</span><span class="then">Dropdown closes. A row click loads the card directly.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 4 -->
+  <section class="grid-2">
+    <div class="chapter wide"><span class="tag">Chapter 4</span><h2>The Blueprint</h2></div>
+    <div class="panel">
+      <h3>Component tree</h3>
+<div class="tree">App → StockSearch
+  ├→ StockTabs
+  ├→ StockSearchPanel
+  │   ├→ SearchForm  <span class="chg">(+ history prop, focus/blur)</span>
+  │   │   ├→ <span class="new">SearchHistoryList</span>  <span class="new">NEW</span>
+  │   │   └→ StockPreviewList → StockPreviewItem
+  │   └→ StockResult
+  └→ WatchlistView</div>
+      <p><span class="new-badge">Pink</span> = new, <span class="chg-badge">cyan</span> = changed.</p>
+    </div>
+    <div class="panel">
+      <h3>Data flow</h3>
+<div class="tree">focus input ──▶ useSearchHistoryDropdown.isOpen
+                     │
+click row ──▶ onSelect(entry)
+                     ├─ setShowPreviews(false)
+                     ├─ close dropdown
+                     └─ loadStockData(entry.symbol)
+                              │
+stockData set ──▶ useEffect in useStockSearchFlow
+                     └─ history.record(stockData)
+                              │
+                 recordSearch() ──▶ localStorage</div>
+    </div>
+    <div class="panel wide">
+      <h3>Files</h3>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Status</th><th>Job</th></tr></thead>
+        <tbody>
+          <tr><td><code>src/hooks/useLocalStorageState.ts</code></td><td class="new-badge">new (refactor)</td><td>Generic <code>useState</code> + persist-on-change, lazy initial read.</td></tr>
+          <tr><td><code>src/utils/storage.ts</code></td><td class="new-badge">new (refactor)</td><td><code>isRecord</code>, <code>isFiniteNumber</code>, <code>parseStoredItems(raw, guard)</code> pulled out of <code>useWatchlist</code>.</td></tr>
+          <tr><td><code>src/utils/symbols.ts</code></td><td class="new-badge">new (refactor)</td><td><code>normalizeSymbol</code>, moved from <code>normalizeWatchlistSymbol</code>.</td></tr>
+          <tr><td><code>src/hooks/useWatchlist.ts</code></td><td class="chg-badge">changed (refactor)</td><td>Built on the two helpers above. Behavior unchanged.</td></tr>
+          <tr><td><code>src/types/searchHistory.ts</code></td><td class="new-badge">new</td><td><code>SearchHistoryEntry</code>.</td></tr>
+          <tr><td><code>src/utils/searchHistory.ts</code></td><td class="new-badge">new</td><td>Pure: <code>toSearchHistoryEntry</code>, <code>recordSearch</code>, <code>isSearchHistoryEntry</code>.</td></tr>
+          <tr><td><code>src/hooks/useSearchHistory.ts</code></td><td class="new-badge">new</td><td>Persisted entries + stable <code>record(stock)</code>.</td></tr>
+          <tr><td><code>src/components/StockSearch/useSearchHistoryDropdown.ts</code></td><td class="new-badge">new</td><td>Focus state, <code>isOpen</code> rule, select handler.</td></tr>
+          <tr><td><code>src/components/StockSearch/useStockSearchFlow.ts</code></td><td class="chg-badge">changed</td><td>Composes history + dropdown, records on load, exposes <code>history</code> view object.</td></tr>
+          <tr><td><code>src/components/SearchHistoryList/*</code></td><td class="new-badge">new</td><td>Renders the RECENT header and rows. CSS module.</td></tr>
+          <tr><td><code>src/components/SearchForm/SearchForm.tsx</code></td><td class="chg-badge">changed</td><td>Input <code>onFocus</code>/<code>onBlur</code>, renders <code>SearchHistoryList</code> when open.</td></tr>
+          <tr><td><code>src/components/StockSearch/StockSearchPanel.tsx</code></td><td class="chg-badge">changed</td><td>Passes one <code>history</code> object through.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 5 -->
+  <section class="grid-2">
+    <div class="chapter wide"><span class="tag">Chapter 5</span><h2>The Code</h2></div>
+    <div class="panel">
+      <p class="caption">Pure core: utils/searchHistory.ts</p>
+<pre><code>export const SEARCH_HISTORY_LIMIT = 5;
+
+export interface SearchHistoryEntry {
+  symbol: string;
+  companyName: string;
+}
+
+export function toSearchHistoryEntry(stock: StockData): SearchHistoryEntry {
+  return { symbol: normalizeSymbol(stock.symbol), companyName: stock.companyName };
+}
+
+export function recordSearch(
+  entries: SearchHistoryEntry[],
+  entry: SearchHistoryEntry,
+  limit = SEARCH_HISTORY_LIMIT,
+): SearchHistoryEntry[] {
+  const symbol = normalizeSymbol(entry.symbol);
+  const rest = entries.filter((e) =&gt; normalizeSymbol(e.symbol) !== symbol);
+  return [{ ...entry, symbol }, ...rest].slice(0, limit);
+}</code></pre>
+    </div>
+    <div class="panel">
+      <p class="caption">Refactor first: useLocalStorageState</p>
+<pre><code>export function useLocalStorageState&lt;T&gt;(
+  key: string,
+  parse: (raw: string | null) =&gt; T,
+): [T, Dispatch&lt;SetStateAction&lt;T&gt;&gt;] {
+  const [value, setValue] = useState&lt;T&gt;(() =&gt; parse(localStorage.getItem(key)));
+
+  useEffect(() =&gt; {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
+}</code></pre>
+      <p>Both stores keep the <code>{ items: [...] }</code> envelope, so <code>parseStoredItems(raw, guard)</code> serves the watchlist and history. This keeps jscpd under 5%.</p>
+    </div>
+    <div class="panel">
+      <p class="caption">hooks/useSearchHistory.ts</p>
+<pre><code>const STORAGE_KEY = 'diamante.searchHistory.v1';
+
+export function useSearchHistory(): SearchHistory {
+  const [state, setState] = useLocalStorageState(STORAGE_KEY, parseHistory);
+
+  const record = useCallback((stock: StockData): void =&gt; {
+    setState((prev) =&gt; ({
+      items: recordSearch(prev.items, toSearchHistoryEntry(stock)),
+    }));
+  }, [setState]);
+
+  return { entries: state.items, record };
+}</code></pre>
+      <p>Functional update plus <code>useCallback</code> gives a stable <code>record</code>, so the effect deps stay honest.</p>
+    </div>
+    <div class="panel">
+      <p class="caption">StockSearch/useSearchHistoryDropdown.ts</p>
+<pre><code>export interface SearchHistoryView {
+  entries: SearchHistoryEntry[];
+  isOpen: boolean;
+  onFocus: () =&gt; void;
+  onBlur: () =&gt; void;
+  onSelect: (entry: SearchHistoryEntry) =&gt; void;
+}
+
+export function useSearchHistoryDropdown(
+  entries: SearchHistoryEntry[],
+  query: string,
+  loadSymbol: (symbol: string) =&gt; void,
+): SearchHistoryView {
+  const [isFocused, setIsFocused] = useState(false);
+  const isOpen = isFocused &amp;&amp; query.trim().length &lt; 2 &amp;&amp; entries.length &gt; 0;
+
+  function handleSelect(entry: SearchHistoryEntry): void {
+    setIsFocused(false);
+    loadSymbol(entry.symbol);
+  }
+
+  return { entries, isOpen, onFocus: () =&gt; setIsFocused(true),
+    onBlur: () =&gt; setIsFocused(false), onSelect: handleSelect };
+}</code></pre>
+    </div>
+    <div class="panel wide">
+      <p class="caption">Wiring inside useStockSearchFlow</p>
+<pre><code>const searchHistory = useSearchHistory();
+const { record } = searchHistory;
+
+useEffect(() =&gt; {
+  if (stockData) record(stockData);
+}, [stockData, record]);
+
+function loadFromHistory(symbol: string): void {
+  setShowPreviews(false);
+  void loadStockData(symbol);
+}
+
+const history = useSearchHistoryDropdown(searchHistory.entries, query, loadFromHistory);
+// return { ...existing, history }</code></pre>
+      <p>One <code>history</code> object flows <code>StockSearch → StockSearchPanel → SearchForm</code>, so we add one prop instead of five. Rows use <code>onMouseDown={preventDefault}</code> so the input's blur cannot close the list before the click lands.</p>
+    </div>
+  </section>
+
+  <!-- CHAPTER 6 -->
+  <section class="grid">
+    <div class="chapter wide"><span class="tag">Chapter 6</span><h2>The Villains</h2></div>
+    <div class="villain">
+      <h3>The Blur Bandit</h3>
+      <p>Input <code>onBlur</code> fires before the row's <code>onClick</code>. The list unmounts and the click is lost.</p>
+      <p class="defeat"><b>Defeated by:</b> <code>onMouseDown</code> → <code>preventDefault()</code> on each row button. An acceptance test clicks a row through <code>userEvent</code>, which fires the real event order.</p>
+    </div>
+    <div class="villain">
+      <h3>Dr. Debounce</h3>
+      <p>Any code that writes the symbol into <code>query</code> re-opens previews 400&nbsp;ms later.</p>
+      <p class="defeat"><b>Defeated by:</b> leaving the input unchanged. The Scenario 2 test advances time past the debounce and asserts no preview items exist.</p>
+    </div>
+    <div class="villain">
+      <h3>The Duplicator</h3>
+      <p>A second <code>useWatchlist</code>-style parse/persist block would push jscpd past 5%.</p>
+      <p class="defeat"><b>Defeated by:</b> the refactor commit that adds <code>useLocalStorageState</code> and <code>parseStoredItems</code> before any history code.</p>
+    </div>
+    <div class="villain">
+      <h3>The Prop Hydra</h3>
+      <p><code>StockSearchPanel</code> already takes 13 props. Five more hurt readability and line counts.</p>
+      <p class="defeat"><b>Defeated by:</b> a single <code>history: SearchHistoryView</code> prop.</p>
+    </div>
+    <div class="villain">
+      <h3>Length Lord</h3>
+      <p><code>useStockSearchFlow</code> is near the 40-line function limit.</p>
+      <p class="defeat"><b>Defeated by:</b> keeping focus/open logic in <code>useSearchHistoryDropdown</code>. The flow only adds the record effect and <code>loadFromHistory</code>.</p>
+    </div>
+    <div class="villain">
+      <h3>Corrupt Storage</h3>
+      <p>Hand-edited or old <code>localStorage</code> data.</p>
+      <p class="defeat"><b>Defeated by:</b> <code>isSearchHistoryEntry</code> guard. Bad rows are dropped, bad JSON gives <code>[]</code>, and the list is sliced to 5 on read.</p>
+    </div>
+  </section>
+
+  <!-- CHAPTER 7 -->
+  <section class="panel">
+    <div class="chapter"><span class="tag">Chapter 7</span><h2>The Battle Plan</h2></div>
+    <p class="caption">One commit per TDD step. Green bar between every step.</p>
+    <ol class="steps">
+      <li><div><p><span class="kind f">refactor</span><strong>Extract storage helpers.</strong> <code>useLocalStorageState</code>, <code>utils/storage.ts</code>, <code>normalizeSymbol</code>. Move <code>useWatchlist</code> onto them. Existing watchlist tests stay green.</p></div></li>
+      <li><div><p><span class="kind r">red</span><strong>Scenario 1 acceptance test.</strong> Search AAPL, MSFT, GOOGL through the UI, focus the input, expect a "Recent searches" region with GOOGL first. Predicted failure: region not found.</p></div></li>
+      <li><div><p><span class="kind g">green</span>Add <code>recordSearch</code>, <code>useSearchHistory</code>, <code>useSearchHistoryDropdown</code>, <code>SearchHistoryList</code>, and the <code>SearchForm</code> focus wiring.</p></div></li>
+      <li><div><p><span class="kind r">red</span><strong>Scenario 2 acceptance test.</strong> Click AAPL in history, expect the card with price and metrics, advance past the debounce, expect no preview items. Predicted failure: row click does nothing.</p></div></li>
+      <li><div><p><span class="kind g">green</span>Add <code>loadFromHistory</code> and the <code>onMouseDown</code> guard on rows.</p></div></li>
+      <li><div><p><span class="kind r">red</span><strong>Scenario 3, unit level.</strong> <code>recordSearch</code> unit tests: cap at 5, dedupe moves to the top, symbols normalized. Predicted failure: 6 entries returned if the slice is missing. Add one acceptance check with 6 searches.</p></div></li>
+      <li><div><p><span class="kind g">green</span>Apply the <code>.slice(0, limit)</code> if it is still missing. Mutation-verify the limit.</p></div></li>
+      <li><div><p><span class="kind r">red</span><strong>Persistence.</strong> Remount and history is still there. Corrupt JSON gives an empty list.</p></div></li>
+      <li><div><p><span class="kind g">green</span>Add <code>parseHistory</code> on <code>parseStoredItems</code>.</p></div></li>
+      <li><div><p><span class="kind f">refactor</span>Tokens-only CSS module for the dropdown. Run lint, jscpd and the line-count checks.</p></div></li>
+      <li><div><p><span class="kind f">docs</span>Mark Story 1.4 ✅ in the backlog. Add <code>useSearchHistory</code> to the AGENTS.md hooks list. Save QA screenshots to <code>docs/test-artifacts/story-1.4</code>.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- CHAPTER 8 -->
+  <section class="grid-2">
+    <div class="chapter wide"><span class="tag">Chapter 8</span><h2>The Proof</h2></div>
+    <div class="panel">
+      <h3>Automated</h3>
+      <ul>
+        <li><code>src/test/acceptance/search-history.acceptance.test.tsx</code>: one <code>test</code> per Gherkin scenario, named after it.</li>
+        <li>New helper <code>givenUserHasSearchedFor(...symbols)</code> in <code>acceptance-helpers.ts</code>, built on <code>givenStockDataIsAvailableFor()</code>. It searches through the UI and does not seed storage, so tests stay independent of the storage format.</li>
+        <li><code>src/utils/searchHistory.test.ts</code>: order, dedupe, cap, normalization.</li>
+        <li><code>src/hooks/useSearchHistory.test.tsx</code>: survives remount, ignores bad data.</li>
+        <li>Clear <code>localStorage</code> in <code>beforeEach</code> so tests don't leak into each other.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Manual QA (from the backlog)</h3>
+      <ul>
+        <li>Search AAPL → MSFT → GOOGL through preview clicks.</li>
+        <li>Focus the input: RECENT list shows GOOGL, MSFT, AAPL.</li>
+        <li>Click AAPL: card appears with all metrics, no preview flash.</li>
+        <li>Extra: search 6 stocks, confirm only 5 rows.</li>
+        <li>Extra: reload, confirm history is still there.</li>
+        <li>Extra: type "AA", history swaps to previews.</li>
+        <li>Extra: check mobile width.</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="end">The End… until Issue #2.1!<small>Plan for Story 1.4 only. No code written yet.</small></p>
+</main>
