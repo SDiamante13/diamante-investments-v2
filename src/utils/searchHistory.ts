@@ -16,5 +16,5 @@ export function toSearchHistoryEntry(stock: StockData): SearchHistoryEntry {
 }
 
 export function isSearchHistoryEntry(value: unknown): value is SearchHistoryEntry {
-  return isRecord(value);
+  return isRecord(value) && typeof value.symbol === 'string' && typeof value.companyName === 'string';
 }
