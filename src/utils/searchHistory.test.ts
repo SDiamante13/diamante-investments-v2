@@ -8,4 +8,8 @@ describe('recordSearch', () => {
   test('puts the newest search first', () => {
     expect(recordSearch([apple], microsoft)).toEqual([microsoft, apple]);
   });
+
+  test('moves a repeated symbol to the top without duplicating it', () => {
+    expect(recordSearch([microsoft, apple], { symbol: 'aapl', companyName: 'APPLE INC' })).toEqual([apple, microsoft]);
+  });
 });
