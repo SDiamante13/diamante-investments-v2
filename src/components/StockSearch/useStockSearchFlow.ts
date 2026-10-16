@@ -2,13 +2,17 @@ import type { FormEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useStockData } from '../../hooks/useStockData';
+import { useSearchHistory } from '../../hooks/useSearchHistory';
 import { useStockPreviews } from '../../hooks/useStockPreviews';
 import type { FinnhubSearchResult } from '../../services/finnhub/types';
 import type { StockData } from '../../types/stock';
+import { useSearchHistoryDropdown } from './useSearchHistoryDropdown';
+import type { SearchHistoryView } from './useSearchHistoryDropdown';
 
 export interface StockSearchFlow {
   debouncedQuery: string;
   error: string;
+  history: SearchHistoryView;
   loadingSymbol: string;
   onQueryChange: (query: string) => void;
   onSelect: (result: FinnhubSearchResult) => void;
@@ -25,6 +29,12 @@ export function useStockSearchFlow(): StockSearchFlow {
   const { results } = useStockPreviews(query);
   const { stockData, error, loadingSymbol, loadStockData } = useStockData();
   const debouncedQuery = useDebounce(query, 400);
+  const { entries, record } = useSearchHistory();
+  const history = useSearchHistoryDropdown(entries, query);
+
+  useEffect(() => {
+    if (stockData) record(stockData);
+  }, [stockData, record]);
 
   useEffect(() => {
     setShowPreviews(debouncedQuery.length >= 2);
@@ -44,6 +54,7 @@ export function useStockSearchFlow(): StockSearchFlow {
   return {
     debouncedQuery,
     error,
+    history,
     loadingSymbol,
     onQueryChange: setQuery,
     onSelect: handleSelect,

@@ -33,6 +33,7 @@ function StockSearchLayout({ activeTab, onTabSelect, search, watchlist }: Readon
           debouncedQuery={search.debouncedQuery}
           onSelect={search.onSelect}
           error={search.error}
+          history={search.history}
           loadingSymbol={search.loadingSymbol}
           stockData={search.stockData}
           isWatched={watchlist.isWatched}

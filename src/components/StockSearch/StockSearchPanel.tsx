@@ -4,10 +4,12 @@ import StockResult from '../StockResult/StockResult';
 import type { FinnhubSearchResult } from '../../services/finnhub/types';
 import type { StockData } from '../../types/stock';
 import styles from './StockSearch.module.css';
+import type { SearchHistoryView } from './useSearchHistoryDropdown';
 
 interface StockSearchPanelProps {
   debouncedQuery: string;
   error: string;
+  history: SearchHistoryView;
   isWatched: boolean;
   loadingSymbol: string;
   onQueryChange: (query: string) => void;
@@ -38,6 +40,7 @@ export default function StockSearchPanel({
   debouncedQuery,
   onSelect,
   error,
+  history,
   loadingSymbol,
   stockData,
   isWatched,
@@ -54,6 +57,7 @@ export default function StockSearchPanel({
         showPreviews={showPreviews}
         debouncedQuery={debouncedQuery}
         onSelect={onSelect}
+        history={history}
       />
       {error && <div className={styles.error}>{error}</div>}
       {loadingSymbol && <LoadingCard symbol={loadingSymbol} />}
