@@ -28,6 +28,8 @@ export default function SearchForm({
   onSelect,
   history,
 }: Readonly<SearchFormProps>): ReactElement {
+  const showNoMatches = showPreviews && debouncedQuery.length >= MIN_PREVIEW_QUERY_LENGTH && previewResults.length === 0;
+
   return (
     <form onSubmit={onSubmit} className={styles.searchForm}>
       <div className={styles.searchWrapper}>
@@ -42,9 +44,7 @@ export default function SearchForm({
         />
         {history.isOpen && <SearchHistoryList entries={history.entries} onSelect={history.onSelect} />}
         {showPreviews && previewResults.length > 0 && <StockPreviewList results={previewResults} onSelect={onSelect} />}
-        {showPreviews && debouncedQuery.length >= MIN_PREVIEW_QUERY_LENGTH && previewResults.length === 0 && (
-          <div className={styles.noMatches}>No matches found</div>
-        )}
+        {showNoMatches && <div className={styles.noMatches}>No matches found</div>}
       </div>
     </form>
   );
