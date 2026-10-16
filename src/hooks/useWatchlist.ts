@@ -25,12 +25,14 @@ function parseWatchlistState(raw: string | null): WatchlistState {
   return { items: parseStoredItems(raw, isWatchlistItem) };
 }
 
-export function useWatchlist(): {
+export interface Watchlist {
   items: WatchlistItem[];
   isWatched: (symbol: string) => boolean;
   remove: (symbol: string) => void;
   upsert: (item: WatchlistItem) => void;
-} {
+}
+
+export function useWatchlist(): Watchlist {
   const [state, setState] = useLocalStorageState(STORAGE_KEY, parseWatchlistState);
   const { items } = state;
 
