@@ -18,4 +18,15 @@ describe('useSearchHistory', () => {
 
     expect(result.current.entries).toEqual([{ symbol: 'AAPL', companyName: 'APPLE INC' }]);
   });
+
+  test('drops malformed rows from stored history', () => {
+    localStorage.setItem(
+      'diamante.searchHistory.v1',
+      JSON.stringify({ items: [{ symbol: 'BROKEN' }, { symbol: 'MSFT', companyName: 'MICROSOFT CORP' }] })
+    );
+
+    const { result } = renderHook(() => useSearchHistory());
+
+    expect(result.current.entries.map((entry) => entry.symbol)).toEqual(['MSFT']);
+  });
 });
