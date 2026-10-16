@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { searchStock } from '../services/finnhub/finnhub.ts';
+import { MIN_PREVIEW_QUERY_LENGTH } from '../utils/previewQuery';
 import { useDebounce } from './useDebounce';
 import { FinnhubSearchResult } from '../services/finnhub/types.ts';
 
@@ -11,7 +12,7 @@ export function useStockPreviews(query: string): {
 
   useEffect(() => {
     async function fetchPreviews(): Promise<void> {
-      if (debouncedQuery.length >= 2) {
+      if (debouncedQuery.length >= MIN_PREVIEW_QUERY_LENGTH) {
         const searchResults = await searchStock(debouncedQuery);
         setResults(searchResults);
       } else {

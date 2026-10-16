@@ -1,6 +1,7 @@
 import type { ReactElement, FormEvent } from 'react';
 import SearchHistoryList from '../SearchHistoryList/SearchHistoryList';
 import StockPreviewList from '../StockPreviewList/StockPreviewList';
+import { MIN_PREVIEW_QUERY_LENGTH } from '../../utils/previewQuery';
 import styles from './SearchForm.module.css';
 
 import type { FinnhubSearchResult } from '../../services/finnhub/types.ts';
@@ -41,7 +42,7 @@ export default function SearchForm({
         />
         {history.isOpen && <SearchHistoryList entries={history.entries} onSelect={history.onSelect} />}
         {showPreviews && previewResults.length > 0 && <StockPreviewList results={previewResults} onSelect={onSelect} />}
-        {showPreviews && debouncedQuery.length >= 2 && previewResults.length === 0 && (
+        {showPreviews && debouncedQuery.length >= MIN_PREVIEW_QUERY_LENGTH && previewResults.length === 0 && (
           <div className={styles.noMatches}>No matches found</div>
         )}
       </div>

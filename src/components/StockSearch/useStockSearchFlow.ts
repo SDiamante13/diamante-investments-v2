@@ -5,6 +5,7 @@ import { useStockData } from '../../hooks/useStockData';
 import { useStockPreviews } from '../../hooks/useStockPreviews';
 import type { FinnhubSearchResult } from '../../services/finnhub/types';
 import type { StockData } from '../../types/stock';
+import { MIN_PREVIEW_QUERY_LENGTH } from '../../utils/previewQuery';
 import { useRecordedSearchHistory } from './useRecordedSearchHistory';
 import { useSearchHistoryDropdown } from './useSearchHistoryDropdown';
 import type { SearchHistoryView } from './useSearchHistoryDropdown';
@@ -32,7 +33,7 @@ export function useStockSearchFlow(): StockSearchFlow {
   const history = useSearchHistoryDropdown(useRecordedSearchHistory(stockData), query, loadFromHistory);
 
   useEffect(() => {
-    setShowPreviews(debouncedQuery.length >= 2);
+    setShowPreviews(debouncedQuery.length >= MIN_PREVIEW_QUERY_LENGTH);
   }, [debouncedQuery]);
 
   function loadFromHistory(symbol: string): void {

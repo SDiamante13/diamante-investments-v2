@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { SearchHistoryEntry } from '../../types/searchHistory';
-
-const MIN_PREVIEW_QUERY_LENGTH = 2;
+import { MIN_PREVIEW_QUERY_LENGTH } from '../../utils/previewQuery';
 
 export interface SearchHistoryView {
   entries: SearchHistoryEntry[];

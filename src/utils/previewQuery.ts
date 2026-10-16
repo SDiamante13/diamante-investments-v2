@@ -1,0 +1,1 @@
+export const MIN_PREVIEW_QUERY_LENGTH = 2;
