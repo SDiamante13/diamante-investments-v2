@@ -1,1 +1,2 @@
 export const MIN_PREVIEW_QUERY_LENGTH = 2;
+export const PREVIEW_DEBOUNCE_MS = 400;
