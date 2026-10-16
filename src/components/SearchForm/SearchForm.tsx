@@ -4,7 +4,7 @@ import StockPreviewList from '../StockPreviewList/StockPreviewList';
 import { MIN_PREVIEW_QUERY_LENGTH } from '../../utils/previewQuery';
 import styles from './SearchForm.module.css';
 
-import type { FinnhubSearchResult } from '../../services/finnhub/types.ts';
+import type { FinnhubSearchResult } from '../../services/finnhub/types';
 import type { SearchHistoryView } from '../StockSearch/useSearchHistoryDropdown';
 
 type SearchFormProps = {
