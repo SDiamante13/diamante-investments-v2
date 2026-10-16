@@ -44,6 +44,28 @@ describe('Search history', () => {
     await thenUserSeesStockCard({ symbol: 'AAPL', values: ['$145.52', '$144.20', '$146.12', '$143.89', '$2.80T', '28.50'] });
     await thenUserSeesNoDropdownAfterDebounce('AAPL');
   });
+
+  test('user sees only the five most recent searches', async () => {
+    givenStocksAreAvailable([
+      { symbol: 'AAPL', description: 'APPLE INC' },
+      { symbol: 'MSFT', description: 'MICROSOFT CORP' },
+      { symbol: 'GOOGL', description: 'ALPHABET INC-CL A' },
+      { symbol: 'AMZN', description: 'AMAZON.COM INC' },
+      { symbol: 'TSLA', description: 'TESLA INC' },
+      { symbol: 'NVDA', description: 'NVIDIA CORP' },
+    ]);
+    render(<App />);
+
+    await whenUserSearchesFor('AAPL');
+    await whenUserSearchesFor('MSFT');
+    await whenUserSearchesFor('GOOGL');
+    await whenUserSearchesFor('AMZN');
+    await whenUserSearchesFor('TSLA');
+    await whenUserSearchesFor('NVDA');
+    whenUserFocusesTheSearchField();
+
+    await thenUserSeesRecentSearches(['NVDA', 'TSLA', 'AMZN', 'GOOGL', 'MSFT']);
+  });
 });
 
 function givenStocksAreAvailable(stocks: Array<{ symbol: string; description: string }>): void {

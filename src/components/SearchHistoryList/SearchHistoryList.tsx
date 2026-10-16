@@ -18,7 +18,13 @@ export default function SearchHistoryList({ entries, onSelect }: Readonly<Search
         Recent searches
       </h2>
       {entries.map((entry) => (
-        <button key={entry.symbol} type="button" className={styles.row} onMouseDown={keepInputFocused} onClick={(): void => onSelect(entry)}>
+        <button
+          key={entry.symbol}
+          type="button"
+          className={styles.row}
+          onMouseDown={keepInputFocused}
+          onClick={(): void => onSelect(entry)}
+        >
           <span className={styles.icon} aria-hidden="true">
             ◷
           </span>

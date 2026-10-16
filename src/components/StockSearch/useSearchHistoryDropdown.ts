@@ -11,7 +11,11 @@ export interface SearchHistoryView {
   onSelect: (entry: SearchHistoryEntry) => void;
 }
 
-export function useSearchHistoryDropdown(entries: SearchHistoryEntry[], query: string, loadSymbol: (symbol: string) => void): SearchHistoryView {
+export function useSearchHistoryDropdown(
+  entries: SearchHistoryEntry[],
+  query: string,
+  loadSymbol: (symbol: string) => void
+): SearchHistoryView {
   const [isFocused, setIsFocused] = useState(false);
   const isOpen = isFocused && query.trim().length < MIN_PREVIEW_QUERY_LENGTH && entries.length > 0;
 
