@@ -12,4 +12,12 @@ describe('recordSearch', () => {
   test('moves a repeated symbol to the top without duplicating it', () => {
     expect(recordSearch([microsoft, apple], { symbol: 'aapl', companyName: 'APPLE INC' })).toEqual([apple, microsoft]);
   });
+
+  test('keeps only the five most recent searches', () => {
+    const history = ['E', 'D', 'C', 'B', 'A'].map((symbol) => ({ symbol, companyName: `${symbol} CORP` }));
+
+    const symbols = recordSearch(history, { symbol: 'F', companyName: 'F CORP' }).map((entry) => entry.symbol);
+
+    expect(symbols).toEqual(['F', 'E', 'D', 'C', 'B']);
+  });
 });
